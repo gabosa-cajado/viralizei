@@ -1,33 +1,26 @@
 import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  audioWav16k,
+  audio16k,
   avaliar,
   avaliarComIA,
   CONFERIR_MANUAL,
   extrairQuadros,
   medir,
+  sondarIA,
   type AvaliacaoIA,
   type MedidasVideo,
   type TextosVideo,
 } from "../dados/avaliacao";
+import { transcreverNoNavegador } from "../dados/transcricao";
 
 const FORMATOS = ["video/mp4", "video/quicktime", "video/webm", "video/x-m4v"];
-
-type Etapa = "parado" | "medindo" | "quadros" | "ia" | "pronto";
-
-const ETAPAS: Record<Etapa, string> = {
-  parado: "",
-  medindo: "Medindo duração, fala e silêncio",
-  quadros: "Tirando os quadros e separando o áudio",
-  ia: "A IA está lendo os quadros e ouvindo a fala (até 1 minuto)",
-  pronto: "",
-};
 
 export function Avaliar() {
   const [arquivo, setArquivo] = useState<File | null>(null);
   const [medidas, setMedidas] = useState<MedidasVideo | null>(null);
-  const [etapa, setEtapa] = useState<Etapa>("parado");
+  const [ocupado, setOcupado] = useState(false);
+  const [etapa, setEtapa] = useState("");
   const [ia, setIa] = useState<AvaliacaoIA | null>(null);
   const [erroIA, setErroIA] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
@@ -52,22 +45,41 @@ export function Avaliar() {
     setIa(null);
     setArquivo(f);
     setMedidas(null);
+    setOcupado(true);
     try {
-      setEtapa("medindo");
+      setEtapa("Medindo duração, fala e silêncio");
       const m = await medir(f);
       setMedidas(m);
-      setEtapa("quadros");
-      const [quadros, audioWav] = await Promise.all([extrairQuadros(f), m.temAudio ? audioWav16k(f) : Promise.resolve(null)]);
-      setEtapa("ia");
+      setEtapa("Tirando os quadros e separando o áudio");
+      const [quadros, audio, capacidades] = await Promise.all([
+        extrairQuadros(f),
+        m.temAudio ? audio16k(f) : Promise.resolve(null),
+        sondarIA().catch(() => ({ ia: false, transcricao: false })),
+      ]);
+      if (!capacidades.ia) {
+        setErroIA("A IA ainda não foi ligada (falta a chave da Anthropic no servidor).");
+        return;
+      }
+      let transcricao: string | null = null;
+      if (audio && !capacidades.transcricao) {
+        // O servidor não transcreve: o Whisper roda aqui mesmo, no navegador.
+        try {
+          transcricao = await transcreverNoNavegador(audio.amostras, setEtapa);
+        } catch {
+          transcricao = null;
+        }
+      }
+      setEtapa("A IA está lendo os quadros e a fala (até 1 minuto)");
       try {
-        setIa(await avaliarComIA({ medidas: m, quadros, audioWav }));
+        setIa(await avaliarComIA({ medidas: m, quadros, audioWav: audio?.wav ?? null, transcricao }));
       } catch (e) {
         setErroIA(e instanceof Error ? e.message : "A avaliação com IA não respondeu.");
       }
-      setEtapa("pronto");
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Não deu para ler este vídeo.");
-      setEtapa("parado");
+    } finally {
+      setOcupado(false);
+      setEtapa("");
     }
   }
 
@@ -84,7 +96,7 @@ export function Avaliar() {
           <p className="abertura-gancho">Solte o vídeo. A IA dá a nota de 0 a 100 contra o que os cinco criadores fazem.</p>
           <p className="abertura-acoes">
             <span>
-              O navegador mede o vídeo e tira 8 quadros e o áudio; a IA transcreve a fala, lê o texto na tela e julga gancho, prova, roupa, luz, enquadramento e chamada. O arquivo inteiro não é enviado. Critérios em <Link to="/referencias" className="link">Referências</Link>.
+              O navegador mede o vídeo, tira 8 quadros e transcreve a fala; a IA lê o texto na tela e julga gancho, prova, roupa, luz, enquadramento e chamada. O arquivo inteiro não é enviado. Critérios em <Link to="/referencias" className="link">Referências</Link>.
             </span>
           </p>
         </div>
@@ -101,9 +113,9 @@ export function Avaliar() {
             <input ref={entrada} type="file" accept="video/*" className="visualmente-oculto" onChange={(e) => void receber(e.target.files?.[0])} />
             <p className="solta-titulo">{arquivo ? arquivo.name : "Solte o vídeo aqui"}</p>
             <p className="solta-texto" aria-live="polite">
-              {etapa !== "parado" && etapa !== "pronto" ? ETAPAS[etapa] : arquivo ? `${(arquivo.size / 1e6).toFixed(1)} MB` : "mp4, mov ou webm, direto do celular"}
+              {ocupado ? etapa : arquivo ? `${(arquivo.size / 1e6).toFixed(1)} MB` : "mp4, mov ou webm, direto do celular"}
             </p>
-            <button type="button" className="botao botao-primario" onClick={() => entrada.current?.click()} disabled={etapa !== "parado" && etapa !== "pronto"}>
+            <button type="button" className="botao botao-primario" onClick={() => entrada.current?.click()} disabled={ocupado}>
               {arquivo ? "Trocar o vídeo" : "Escolher o vídeo"}
             </button>
           </div>
@@ -228,8 +240,8 @@ export function Avaliar() {
                 </div>
               );
             })
-          ) : etapa !== "parado" && etapa !== "pronto" ? (
-            <p className="sem-dado">{ETAPAS[etapa]}.</p>
+          ) : ocupado ? (
+            <p className="sem-dado">{etapa}.</p>
           ) : (
             <p className="sem-dado">Solte um vídeo: a nota, o que mudar e o critério por critério aparecem aqui.</p>
           )}

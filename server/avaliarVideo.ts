@@ -53,9 +53,11 @@ interface Entrada {
   medidas: { duracaoSeg: number; largura: number; altura: number; vertical: boolean; temAudio: boolean; primeiraFalaMs: number | null; silencio: number | null; pausasLongasPorMin: number | null; energiaFinal: number | null };
   quadros: { tempo: number; imagem: string }[];
   audioWav: string | null;
+  transcricao?: string | null;
 }
 
-async function transcrever(audioWav: string | null, chave: string | undefined): Promise<{ texto: string; aviso?: string }> {
+async function transcrever(audioWav: string | null, chave: string | undefined, pronta?: string | null): Promise<{ texto: string; aviso?: string }> {
+  if (pronta && pronta.trim()) return { texto: pronta.trim().slice(0, 6000) };
   if (!audioWav) return { texto: "", aviso: "O vídeo não tem áudio legível: os critérios de fala ficaram sem conferir." };
   if (!chave) return { texto: "", aviso: "Sem OPENAI_API_KEY no .env: a fala não foi transcrita, só o visual e as medidas entraram na nota." };
   try {
@@ -94,16 +96,20 @@ function responder(res: ServerResponse, status: number, dados: unknown) {
 export function criarRotaAvaliar(chave: string | undefined, chaveOpenAI: string | undefined) {
   return async (req: IncomingMessage, res: ServerResponse) => {
     if (req.method !== "POST") return responder(res, 405, { erro: "Use POST." });
-    let e: Entrada;
+    let bruto: Entrada & { sonda?: boolean };
     try {
-      e = JSON.parse(await lerCorpo(req));
-      if (!e.medidas || !Array.isArray(e.quadros) || e.quadros.length === 0) throw new Error("x");
+      bruto = JSON.parse(await lerCorpo(req));
     } catch {
+      return responder(res, 400, { erro: "Pedido inválido." });
+    }
+    if (bruto.sonda) return responder(res, 200, { ia: !!chave, transcricao: !!chaveOpenAI });
+    const e = bruto;
+    if (!e.medidas || !Array.isArray(e.quadros) || e.quadros.length === 0) {
       return responder(res, 400, { erro: "Pedido inválido: faltam as medidas ou os quadros do vídeo." });
     }
     if (!chave) return responder(res, 503, { erro: "A avaliação com IA precisa de ANTHROPIC_API_KEY no .env." });
 
-    const { texto: transcricao, aviso } = await transcrever(e.audioWav, chaveOpenAI);
+    const { texto: transcricao, aviso } = await transcrever(e.audioWav, chaveOpenAI, e.transcricao);
     const m = e.medidas;
     const medidasTexto = `Duração: ${m.duracaoSeg.toFixed(1)} s. Resolução: ${m.largura}×${m.altura} (${m.vertical ? "vertical" : "horizontal"}). Tem áudio: ${m.temAudio ? "sim" : "não"}. Primeira fala: ${m.primeiraFalaMs == null ? "não detectada" : (m.primeiraFalaMs / 1000).toFixed(2) + " s"}. Silêncio: ${m.silencio == null ? "?" : Math.round(m.silencio * 100) + "%"}. Pausas longas por minuto: ${m.pausasLongasPorMin ?? "?"}. Energia final: ${m.energiaFinal == null ? "?" : Math.round(m.energiaFinal * 100) + "% da média"}.`;
     const conteudo: Anthropic.Beta.BetaContentBlockParam[] = [{ type: "text", text: `MEDIDAS\n${medidasTexto}\n\nTRANSCRIÇÃO\n${transcricao || "(sem transcrição)"}\n\nQUADROS, na ordem:` }];

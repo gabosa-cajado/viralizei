@@ -20,6 +20,8 @@ export interface Entrada {
   };
   quadros: { tempo: number; imagem: string }[];
   audioWav: string | null;
+  /** Transcrição feita no navegador (Whisper local), quando o servidor não transcreve. */
+  transcricao?: string | null;
 }
 
 const Estado = z.enum(["ok", "falha", "conferir"]);
@@ -66,7 +68,8 @@ Você recebe: medidas numéricas do vídeo, até 8 quadros com o tempo de cada u
 Responda em português do Brasil, direto, sem elogio vazio. Em "melhorias", dê 3 a 5 mudanças concretas, ordenadas da que mais vale a nota para a que menos vale.
 ${CRITERIOS}`;
 
-async function transcrever(audioWav: string | null, chave: string | undefined): Promise<{ texto: string; aviso?: string }> {
+async function transcrever(audioWav: string | null, chave: string | undefined, pronta?: string | null): Promise<{ texto: string; aviso?: string }> {
+  if (pronta && pronta.trim()) return { texto: pronta.trim().slice(0, 6000) };
   if (!audioWav) return { texto: "", aviso: "O vídeo não tem áudio legível: os critérios de fala ficaram sem conferir." };
   if (!chave) return { texto: "", aviso: "Sem OPENAI_API_KEY no servidor: a fala não foi transcrita, só o visual e as medidas entraram na nota." };
   try {
@@ -90,7 +93,7 @@ async function transcrever(audioWav: string | null, chave: string | undefined): 
 }
 
 export async function avaliarVideo(e: Entrada, chaveAnthropic: string, chaveOpenAI: string | undefined) {
-  const { texto: transcricao, aviso } = await transcrever(e.audioWav, chaveOpenAI);
+  const { texto: transcricao, aviso } = await transcrever(e.audioWav, chaveOpenAI, e.transcricao);
   const m = e.medidas;
   const medidasTexto = `Duração: ${m.duracaoSeg.toFixed(1)} s. Resolução: ${m.largura}×${m.altura} (${m.vertical ? "vertical" : "horizontal"}). Tem áudio: ${m.temAudio ? "sim" : "não"}. Primeira fala: ${m.primeiraFalaMs == null ? "não detectada" : (m.primeiraFalaMs / 1000).toFixed(2) + " s"}. Silêncio: ${m.silencio == null ? "?" : Math.round(m.silencio * 100) + "%"}. Pausas longas por minuto: ${m.pausasLongasPorMin ?? "?"}. Energia final: ${m.energiaFinal == null ? "?" : Math.round(m.energiaFinal * 100) + "% da média"}.`;
 

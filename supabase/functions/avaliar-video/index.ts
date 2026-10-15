@@ -25,15 +25,20 @@ Deno.serve(async (req) => {
   const { data: socio } = await supabase.rpc("sou_socio");
   if (socio !== true) return responder(403, { erro: "Sua conta não está na lista de sócios do Viralizei." });
 
-  let e: Entrada;
+  let bruto: Entrada & { sonda?: boolean };
   try {
-    e = await req.json();
-    if (!e.medidas || !Array.isArray(e.quadros) || e.quadros.length === 0) throw new Error("x");
+    bruto = await req.json();
   } catch {
+    return responder(400, { erro: "Pedido inválido." });
+  }
+  const chave = Deno.env.get("ANTHROPIC_API_KEY");
+  // Sonda: o navegador pergunta o que existe antes de transcrever ou enviar áudio.
+  if (bruto.sonda) return responder(200, { ia: !!chave, transcricao: !!Deno.env.get("OPENAI_API_KEY") });
+  const e = bruto;
+  if (!e.medidas || !Array.isArray(e.quadros) || e.quadros.length === 0) {
     return responder(400, { erro: "Pedido inválido: faltam as medidas ou os quadros do vídeo." });
   }
 
-  const chave = Deno.env.get("ANTHROPIC_API_KEY");
   if (!chave) return responder(503, { erro: "A avaliação com IA ainda não foi ligada. O dono precisa cadastrar a chave da Anthropic no Supabase." });
 
   try {

@@ -277,8 +277,8 @@ export async function extrairQuadros(arquivo: File, largura = 540): Promise<{ te
   }
 }
 
-/** Áudio do vídeo como WAV 16 kHz mono em base64 (uns 2 MB por minuto). */
-export async function audioWav16k(arquivo: File, maxSeg = 180): Promise<string | null> {
+/** Áudio do vídeo a 16 kHz mono: as amostras (para o Whisper local) e o WAV em base64 (uns 2 MB por minuto). */
+export async function audio16k(arquivo: File, maxSeg = 180): Promise<{ amostras: Float32Array; wav: string } | null> {
   try {
     const buf = await arquivo.arrayBuffer();
     const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -306,22 +306,37 @@ export async function audioWav16k(arquivo: File, maxSeg = 180): Promise<string |
     const bytes = new Uint8Array(dados.buffer);
     let bin = "";
     for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-    return btoa(bin);
+    return { amostras: mono, wav: btoa(bin) };
   } catch {
     return null;
   }
+}
+
+export interface Capacidades {
+  ia: boolean;
+  transcricao: boolean;
+}
+
+/** Pergunta ao servidor o que ele tem (chave da IA, transcrição) sem gastar nada. */
+export async function sondarIA(): Promise<Capacidades> {
+  return (await chamar({ sonda: true })) as Capacidades;
 }
 
 export async function avaliarComIA(entrada: {
   medidas: MedidasVideo;
   quadros: { tempo: number; imagem: string }[];
   audioWav: string | null;
+  transcricao: string | null;
 }): Promise<AvaliacaoIA> {
-  const corpo = {
+  return (await chamar({
     medidas: { ...entrada.medidas, quadros: undefined },
     quadros: entrada.quadros,
-    audioWav: entrada.audioWav,
-  };
+    audioWav: entrada.transcricao ? null : entrada.audioWav,
+    transcricao: entrada.transcricao,
+  })) as AvaliacaoIA;
+}
+
+async function chamar(corpo: Record<string, unknown>): Promise<unknown> {
   const { noArtefato } = await import("./plataforma");
   const { noSite, supabase } = await import("./site");
   if (!noArtefato && noSite && supabase) {
@@ -331,7 +346,7 @@ export async function avaliarComIA(entrada: {
       const c = error instanceof FunctionsHttpError ? await error.context.json().catch(() => ({})) : {};
       throw new Error(c.erro ?? "A avaliação com IA não respondeu. Tente de novo.");
     }
-    return data as AvaliacaoIA;
+    return data;
   }
   if (!noArtefato) {
     const r = await fetch("/api/avaliar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo) }).catch(() => {
@@ -339,7 +354,7 @@ export async function avaliarComIA(entrada: {
     });
     const d = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(d.erro ?? "A avaliação com IA não respondeu.");
-    return d as AvaliacaoIA;
+    return d;
   }
   throw new Error("A avaliação com IA existe só no site.");
 }
