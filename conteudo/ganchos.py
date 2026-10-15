@@ -157,58 +157,64 @@ G = [
   ("conversa", [("Matemática", "Responda rápido: quanto é 15% de 80?"), ("Português", "Responda rápido: é \"a nível de\" ou \"em nível de\"?")])),
 ]
 
-# Vídeos de referência (YouTube, públicos e incorporáveis, conferidos em 15/10/2026):
-# gancho -> [vídeo do formato A, vídeo do formato B]
+# Vídeos de referência, conferidos em 15/10/2026: posts públicos de Instagram,
+# TikTok e YouTube que usam o formato do gancho, filtrados para negócios,
+# tecnologia e motivação. gancho -> (vídeo do formato A, vídeo do formato B)
+def ig(c): return f"https://www.instagram.com/reel/{c}/"
+def igp(c): return f"https://www.instagram.com/p/{c}/"
+def yt(c): return f"https://www.youtube.com/shorts/{c}"
+def tt(u, v): return f"https://www.tiktok.com/@{u}/video/{v}"
+
 VIDEOS = {
-    2: ['g2tSaCNfdUM', '3qUwBbkltPw'],
-    3: ['SbcHXUjwv-M', 'fmElzSBcusc'],
-    4: ['87cMzcDFCZQ', 'a0m9Uml61-Q'],
-    5: ['_1scteWucOs'],
-    6: ['dL-R8Au_jUM'],
-    7: ['54FcEF0Wzks', 'cJZD8WD1pCY'],
-    8: ['VmIcbT_8ekM', 'o9CVXZ2uAc0'],
-    9: ['QUXlH6_wvEU', 'TAvOp2qyfNs'],
-    11: ['Et_xJkvz-EY', 'PDqEQ_Bi1KY'],
-    12: ['IZD9jcfQHwk'],
-    13: ['zawoyPgKGbY', 'eAt_-EaCfnY'],
-    14: ['y2ylZkMx_NU', 'p7-eZpy0PIA'],
-    15: ['nPNr9WVpVmY', 'Rd3BUXA70MU'],
-    16: ['_kAxkssITpk', 'PeitsCzwe0A'],
-    17: ['wFK8hEGa0-Y', 'wC7KJSuY0nI'],
-    18: ['HvEX3MVKQXk', 'u7IIyWwJHes'],
-    19: ['BsfOLUntQxw', 'ykBmP0VEK2Y'],
-    20: ['H8sVhXC9_1Q', '8iy49Vb91yY'],
-    21: ['PWiqU73A-hc', '9XPQO_WEUAo'],
-    22: ['rQ94OyrcAs8', 'D_hVUAfOihs'],
-    23: ['Ls2cmVH5iMI', 'tcuVE9qFEX4'],
-    24: ['d-7kzjggcQE', 'b3FvleFwbuo'],
-    26: ['yUuwfg0_zUs', 'e3cYhr1HQFQ'],
-    27: ['19sbJ95tJ08', '8GIj8y4bKB4'],
-    28: ['ikWTXhJFIpE', 'zBpEiDXj-VI'],
-    29: ['WluyZTtCRvA', 'C-VXCy-OiCo'],
-    30: ['DCF8MEYiCsM', 'XxK80tdB7bw'],
-    31: ['7Qc5vPn5Nfw', 'X1-PlsHvIkg'],
-    32: ['B02Gh6gOtTA', 'OitOx6_Kp3M'],
-    34: ['I-bCHf9EhG4', 'lhjEG3wC4mA'],
-    35: ['J2ZoBGjWd7o'],
-    36: ['Fc5c5G6cR24', 'U5IA4F4D7UA'],
+    1: (ig("DRX1K3YgRWm"), igp("DZa2KtCoj-d")),
+    2: (ig("DNdF997A8Hd"), yt("g2tSaCNfdUM")),
+    3: (yt("fmElzSBcusc"), ""),
+    4: (ig("DXKszt1kT2x"), yt("a0m9Uml61-Q")),
+    5: (ig("Da8tn7kvdaM"), igp("DdRmMfbxdbz")),
+    6: (ig("DYKnfVlPM0P"), igp("DdKGDB2J0VL")),
+    7: (igp("DeTmdAniTe9"), igp("DQfTt7mCnaB")),
+    8: (ig("DV6JK4-DTSS"), ig("DXPCZTGGleF")),
+    9: (ig("DW1fpjWEdo_"), yt("TAvOp2qyfNs")),
+    10: (ig("DYAALUMvfrh"), igp("DYCRTPYv5rA")),
+    11: (yt("PDqEQ_Bi1KY"), igp("DZIPokmAqBx")),
+    12: (tt("nutrijoao", "7415377559300394246"), yt("IZD9jcfQHwk")),
+    13: (ig("DWrkvjHEUZC"), yt("zawoyPgKGbY")),
+    14: (tt("pitangaalessandra", "7639844947432197384"), igp("DbeJgdZxRzQ")),
+    15: (tt("luanacarolina.hilg", "7545861660930526486"), yt("nPNr9WVpVmY")),
+    16: (igp("DWKftPrDUwy"), igp("DWXbdCnDXwq")),
+    17: (ig("DZpLhicRYo1"), yt("wFK8hEGa0-Y")),
+    18: (igp("Db8FMjsx3HE"), igp("DbtvddKRK5x")),
+    19: (ig("DVv4fijDZnD"), tt("oficialjoaoviana", "7543449900625792261")),
+    20: (ig("DVvvKDykQTv"), ig("DbB2M7vpzWp")),
+    21: (ig("DYSBXX1NagN"), yt("PWiqU73A-hc")),
+    22: (yt("rQ94OyrcAs8"), igp("Dcg4M3NAFV9")),
+    23: (ig("C-YqFM7PQt_"), igp("DchGxWDxR6O")),
+    24: (ig("DXMwcGxkY2V"), yt("d-7kzjggcQE")),
+    25: (igp("DdMYKlLu9r4"), ""),
+    26: (igp("DGL5Ke1P68Y"), igp("DbwPx2wJPjT")),
+    27: (igp("DLbEKb7sQRp"), ""),
+    28: (ig("DUNn6J5jkPz"), ig("DYVUpvPR1aF")),
+    29: (igp("DGJ9MrdslSb"), igp("CmhqRRYhkU4")),
+    30: (ig("DUikO99kY_l"), tt("annacarollina.advogada", "7530282806832942342")),
+    31: (yt("7Qc5vPn5Nfw"), yt("X1-PlsHvIkg")),
+    32: (yt("B02Gh6gOtTA"), yt("OitOx6_Kp3M")),
+    33: (ig("DOtLOvXkfZY"), ig("DaCK7HuoWb7")),
+    34: (tt("raqueltributarista", "7615306495890050325"), yt("lhjEG3wC4mA")),
+    35: (ig("DbRRMdPhfbq"), ""),
+    36: (yt("Fc5c5G6cR24"), yt("U5IA4F4D7UA")),
 }
-LONGOS = {"_1scteWucOs"}  # vídeo comum, não Short
 
 assert len(G) == 36, len(G)
 dias = []
 n = 0
-def url(v):
-    return f"https://www.youtube.com/watch?v={v}" if v in LONGOS else f"https://www.youtube.com/shorts/{v}"
-
 for k, (gancho, porque, *formatos) in enumerate(G, 1):
-    vids = VIDEOS.get(k, [])
+    vids = VIDEOS.get(k, ("", ""))
     for i, (fmt, exemplos) in enumerate(formatos):
         n += 1
         assert fmt in dict(FORMATOS), fmt
         dias.append({
             "id": f"d{n}", "numero": n, "gancho": gancho, "descricao": porque,
-            "formatoId": fmt, "referenciaUrl": url(vids[i]) if i < len(vids) else "",
+            "formatoId": fmt, "referenciaUrl": vids[i],
             "exemplos": [{"nicho": a, "texto": b} for a, b in exemplos],
         })
 # Intercala para o mesmo gancho não cair em dias seguidos: A dos 36 primeiro, depois B.

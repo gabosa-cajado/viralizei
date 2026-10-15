@@ -16,8 +16,10 @@ export function lerReferencia(url: string): Referencia | null {
   const caminho = endereco.pathname;
 
   if (host === "instagram.com") {
-    const m = caminho.match(/^\/(?:reel|reels|p|tv)\/([A-Za-z0-9_-]+)/);
-    if (m) return { plataforma: "Instagram", embed: `https://www.instagram.com/reel/${m[1]}/embed`, original: url };
+    const m = caminho.match(/^\/(reel|reels|p|tv)\/([A-Za-z0-9_-]+)/);
+    // Post comum (/p/) e Reel (/reel/) têm embeds em caminhos diferentes.
+    const tipo = m?.[1] === "p" ? "p" : "reel";
+    if (m) return { plataforma: "Instagram", embed: `https://www.instagram.com/${tipo}/${m[2]}/embed/`, original: url };
   }
   if (host.endsWith("tiktok.com")) {
     const m = caminho.match(/\/video\/(\d+)/);
