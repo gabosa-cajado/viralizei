@@ -1,0 +1,455 @@
+{
+  "versao": 1,
+  "atualizado": "2026-10-15",
+  "metodo": "Cinco perfis estudados em 15/10/2026 pela conta do Gabriel: grade e aba Reels inteiras (views, curtidas, comentários, datas, coautores, publi marcada), legendas dos virais, quadros dos vídeos em 0,4 s, 3 s e no meio (cenário, roupa, texto na tela), medição de pausas no áudio dos dois maiores vídeos de cada um, TikTok e YouTube de cada um, e quatro vídeos longos do Kallaway no YouTube (ganchos, voz, algoritmo, storytelling, posicionamento). Números são do dia da leitura.",
+  "criadores": [
+    {
+      "slug": "tarik-lopes",
+      "nome": "Tarik Lopes",
+      "handle": "tarik_lopes",
+      "instagram": "https://www.instagram.com/tarik_lopes/",
+      "nicho": "Jovem empreendedor documentando a jornada: economia do dia a dia, dinheiro e conversas com empresários grandes",
+      "resumo": "Tem 26,8 mil seguidores e cresce com dois motores: volume (9,5 posts por semana, quase tudo Reel, até 5 num dia) e vídeos ao lado de gente famosa no nicho (Benchimol, Otaviano, Alfredo Soares, Paulo Opice Blum). O vídeo mediano fica em 4 a 5 mil views; os 9 maiores (45 mil a 273 mil) são todos com convidado ou colab, nunca ele sozinho explicando notícia.",
+      "numeros": {
+        "Instagram": "26,8 mil seguidores · 249 posts · 408 seguindo · 177 dos últimos 180 posts são Reels",
+        "TikTok": "7,8 mil seguidores · 81,8 mil curtidas · mesmos vídeos, bio manda para o Instagram",
+        "YouTube": "Canal pequeno (46 vídeos)",
+        "Mediana de views": "≈ 4,5 mil por Reel; 9 vídeos acima de 45 mil em 156",
+        "Cadência": "9,5 posts/semana entre maio e outubro de 2026; 48 dias com 2 ou mais posts; 41 dias sem post em 132"
+      },
+      "porqueFunciona": [
+        "Prova emprestada: os virais são ele caminhando e perguntando para quem o público já admira (Benchimol 273 mil, Otaviano 45,7 mil, Alfredo Soares 53 mil). O nome grande vai no título fixo da tela e na legenda.",
+        "Colab oficial (post em coautoria) com quem tem mais audiência: mohz.invest rendeu 241 mil e 111 mil; Paulo Opice Blum 171 mil; a colab com Luka e amigos, 55,7 mil. O post aparece nos dois perfis.",
+        "Volume sem medo de errar: posta a notícia econômica do dia (juros, dólar, tarifaço, Pix) todo dia útil às 16–19h. Esses rendem pouco (2–8 mil), mas mantêm o perfil ativo e treinam o algoritmo no tema.",
+        "Toda legenda termina com pergunta direta e dá a resposta nos comentários (\"Me conta aqui embaixo\", \"Teu palpite\", \"Marca quem tá decidindo isso agora\"); 41 de 180 legendas têm chamada explícita.",
+        "Título fixo na tela o vídeo inteiro, em caixa branca com fonte de máquina de escrever: quem chega no meio sabe do que se trata."
+      ],
+      "posicionamento": "Atributos de diferenciação (dos 7 do Kallaway): avatar específico (jovem que quer empreender e não entende economia), histórias próprias (acesso a eventos como a Expert XP e a empresários) e estilo de entrega (energia de aluno curioso, não de guru). Em tema e profundidade ele compete com todo mundo; o que o separa é o acesso.",
+      "formatos": [
+        "Walk-and-talk a dois: ele caminhando ao lado do convidado num evento ou corredor, câmera na mão, perguntando e deixando o outro responder (60 a 150 s). É o formato de todos os virais.",
+        "Entrevista em pé, plano aberto, numa sala vazia ou corredor de escritório (mesa de reunião ao fundo).",
+        "Notícia do dia explicada: ele sozinho, busto, câmera levemente de baixo, 50 a 90 s, com cartão de dado quando há número (R$ 123 milhões do Roblox).",
+        "Carrossel de agradecimento pós-evento (raro: 3 em 180)."
+      ],
+      "ganchos": [
+        { "texto": "Guilherme Benchimol, fundador da XP e uma referência gigante!", "onde": "título fixo na tela", "views": "273 mil", "url": "https://www.instagram.com/reel/DbJD6WVRopH/" },
+        { "texto": "Esse é o lado da mesa que escondem de você!", "onde": "título fixo na tela", "views": "241 mil", "url": "https://www.instagram.com/reel/DczJ_adNNCh/" },
+        { "texto": "Se você é jovem e não se contenta com a média, isso aqui é pra você!", "onde": "título fixo na tela", "views": "171 mil", "url": "https://www.instagram.com/reel/DcypLLTtGUM/" },
+        { "texto": "Luana, como alguém pode perder a timidez?", "onde": "título fixo na tela, pergunta ao convidado", "views": "156 mil", "url": "https://www.instagram.com/reel/DdpPlZdN1RK/" },
+        { "texto": "Você passou a vida inteira do lado que paga a parcela.", "onde": "legenda (primeira linha)", "views": "241 mil", "url": "https://www.instagram.com/reel/DczJ_adNNCh/" },
+        { "texto": "Todo mundo xinga a Petrobras quando o preço sobe, mas quase ninguém sabe quanto do tanque nunca foi combustível.", "onde": "legenda", "views": "4,7 mil", "url": "https://www.instagram.com/reel/Db3fILKtGJP/" }
+      ],
+      "roteiro": "Notícia: fato concreto com número na primeira frase → por que mexe no bolso de quem vê → pergunta final. Entrevista: ele faz uma pergunta curta e sai de cena; o convidado fala 80% do tempo. Fala com pausas naturais (16–19% do áudio em silêncio, 5 a 9 pausas longas por minuto): ritmo de conversa, não de locução.",
+      "legenda": "Legenda de 2 a 4 frases: tese + pergunta. Marca os convidados com @. Quase nunca usa hashtag (1 post em 180). Nos vídeos de notícia abre com \"O que não coube no vídeo:\" e entrega um dado extra, o que dá motivo para abrir a legenda.",
+      "visual": {
+        "cenario": "Eventos (Expert XP, com lanyard amarelo no pescoço), corredores e salas de escritório, rua. Nada montado.",
+        "luz": "Só a do ambiente (teto, janela). Nenhuma luz própria.",
+        "enquadramento": "Busto ou plano americano, câmera na mão um pouco abaixo dos olhos; nos duetos, plano aberto com os dois caminhando.",
+        "roupa": "Camiseta preta lisa, suéter cru/bege, polo escura. Sem logo, sem terno. Microfone de lapela preso na gola.",
+        "textoNaTela": "Caixa branca arredondada com fonte monoespaçada preta, 2–3 linhas no terço superior, presente do início ao fim. Em vários vídeos, um cartão imitando a barra de perfil do Instagram (\"tarik_lopes ✓ Seguir\") no canto.",
+        "edicao": "Cortes secos entre pergunta e resposta; cartão de dado escuro com logo e número grande quando é notícia; sem legenda automática palavra por palavra."
+      },
+      "voz": "Conversa: frases médias, pausas reais, tom de quem está aprendendo junto. Começa a falar em menos de 0,3 s. Nos vídeos de notícia o tom sobe para \"apresentador\" e o resultado cai.",
+      "cadencia": "Segunda a quinta são os dias fortes (29–33 posts cada); domingo é o mais fraco (12). Pico entre 16h e 19h (Brasília), com 17h no topo. Vários dias com 3 a 5 posts seguidos durante eventos.",
+      "monetizacao": "Nenhuma publi marcada em 180 posts. Está num programa de crescimento de audiência e funis (post de terceiro o parabeniza por isso) e prepara um produto para jovens com Paulo Opice Blum (\"estamos preparando uma novidade pra você que é jovem\").",
+      "outrasPlataformas": "TikTok é espelho do Instagram sem adaptação (7,8 mil). YouTube com 46 vídeos, sem peso.",
+      "trialReels": "Não dá para ver de fora: Reels de teste só aparecem para quem não segue a conta. O que se vê é o resultado: vários Reels por dia com o mesmo formato, que é o comportamento de quem testa muito.",
+      "videos": [
+        { "url": "https://www.instagram.com/reel/DbJD6WVRopH/", "titulo": "Com Benchimol na Expert XP", "views": "273 mil" },
+        { "url": "https://www.instagram.com/reel/DczJ_adNNCh/", "titulo": "O lado da mesa que escondem de você (colab)", "views": "241 mil" },
+        { "url": "https://www.instagram.com/reel/DcypLLTtGUM/", "titulo": "Para o jovem que não se contenta com a média", "views": "171 mil" },
+        { "url": "https://www.instagram.com/reel/DdpPlZdN1RK/", "titulo": "Como perder a timidez (entrevista)", "views": "156 mil" },
+        { "url": "https://www.instagram.com/reel/DeaADFxtVuQ/", "titulo": "O número do Roblox", "views": "78,6 mil" },
+        { "url": "https://www.instagram.com/reel/DbOxD68tLoB/", "titulo": "Oratória com Otaviano", "views": "45,7 mil" }
+      ],
+      "copiar": [
+        "Pedir 60 segundos a quem é maior em todo evento que você for: uma pergunta boa, câmera na mão, título com o nome da pessoa.",
+        "Post em coautoria (colab) toda vez que gravar com alguém: o vídeo aparece nos dois perfis.",
+        "Título fixo na tela, na mesma fonte, em todo vídeo: vira assinatura e segura quem entra no meio.",
+        "Fechar a legenda com uma pergunta que a pessoa consegue responder em uma palavra."
+      ],
+      "evitar": [
+        "Notícia do dia sem ângulo próprio: 130 dos 156 Reels ficam abaixo de 10 mil. Volume sem gancho forte só serve para treinar o algoritmo.",
+        "Sozinho na frente da câmera com tom de apresentador."
+      ]
+    },
+    {
+      "slug": "kallaway",
+      "nome": "Kallaway",
+      "handle": "kallawaymarketing",
+      "instagram": "https://www.instagram.com/kallawaymarketing/",
+      "nicho": "Estratégia de conteúdo e marca pessoal para donos de negócio, com IA (Claude) como ferramenta",
+      "resumo": "Conta de marketing aberta há cerca de 5 meses, já com 163 mil seguidores (ele diz 0 → 100 mil em 5 meses e 1 mil seguidores por dia). Posta um Reel e um carrossel por dia, cada um com um framework batizado. Tem 2 milhões de seguidores somando as contas, 472 mil inscritos no YouTube e vende um programa de 4 semanas (US$ 497) e o Sandcastles.ai. É o único dos cinco que ensina o método, e o método está nas páginas de padrões e checklists.",
+      "numeros": {
+        "Instagram": "163 mil seguidores · 228 posts · 2 seguindo · 66 Reels e 54 carrosséis nos últimos 120 posts",
+        "TikTok": "21,9 mil na conta nova (@kallaway.marketing); a antiga tem 605",
+        "YouTube": "472 mil inscritos · 100 vídeos de 17 a 67 min, 1 por semana · maior: 1,1 mi (\"How Social Media Algorithms Actually Work\")",
+        "Mediana de views": "≈ 40 mil por Reel; 9 acima de 140 mil (até 1,2 mi)",
+        "Cadência": "11,1 posts/semana (2 por dia em 49 dias de 76); só 6 dias sem post"
+      },
+      "porqueFunciona": [
+        "Cada post é um framework com nome próprio (Dopamine Addiction Loop, Triple Hook Method, Lock-in Zone, 321, Double Aha, Comprehension Maxxing, Illusion of Novelty, Power Words, Internet Echo). O nome vira termo que o público repete e a conta vira dicionário do nicho.",
+        "Reel e carrossel no mesmo dia, muitas vezes com o mesmo conteúdo: dois formatos, dois públicos, dobro de amostras para o algoritmo.",
+        "Palavra-chave nos comentários (\"Comment LAUNCH\", \"Comment SYSTEM\", \"Comment DOPAMINE\") para entregar material por DM: em vários posts há mais comentários do que curtidas (557 mil views: 17,6 mil curtidas e 19,4 mil comentários).",
+        "A legenda é o roteiro inteiro: quem lê sem som recebe o conteúdo; quem busca encontra as palavras.",
+        "Assinatura visual fechada: estúdio preto, boné preto, camiseta preta, luz de recorte azul, legenda de uma palavra por vez. Em 76 Reels não muda nada.",
+        "Prova na primeira frase de tudo: \"I have a million followers, I've done billions of views\" aparece em todo vídeo longo; \"14M vs 40K views\" nos curtos."
+      ],
+      "posicionamento": "Ele mesmo explica, no YouTube, como escolheu: nicho lotado (social media), então empilhou profundidade (substância maior que a média), estilo de entrega (dicção limpa, tudo preto, cinematográfico) e um tema pouco coberto (fluxos de IA para conteúdo). Formato narrativo e caso de cliente ele deixa de fora de propósito enquanto a conta é pequena.",
+      "formatos": [
+        "Explicador de framework: ele fala 60–110 s com o título editorial no alto e gráficos animados no lugar do rosto durante a explicação.",
+        "Carrossel de 6 a 12 cartelas, texto grande, que repete o Reel do dia.",
+        "Breakdown de caso (\"Nate went from 10K to 500K in 1 month\") com os 3 pontos.",
+        "Lista (6 formatos, 5 gatilhos, 3 conselhos ruins) com estrutura gancho → zona de trava → itens → fechamento.",
+        "Tutorial de Claude/ChatGPT para conteúdo (os de maior alcance: 843 mil, 433 mil)."
+      ],
+      "ganchos": [
+        { "texto": "Here's how to make your storytelling so addictive, it is scientifically impossible to skip.", "onde": "fala + legenda", "views": "1,2 mi", "url": "https://www.instagram.com/reel/DaiCxAkOpNb/" },
+        { "texto": "This is how you turn Claude into a social media machine.", "onde": "fala + legenda", "views": "843 mil", "url": "https://www.instagram.com/reel/DZU1D_8OI62/" },
+        { "texto": "This is the ultimate scriptwriting format for short-form content.", "onde": "fala + legenda", "views": "557 mil", "url": "https://www.instagram.com/reel/DcqiQesO_R9/" },
+        { "texto": "There's a new type of content that is starting to crush on social media. It's called Application Content.", "onde": "fala + legenda", "views": "433 mil", "url": "https://www.instagram.com/reel/DdEPZQSOsx2/" },
+        { "texto": "The reason your videos don't hold attention is because you're using the wrong story arc.", "onde": "fala + legenda", "views": "364 mil", "url": "https://www.instagram.com/reel/DY2BBsIuFcC/" },
+        { "texto": "One of these hooks got 14 million views, and the other only got 40,000. They're both my videos.", "onde": "fala + legenda", "views": "40,9 mil", "url": "https://www.instagram.com/reel/DedJoRVumq-/" }
+      ],
+      "roteiro": "Gancho (assunto + resultado em até 10 palavras) → zona de trava de 2–3 frases com prova (\"I've gotten billions of views\") → o framework em passos numerados → fechamento com a palavra-chave para comentar. Sem pausa: 8% do áudio em silêncio, zero pausas longas, primeira palavra em 0,02 s. Ele grava linha por linha e corta tudo que sobra.",
+      "legenda": "Roteiro completo (300 a 2.000 caracteres), começando pela mesma frase do gancho falado. Chamada de comentário logo na primeira ou na última linha. Sem hashtag (3 posts em 120). Uma publi marcada em 120 posts (Meta Ads Creative Studio).",
+      "visual": {
+        "cenario": "Estúdio escuro fixo, fundo preto com neon azul/roxo de recorte. Sempre o mesmo.",
+        "luz": "Luz suave frontal no rosto, contraluz colorida. Produção de verdade.",
+        "enquadramento": "Busto centralizado, câmera na altura dos olhos, mãos na altura do peito; corte mais fechado para ênfase.",
+        "roupa": "Boné preto e camiseta preta em 100% dos vídeos.",
+        "textoNaTela": "Uma palavra por vez, branca, sem serifa, centralizada abaixo do rosto, no ritmo da fala. Título editorial em cartão claro no alto (serifa itálica + sem serifa, vermelho de destaque).",
+        "edicao": "Gráficos animados (curvas de arco de história, barras, grades de exemplos, prints do Claude) substituem o rosto por 2–4 s; rosto some e volta como interrupção de padrão."
+      },
+      "voz": "Dicção muito clara, frases curtas, tom caindo no fim de cada frase (ele ensina isso: nada de \"upspeak\"), energia constante até a última palavra. Mesma cadência em todos os vídeos.",
+      "cadencia": "Reel de manhã (7–9h, hora de Nova York) e carrossel à noite (21–22h), todo dia, inclusive domingo (18 posts). Terça e quarta são os dias mais cheios.",
+      "monetizacao": "Produto próprio: Short Form Launch (cohort de 4 semanas, US$ 497), Sandcastles.ai (SaaS de pesquisa de vídeos), consultoria para donos de negócio, newsletter. Os posts de venda (\"Comment LAUNCH\") rendem 11–130 mil; os de pura entrega, 360 mil a 1,2 mi: ele aceita perder alcance na semana de lançamento.",
+      "outrasPlataformas": "YouTube é o canal principal de profundidade (1 vídeo longo por semana, 472 mil inscritos); o Instagram corta cada vídeo longo em 5 a 10 Reels e carrosséis. TikTok recomeçou do zero (21,9 mil).",
+      "trialReels": "Não visível de fora. Ele descreve publicamente o \"agente do caos\": 1 dos 7 posts da semana é teste fora dos temas fixos.",
+      "videos": [
+        { "url": "https://www.instagram.com/reel/DaiCxAkOpNb/", "titulo": "Dopamine Addiction Loop", "views": "1,2 mi" },
+        { "url": "https://www.instagram.com/reel/DZU1D_8OI62/", "titulo": "Claude como máquina de social media", "views": "843 mil" },
+        { "url": "https://www.instagram.com/reel/DcqiQesO_R9/", "titulo": "Formato de roteiro para short-form", "views": "557 mil" },
+        { "url": "https://www.instagram.com/reel/DdEPZQSOsx2/", "titulo": "Application Content", "views": "433 mil" },
+        { "url": "https://www.instagram.com/reel/DY2BBsIuFcC/", "titulo": "O arco de história errado", "views": "364 mil" },
+        { "url": "https://www.instagram.com/reel/DedJoRVumq-/", "titulo": "14 milhões vs 40 mil views", "views": "40,9 mil" }
+      ],
+      "copiar": [
+        "Batizar cada ideia com um nome (em português): \"zona de trava\", \"gancho triplo\", \"3-2-1\".",
+        "Dois posts por dia: o Reel e o mesmo conteúdo em carrossel.",
+        "Legenda = roteiro inteiro; primeira linha = gancho falado.",
+        "Palavra-chave nos comentários para entregar um material.",
+        "Um cenário, uma roupa, uma fonte: nunca mudar."
+      ],
+      "evitar": [
+        "Semana inteira de posts de venda: o alcance cai 5 a 10 vezes.",
+        "Copiar o visual dele (preto + neon): ele mesmo diz que quem copia entrega o valor para o original."
+      ]
+    },
+    {
+      "slug": "luka-choi",
+      "nome": "Luka Choi",
+      "handle": "lukachoi_",
+      "instagram": "https://www.instagram.com/lukachoi_/",
+      "nicho": "Estudante-fundador brasileiro (Link School) documentando a startup e ensinando IA para criar conteúdo",
+      "resumo": "15,7 mil seguidores com só 44 posts, todos Reels, em dois meses de conta ativa. Metas públicas na própria legenda (\"7.2k/100k até fim do ano\"). Um vídeo de 902 mil views (\"vídeo 100% editado por IA\") e outro de 277 mil (estatísticas do mercado) puxam tudo; os de mentalidade ficam em 10–30 mil. Faz colab com o Tarik e com colegas, e usa o campus como cenário.",
+      "numeros": {
+        "Instagram": "15,7 mil seguidores · 44 posts (100% Reels) · 304 seguindo",
+        "TikTok": "1,5 mil seguidores · 16,7 mil curtidas",
+        "YouTube": "Sem canal",
+        "Mediana de views": "≈ 27 mil por Reel; 4 acima de 150 mil",
+        "Cadência": "4,1 posts/semana (agosto a setembro de 2026)"
+      },
+      "porqueFunciona": [
+        "Tema quente + ferramenta mostrada na tela: \"vídeo 100% editado por IA, me segue pra aprender\" (902 mil) e \"estatísticas do mercado\" (277 mil) mostram o resultado antes de explicar.",
+        "Palavra-chave nos comentários (\"Comenta GUIA\", \"SKILL\", \"AULA\", \"Astella\"): 1.644 e 2.319 comentários em vídeos de 160 mil e 31 mil views, muito acima da média dele (30 a 80).",
+        "Diário de construção com meta pública: \"Dia 1 do zero ao milhão\", \"Dia 2 criando a minha startup\", \"Segue 7.2k/100k até fim do ano\". O seguidor acompanha uma história com placar.",
+        "Gimmick barato e memorável: luva branca numa mão; óculos redondos; fleece da Stanford. Identificável em 1 quadro.",
+        "Rede: colab com Tarik e amigos (55,7 mil), com a Link School (25,8 mil) e com um criador maior (118 mil)."
+      ],
+      "posicionamento": "Avatar específico (jovem brasileiro que quer empreender com IA) + histórias próprias (está na Link School, visita campus nos EUA, constrói produto) + entrega (energia de quem acabou de descobrir um truque). Slogan \"Why not you?\" e a frase \"founder led growth\" na legenda.",
+      "formatos": [
+        "Tutorial de ferramenta de IA com a tela gravada em cartões (cotação, gráfico, documento de prompt) e ele comentando.",
+        "Diário: \"Dia 1\", \"Dia 2\", \"1 dia normal na Link School\", \"1 dia com óculos Meta\".",
+        "Frase de mentalidade em 30–60 s (\"One day or day one\", \"NÃO aceite o NÃO\"), os de menor alcance.",
+        "Conversa com colega ou convidado (CEO da ABVCAP, aula com Tallis Gomes), 25–40 s."
+      ],
+      "ganchos": [
+        { "texto": "Video 100% editado por IA, me segue pra aprender", "onde": "legenda", "views": "902 mil", "url": "https://www.instagram.com/reel/DeH8GG8JPgO/" },
+        { "texto": "segue @lukachoi_ pra acompanhar as estatísticas do mercado", "onde": "legenda", "views": "277 mil", "url": "https://www.instagram.com/reel/Dd9YvCNpIRf/" },
+        { "texto": "eu não abri nenhum programa", "onde": "texto na tela (primeira frase)", "views": "160 mil", "url": "https://www.instagram.com/reel/DeQNs6LJeHh/" },
+        { "texto": "O segredo de viralizar na internet", "onde": "legenda", "views": "118 mil", "url": "https://www.instagram.com/reel/DcwetujJOzB/" },
+        { "texto": "Jarvis é bem mais maneiro", "onde": "legenda", "views": "84 mil", "url": "https://www.instagram.com/reel/DdsO-lTpd0W/" },
+        { "texto": "Esse video é um meio/fundo do funil, entenderam o jogo?", "onde": "legenda", "views": "55 mil", "url": "https://www.instagram.com/reel/Dd10WakJ7Yk/" }
+      ],
+      "roteiro": "Resultado na tela nos 2 primeiros segundos → \"como eu fiz\" em 3 passos → \"comenta X que eu mando\". Fala com pausas e respiros (19–24% de silêncio, até 12 pausas longas por minuto): conversa de amigo, não locução. Começa a falar em 0,1 s.",
+      "legenda": "Uma linha (média de 40 caracteres): pergunta, frase de efeito ou chamada. Hashtags só num post institucional. Nenhuma publi marcada.",
+      "visual": {
+        "cenario": "Sala de aula e escritório da Link School (mesas, persiana, luz fria de teto), janela com vista de prédios, cadeira gamer. Zero cenografia.",
+        "luz": "Ambiente; às vezes contraluz da janela.",
+        "enquadramento": "Busto, câmera na altura do peito, mãos sempre em movimento na frente do corpo.",
+        "roupa": "Fleece azul-marinho com logo Stanford, moletom azul florido, camiseta preta; óculos redondos. Luva branca como gimmick.",
+        "textoNaTela": "Dois registros: legenda cursiva branca com sublinhado colorido, palavra por palavra (edição por IA), e título em caixa alta amarela/branca. Cartões de produto com preço e botões.",
+        "edicao": "Cortes rápidos, zoom nos cartões, print de insights do próprio Reel como prova. Um Reel com música licenciada (290 mil) é o único sem fala."
+      },
+      "voz": "Alta energia, ritmo irregular, risos, pausas para respirar. Soa como amigo mostrando o celular.",
+      "cadencia": "4 por semana, de terça a sexta, 18h–20h (Brasília). Poucos dias com 2 posts.",
+      "monetizacao": "Nenhuma publi. Monetiza por link na bio (ferramenta própria \"edite reels com IA\") e por audiência para a startup; a Link School aparece como parceira (colab, cenário).",
+      "outrasPlataformas": "TikTok com 1,5 mil, sem esforço. Sem YouTube.",
+      "trialReels": "Não visível de fora.",
+      "videos": [
+        { "url": "https://www.instagram.com/reel/DeH8GG8JPgO/", "titulo": "Vídeo 100% editado por IA", "views": "902 mil" },
+        { "url": "https://www.instagram.com/reel/Dd9YvCNpIRf/", "titulo": "Estatísticas do mercado", "views": "277 mil" },
+        { "url": "https://www.instagram.com/reel/DeQNs6LJeHh/", "titulo": "Eu não abri nenhum programa (comenta GUIA)", "views": "160 mil" },
+        { "url": "https://www.instagram.com/reel/DcwetujJOzB/", "titulo": "O segredo de viralizar (colab)", "views": "118 mil" },
+        { "url": "https://www.instagram.com/reel/Dd-WsRzuOgP/", "titulo": "Founder led growth (colab com Tarik)", "views": "55,7 mil" },
+        { "url": "https://www.instagram.com/reel/DbwBHV3J1w7/", "titulo": "One day or day one", "views": "68,5 mil" }
+      ],
+      "copiar": [
+        "Mostrar o resultado antes de explicar (o vídeo pronto, o número, o print).",
+        "Placar público na legenda: \"7.2k/100k até o fim do ano\".",
+        "Um objeto-assinatura barato (luva, óculos, boné) que apareça em todo vídeo.",
+        "Comentário com palavra-chave para entregar guia ou prompt."
+      ],
+      "evitar": [
+        "Frase motivacional solta sem história: é o formato de menor alcance dele.",
+        "Depender de um viral: sem os dois grandes, a conta teria um terço dos views."
+      ]
+    },
+    {
+      "slug": "robert-mckeaveney",
+      "nome": "Robert McKeaveney",
+      "handle": "robertmckeaveney",
+      "instagram": "https://www.instagram.com/robertmckeaveney/",
+      "nicho": "Jovem dono de marca de roupa (Wants and Needs) falando de conteúdo, disciplina e empreender, nos EUA",
+      "resumo": "93 mil seguidores com 45 posts, todos Reels, em 6 semanas: 8 vídeos acima de 650 mil e um de 5 milhões. Tudo gravado no celular, no carro ou no quarto, com moletom. Ele reescreve roteiros virais de outros criadores e dá o crédito na legenda (\"Script and video inspo: @…\"). A marca de roupa é o produto: cada vídeo é um anúncio disfarçado de conselho.",
+      "numeros": {
+        "Instagram": "93 mil seguidores · 45 posts (100% Reels) · 54 seguindo",
+        "TikTok": "288 seguidores (conta parada)",
+        "YouTube": "Sem canal",
+        "Mediana de views": "≈ 117 mil por Reel; 8 acima de 650 mil; maior: 5 mi",
+        "Cadência": "5,9 posts/semana (quase 1 por dia) entre agosto e setembro de 2026"
+      },
+      "porqueFunciona": [
+        "Remix declarado: pega um roteiro que já viralizou, regrava com a cara dele e credita o original. Três dos maiores (897 mil, 1 mi, 1,2 mi) são assim. O risco é zero porque o roteiro já foi testado.",
+        "Formato \"entrevistando meu eu do passado\" (1,2 mi e 173 mil): ele conversa com um vídeo antigo dele num quadro menor.",
+        "Desafio físico com a roupa da marca (barra fixa 5 mi, corrida + flexões 1 mi): corpo e humor trazem público de fora do nicho, e a marca aparece.",
+        "Prova na tela em vez de na fala: print de \"Follows 30.638\", \"12M views\", \"9M views\".",
+        "Hashtags de nicho em todo post (#brandowner, #clothingbrand, #entrepreneur, #advice, #contentcreation): 4–5 por legenda, sempre as mesmas, para o algoritmo saber o assunto.",
+        "Frase de conselho curta e a cara de quem está no começo: \"TAKE ACTION\" na bio, \"Leverage the fact that you're at square 1\"."
+      ],
+      "posicionamento": "Histórias próprias (está construindo uma marca de roupa com 20 e poucos anos) + relacionabilidade (o público é igual a ele) + aparência (sem camisa em parte dos vídeos; o item 1 da zona de trava do Kallaway) + estilo cru. Não tem tema exclusivo nem profundidade: tem identificação.",
+      "formatos": [
+        "Fala no carro (banco do motorista, luz da janela), 40–50 s, uma ideia.",
+        "Entrevista com o eu do passado (vídeo antigo em picture-in-picture).",
+        "Remix de roteiro viral com crédito.",
+        "Desafio físico / rotina (barra fixa, corrida, \"rotina do vovô chinês\").",
+        "Breakdown do vídeo de outra pessoa em PiP (\"Should I break down other people's vids?\").",
+        "Bastidor da marca: amostras, drop, \"qual eu escolho?\" (os de menor alcance, 36–60 mil)."
+      ],
+      "ganchos": [
+        { "texto": "Let me reintroduce myself…", "onde": "legenda + fala (\"hi I'm Robert\" na tela)", "views": "653 mil", "url": "https://www.instagram.com/reel/DcRyvjiz8au/" },
+        { "texto": "I'm just a genius bru", "onde": "legenda", "views": "1,5 mi", "url": "https://www.instagram.com/reel/DeYZ_aVz-h4/" },
+        { "texto": "I use tf out of this strategy", "onde": "legenda", "views": "1,2 mi", "url": "https://www.instagram.com/reel/DeDfWp_zslJ/" },
+        { "texto": "Bro thought he was slick", "onde": "legenda (entrevistando o eu do passado)", "views": "1,2 mi", "url": "https://www.instagram.com/reel/DdfEWGkzmi_/" },
+        { "texto": "Giving yall the sauce!", "onde": "legenda", "views": "982 mil", "url": "https://www.instagram.com/reel/DcpwWfTTePr/" },
+        { "texto": "Gotta play the game", "onde": "legenda (#copycontent)", "views": "897 mil", "url": "https://www.instagram.com/reel/Ddm08FwTdVt/" }
+      ],
+      "roteiro": "Primeira frase já é a tese, falada rápido (3–13% de silêncio, quase sem pausa; começa em 0,01 s). Uma ideia, um exemplo próprio, um fechamento de uma frase. 40–50 s. Palavra solta na tela marcando o ponto (\"posting 15x\", \"drop\", \"survival\").",
+      "legenda": "Uma frase casual com emoji + 4–5 hashtags fixas. Crédito do roteiro original quando é remix. Poucas chamadas (2 em 33), e quando há é para o e-mail da marca (desconto de 10%).",
+      "visual": {
+        "cenario": "Carro parado, quarto, varanda, garagem, rua à noite, parque. Sempre lugar real.",
+        "luz": "Natural da janela do carro ou da rua; nada montado.",
+        "enquadramento": "Selfie frontal no celular, rosto grande, às vezes dois amigos no sofá.",
+        "roupa": "Moletom azul royal ou cinza, polo rugby listrada, camiseta da própria marca; sem camisa nos vídeos de treino.",
+        "textoNaTela": "Uma ou duas palavras minúsculas em fonte do sistema no meio do quadro; nos remixes, o texto fica dentro do vídeo citado.",
+        "edicao": "Picture-in-picture do vídeo citado no alto; prints de métricas; corte seco; sem efeitos."
+      },
+      "voz": "Rápida, sem pausa, tom de amigo convencido. Energia alta o vídeo inteiro.",
+      "cadencia": "Quase todo dia, postado entre 0h e 1h (horário de Nova York), ou seja, fim da noite. Sem dia preferido.",
+      "monetizacao": "Nenhuma publi marcada. O produto é a marca de roupa (drops anunciados, lista de e-mail com desconto, roupa aparecendo nos vídeos).",
+      "outrasPlataformas": "TikTok abandonado (288). A marca tem conta própria no TikTok com skits.",
+      "trialReels": "Não visível de fora.",
+      "videos": [
+        { "url": "https://www.instagram.com/reel/DeQeTsUzzc4/", "titulo": "Desafio da barra (remix)", "views": "5 mi" },
+        { "url": "https://www.instagram.com/reel/DeYZ_aVz-h4/", "titulo": "I'm just a genius bru", "views": "1,5 mi" },
+        { "url": "https://www.instagram.com/reel/DdfEWGkzmi_/", "titulo": "Entrevistando meu eu do passado", "views": "1,2 mi" },
+        { "url": "https://www.instagram.com/reel/DeDfWp_zslJ/", "titulo": "A estratégia que eu mais uso", "views": "1,2 mi" },
+        { "url": "https://www.instagram.com/reel/DcpwWfTTePr/", "titulo": "Marketing da marca (the sauce)", "views": "982 mil" },
+        { "url": "https://www.instagram.com/reel/DcRyvjiz8au/", "titulo": "Let me reintroduce myself", "views": "653 mil" }
+      ],
+      "copiar": [
+        "Regravar um roteiro que já viralizou, com a sua história, e creditar o original na legenda.",
+        "\"Entrevistando meu eu do passado\": um vídeo antigo seu em PiP.",
+        "Mostrar o número na tela (print) em vez de falar dele.",
+        "Hashtags fixas de nicho em todo post (4 ou 5, sempre as mesmas)."
+      ],
+      "evitar": [
+        "Bastidor de produto sem gancho (\"qual amostra eu escolho?\"): metade do alcance dos outros.",
+        "Transplantar o tom (\"bru\", sem camisa) para o nosso público sem adaptar."
+      ]
+    },
+    {
+      "slug": "guilherme-benchimol",
+      "nome": "Guilherme Benchimol",
+      "handle": "guilhermebenchimol",
+      "instagram": "https://www.instagram.com/guilhermebenchimol/",
+      "nicho": "Fundador da XP: máximas de vida e negócios de quem já venceu, em entrevista cinematográfica",
+      "resumo": "1,1 milhão de seguidores e 599 posts. Posta pouco (2,7 por semana) e grande: 19 dos últimos 76 Reels passaram de 1 milhão, e o maior tem 8,2 milhões. É o único com equipe de produção e o único que não faz chamada nem usa hashtag. A autoridade vem da biografia; o conteúdo é uma frase forte por vídeo, em 36 a 53 segundos.",
+      "numeros": {
+        "Instagram": "1,1 mi seguidores · 599 posts · 993 seguindo · 100 Reels, 9 carrosséis e 11 fotos nos últimos 120 posts",
+        "TikTok": "Sem conta",
+        "YouTube": "Sem canal próprio (aparece nos canais da XP); tem Threads e a newsletter \"Na Raça\"",
+        "Mediana de views": "≈ 470 mil por Reel; 19 acima de 1 mi; maior: 8,2 mi",
+        "Cadência": "2,7 posts/semana (novembro de 2025 a setembro de 2026); 202 dias sem post em 314"
+      },
+      "porqueFunciona": [
+        "Vocabulário próprio repetido até virar marca: \"vitimista × protagonista\" (8,2 mi, 6,5 mi, 3,9 mi), \"comprar o desconforto\", \"ser cara de pau\", \"tubarão no tanque\", \"cavalo inglês × cavalo paraguaio\". O público reconhece o tema pela palavra.",
+        "Posição firme e um pouco contrária, dita com calma: \"só otimismo não é suficiente\" (1,2 mi), \"dos 20 aos 40 anos você só pode fazer o que não quer\" (3,5 mi), \"dinheiro é para construir, não para ostentar\" (422 mil).",
+        "Metáfora de uma linha por vídeo (carro enguiçado, muros × pontes, treino difícil = jogo fácil): fácil de lembrar e de comentar.",
+        "Corte de entrevista: ele não fala para a câmera, fala para alguém fora dela. Soa como bastidor de documentário, não como post.",
+        "Produção de cinema com visual idêntico em todos os vídeos (faixa preta em cima e embaixo, polo preta, luz quente): a moldura é a assinatura.",
+        "Sem pedir nada: 7 chamadas em 120 legendas, 4 hashtags em 120. A legenda é a tese em 1–3 frases."
+      ],
+      "posicionamento": "Histórias próprias que ninguém pode copiar (fundou a XP, demitido aos 20 e poucos, foi para Porto Alegre sem mesada) + profundidade de quem viveu + entrega calma e firme + visual cinematográfico. É o caso em que um único atributo (a biografia) sustenta tudo.",
+      "formatos": [
+        "Trecho de entrevista longa cortado em 36–53 s, uma ideia por corte (90% dos Reels).",
+        "Vídeo institucional da XP (prêmio, parceria com o UTS, Expert XP) em colab com as contas da empresa: alcance alto (4,9 mi) mas curtidas ocultas.",
+        "Carrossel de livros ou de frases (9 em 120).",
+        "Foto com texto (11 em 120), o formato de menor peso."
+      ],
+      "ganchos": [
+        { "texto": "Por mais conhecida que essa teoria do carro enguiçado seja, vejo muitas pessoas que ainda esperam que a resolução do problema caia no colo.", "onde": "legenda", "views": "8,2 mi", "url": "https://www.instagram.com/reel/Dav4391I01S/" },
+        { "texto": "Qual é o segredo da vida?", "onde": "legenda + fala", "views": "6,5 mi", "url": "https://www.instagram.com/reel/DaEFwRLoKIr/" },
+        { "texto": "Um vitimista constrói muros, um protagonista constrói pontes.", "onde": "legenda + fala", "views": "6,5 mi", "url": "https://www.instagram.com/reel/DZxEIHqI-fT/" },
+        { "texto": "Às vezes o que pode estar faltando é um tubarão no seu tanque.", "onde": "legenda", "views": "3,6 mi", "url": "https://www.instagram.com/reel/DZN7ykcsEam/" },
+        { "texto": "Dos 20 aos 40 anos é a fase da vida em que você só pode fazer o que não quer!", "onde": "legenda + fala", "views": "3,5 mi", "url": "https://www.instagram.com/reel/DdcXkHPICc8/" },
+        { "texto": "Você só tem um negócio de verdade quando passa a ser substituível.", "onde": "legenda + fala", "views": "3,3 mi", "url": "https://www.instagram.com/reel/DYNmcB2onl0/" }
+      ],
+      "roteiro": "O corte entra no meio de uma frase já em andamento (\"aquilo que…\", \"eles querem tudo,\") e termina na conclusão da ideia. Zero silêncio (1–14% do áudio, nenhuma pausa longa): a edição tira todas as respirações. Uma metáfora, uma regra, um exemplo da XP.",
+      "legenda": "Tese em 1 a 3 frases, na primeira pessoa, sem pergunta e sem hashtag. Marca as contas da XP e do B55 quando é institucional. Nenhuma publi marcada (a empresa é dele).",
+      "visual": {
+        "cenario": "Vídeo horizontal dentro do vertical, com faixas pretas: padaria, escritório da XP, fundo preto. Produção de equipe.",
+        "luz": "Luz quente lateral, fundo escuro com pontos de luz, profundidade de campo de câmera de cinema.",
+        "enquadramento": "Busto, três quartos, olhando para o entrevistador fora da lente; plano aberto ocasional com pessoas desfocadas.",
+        "roupa": "Polo preta ou camiseta escura em todos os vídeos; cabelo natural; nunca terno.",
+        "textoNaTela": "Legenda desenhada palavra por palavra, branca, com a palavra-chave maior e às vezes em itálico (\"nunca plantaram\", \"difficuldade\"), na altura do peito. Sem título fixo no alto.",
+        "edicao": "Cortes invisíveis entre frases, trilha discreta, sem gráfico, sem print. Tudo descansa no rosto e na frase."
+      },
+      "voz": "Grave, calma, pausada na origem (a edição tira as pausas), tom de conselho de pai; frases terminam para baixo, com certeza. Nunca levanta a voz.",
+      "cadencia": "Sexta-feira é o dia mais comum (28 de 120), depois quarta e segunda. Horário fixo: 17h–19h (Brasília), com 18h em 39 posts; um segundo bloco às 9h.",
+      "monetizacao": "XP, B55 e a newsletter \"Na Raça\" (link na bio). Colabs só com contas do grupo (xpinvestimentos, xp_b2b, institutob55).",
+      "outrasPlataformas": "Sem TikTok. Threads ativo. YouTube só pelos canais da XP.",
+      "trialReels": "Não visível de fora; com 2,7 posts por semana e a mesma moldura em todos, não há sinal de teste.",
+      "videos": [
+        { "url": "https://www.instagram.com/reel/Dav4391I01S/", "titulo": "Teoria do carro enguiçado", "views": "8,2 mi" },
+        { "url": "https://www.instagram.com/reel/DaEFwRLoKIr/", "titulo": "Qual é o segredo da vida?", "views": "6,5 mi" },
+        { "url": "https://www.instagram.com/reel/DZxEIHqI-fT/", "titulo": "Muros e pontes", "views": "6,5 mi" },
+        { "url": "https://www.instagram.com/reel/DdcXkHPICc8/", "titulo": "Dos 20 aos 40", "views": "3,5 mi" },
+        { "url": "https://www.instagram.com/reel/DYNmcB2onl0/", "titulo": "Negócio de verdade é quando você é substituível", "views": "3,3 mi" },
+        { "url": "https://www.instagram.com/reel/DefT135o-lG/", "titulo": "Ser cara de pau", "views": "466 mil" }
+      ],
+      "copiar": [
+        "Uma metáfora por vídeo, repetida em vários vídeos até virar seu vocabulário.",
+        "Cortar uma conversa longa em pedaços de 40 s com uma ideia cada (uma gravação de 1 hora rende 20 Reels).",
+        "Entrar no meio da frase, sem apresentação.",
+        "Legenda com a palavra-chave maior, para quem vê sem som."
+      ],
+      "evitar": [
+        "Imitar a calma dele sem ter a biografia: o tom de conselho só funciona com prova de vida.",
+        "Postar 2 vezes por semana no começo: ele pode; conta nova precisa de amostra para o algoritmo."
+      ]
+    }
+  ],
+  "padroes": [
+    { "titulo": "A primeira palavra sai antes de 0,3 s", "texto": "Medido nos dois maiores vídeos de cada um: a fala começa entre 0,01 s e 0,21 s. Ninguém diz \"oi, gente\". O Benchimol entra no meio de uma frase; o Kallaway e o Robert já estão falando no primeiro quadro." },
+    { "titulo": "Sempre há texto na tela, e ele não some", "texto": "Tarik: caixa de título o vídeo inteiro. Kallaway e Luka: uma palavra por vez no ritmo da fala, mais um título. Benchimol: legenda desenhada com a palavra-chave maior. Robert: uma palavra solta marcando o ponto. Sem som, todos continuam fazendo sentido." },
+    { "titulo": "Prova na tela, não na fala", "texto": "Prints de seguidores e de views (Robert), cotação e gráfico (Luka), \"14M vs 40K\" e grades de exemplos (Kallaway), cartão com o número da notícia (Tarik), lanyard do evento (Tarik). O Benchimol é a exceção: a prova dele é o nome." },
+    { "titulo": "Uma assinatura visual que não muda", "texto": "Boné e camiseta pretos com neon (Kallaway), faixas pretas de vídeo horizontal e polo preta (Benchimol), caixa de máquina de escrever (Tarik), moletom no carro (Robert), luva branca e óculos (Luka). Reconhecível num quadro congelado. Roupa, luz e enquadramento são escolhidos uma vez e repetidos." },
+    { "titulo": "Vocabulário próprio", "texto": "Frameworks batizados (Kallaway, mais de 40 nomes), metáforas repetidas (Benchimol: vitimista × protagonista, tubarão no tanque), slogans (Robert: TAKE ACTION; Luka: Why not you?). O nome dá ao público um jeito de citar o vídeo." },
+    { "titulo": "Gente maior no vídeo", "texto": "Os 5 maiores vídeos do Tarik têm convidado ou coautor; o Luka cresce em colab com Tarik, colegas e um criador maior; o Benchimol alcança 4,9 mi em colab com a XP. Post em coautoria aparece nos dois perfis e herda a amostra inicial do outro." },
+    { "titulo": "Palavra-chave nos comentários", "texto": "\"Comenta GUIA\" (Luka: 1.644 comentários num vídeo de 160 mil), \"Comment LAUNCH / SYSTEM / DOPAMINE\" (Kallaway: mais comentários do que curtidas em vários posts). O comentário vira sinal para o algoritmo e lead na DM." },
+    { "titulo": "Volume: de 4 a 11 posts por semana", "texto": "Kallaway 11,1 (Reel + carrossel por dia), Tarik 9,5 (até 5 num dia), Robert 5,9, Luka 4,1, Benchimol 2,7 (único com produção de equipe e 1 milhão de seguidores). Quem está começando posta todo dia; quem já tem autoridade posta menos e maior." },
+    { "titulo": "Horário: fim de tarde no Brasil, manhã nos EUA", "texto": "Tarik 16h–19h, Benchimol 17h–19h (18h em 39 posts), Luka 18h–20h, horário de Brasília. Kallaway 7h–9h e 21h–22h (Nova York). Robert 0h–1h. O Kallaway diz que hora não importa; os dados dele mostram que ele mesmo é regular." },
+    { "titulo": "Duração dos virais: 36 s a 150 s, nunca 15 s", "texto": "Benchimol 36–53 s, Robert 40–79 s, Luka 29–74 s, Kallaway 63–108 s, Tarik 60–150 s. Os vídeos curtos de frase solta são os de menor alcance em todos os perfis." },
+    { "titulo": "Uma posição, dita sem hedge", "texto": "\"Só otimismo não é suficiente\", \"dos 20 aos 40 você só pode fazer o que não quer\" (Benchimol), \"posting time does not matter\" (Kallaway), \"rage bait = engagement bait\" (Robert), \"se você não faz conteúdo, pare de assistir conteúdo curto\" (Robert). Posição firme gera comentário." },
+    { "titulo": "Quase sem hashtag, quase sem publi", "texto": "Hashtags: Tarik 1 em 180, Kallaway 3 em 120, Benchimol 4 em 120, Luka 1 em 32; só o Robert usa (4–5 fixas em todo post). Publi marcada: 1 em 490 posts (Kallaway com a Meta). Todos monetizam produto próprio: curso e SaaS, marca de roupa, XP, ferramenta na bio." },
+    { "titulo": "Documentar a jornada com placar", "texto": "Luka: \"Dia 1 do zero ao milhão\", \"7.2k/100k até o fim do ano\". Robert: \"it's really just the beginning\", drop 004. Tarik: \"documentando minha jornada empreendedora\" na bio. Kallaway: \"0 to 100K in 5 months\". A meta pública dá motivo para seguir." },
+    { "titulo": "TikTok é secundário para todos", "texto": "Tarik 7,8 mil (espelho do Instagram), Kallaway 21,9 mil numa conta nova, Luka 1,5 mil, Robert 288, Benchimol sem conta. O Instagram é a casa; o TikTok recebe o mesmo vídeo sem adaptação, quando recebe." },
+    { "titulo": "Trial Reels não dão para ver de fora", "texto": "Reels de teste só aparecem para quem não segue o perfil, e não ficam na grade. O que se observa é o efeito: muitos Reels por dia no mesmo formato (Tarik), e o \"agente do caos\" que o Kallaway descreve (1 post por semana fora dos temas fixos)." }
+  ],
+  "checklists": [
+    { "titulo": "Gancho (3 primeiros segundos)", "fonte": "Kallaway, Psychology of Killer Hooks", "itens": [
+      "Responde \"sobre o que é\" e \"o que eu ganho\" em até 10 palavras.",
+      "Tem assunto nomeado (nome próprio, termo, número) + uma de três coisas: dor, resultado ou mudança.",
+      "Título na tela em até 2 linhas, sem pontuação, sem \"e/ou/mas\", quebrado onde a frase lê natural, 3 s no mínimo.",
+      "Texto, fala e imagem contam a mesma coisa (vendo só um, dá para adivinhar os outros dois).",
+      "Número específico no lugar de \"alguns\" (R$ 2.700, 22 dias, 14 milhões).",
+      "Uma ação visual nos 2 primeiros segundos: inclinar, trocar o visual, entrar texto."
+    ] },
+    { "titulo": "Zona de trava (5 a 10 s depois do gancho)", "fonte": "Kallaway + observação dos cinco", "itens": [
+      "Confirma a promessa do gancho (sem bait and switch).",
+      "Uma prova concreta na tela: print, número, nome, estudo.",
+      "Cenário e som cuidados (cuidado = confiança), não cenário caro.",
+      "Você parece com o seu público ou com o personagem que ele espera."
+    ] },
+    { "titulo": "Roteiro (loop do vício)", "fonte": "Kallaway, Neuroscience of Addictive Storytelling", "itens": [
+      "Stakes nas 3 primeiras frases: quem, o que está em risco, até quando.",
+      "Uma pergunta específica cedo (contexto suficiente para a pessoa prever).",
+      "Uma virada com pista (inesperada, mas lógica na hora).",
+      "Fecha um loop abrindo outro na mesma frase (\"o que seria ótimo, se não fosse…\").",
+      "Uma metáfora por vídeo (Benchimol) ou um framework com nome (Kallaway).",
+      "Posição firme: a favor ou contra, sem meio-termo.",
+      "Fechamento com pergunta de uma palavra (Tarik) ou palavra-chave para comentar (Luka, Kallaway)."
+    ] },
+    { "titulo": "Gravação e voz", "fonte": "Kallaway, Speaking Like This + medições", "itens": [
+      "Sacudir o corpo 30 s e gravar um take descartável antes do real.",
+      "Foto de um amigo colada embaixo da lente.",
+      "Gravar linha por linha; energia cheia em cada frase.",
+      "Frases curtas (6 palavras > 15); pausa de meio segundo depois da palavra que importa.",
+      "Tom caindo no fim da frase; volume até a última palavra.",
+      "Começar a falar no primeiro quadro (todos os cinco começam antes de 0,3 s).",
+      "Na edição, tirar os silêncios (Benchimol e Kallaway ficam com menos de 10% de silêncio).",
+      "Só gravar com energia de \"feliz de estar aqui\"; senão, treinar e voltar."
+    ] },
+    { "titulo": "Visual e roupa", "fonte": "Folhas de contato dos cinco", "itens": [
+      "Escolher uma roupa e repetir (preto liso, polo escura, moletom). Sem logo de terceiros, sem estampa.",
+      "Um cenário fixo e reconhecível, mesmo que seja o carro ou a sala de aula.",
+      "Um objeto-assinatura (boné, óculos, luva, lapela visível).",
+      "Luz no rosto: janela de frente ou uma luz suave; fundo mais escuro que o rosto.",
+      "Busto, câmera na altura dos olhos (ou um pouco abaixo, como o Tarik), mãos aparecendo.",
+      "Texto na tela em uma fonte só, sempre no mesmo lugar, legível sem zoom.",
+      "Trocar o visual (gráfico, print, PiP) a cada 10–15 s para interromper o padrão."
+    ] },
+    { "titulo": "Legenda e publicação", "fonte": "490 legendas lidas", "itens": [
+      "Primeira linha = gancho falado.",
+      "Ou o roteiro inteiro (Kallaway), ou tese + pergunta (Tarik), ou uma frase (Luka, Robert). Não misturar.",
+      "Marcar com @ quem aparece; publicar em coautoria quando houver convidado.",
+      "Hashtag: 0, ou 4–5 fixas de nicho. Nunca 20.",
+      "Horário fixo: 17h–19h (Brasília) para o nosso público.",
+      "Reel de manhã e carrossel à noite quando o conteúdo for lista ou framework.",
+      "Meta pública no perfil ou na legenda (\"x/100 mil até dezembro\")."
+    ] },
+    { "titulo": "Estratégia 3-2-1 (semana)", "fonte": "Kallaway, Personal Brand Strategy 2026", "itens": [
+      "3 temas: 1 amplo (traz gente) + 2 estreitos (dores do comprador ideal).",
+      "2 vídeos por tema por semana = 6; o 7º é o agente do caos (teste fora dos temas).",
+      "Avaliar a cada 2 semanas: matar o tema que não anda e promover outro.",
+      "Mesmo avatar em todos os vídeos: um viral para o público errado prejudica os seguintes.",
+      "Posicionar em pelo menos 2 dos 7 atributos: tema, profundidade, histórias próprias, avatar, entrega, formato de história, formato visual."
+    ] }
+  ],
+  "frameworks": [
+    { "nome": "Teoria da interrupção e os 4 S", "resumo": "O gancho provoca o congelamento do polegar respondendo assunto + resultado; precisa de Subject, Stakes, Speed e Super clear." },
+    { "nome": "Gancho triplo", "resumo": "Texto na tela, fala e imagem, alinhados; o texto é o mais importante, a legenda do post é o quarto gancho." },
+    { "nome": "Zona de trava (lock-in zone)", "resumo": "Os 5–10 s depois do gancho: confirmar a promessa e passar na avaliação de confiança (aparência, embalagem, relacionabilidade, prova)." },
+    { "nome": "Palavras de força (power words)", "resumo": "Pacotes de 1–3 palavras que amplificam dor ou desejo; minerar nos seus melhores ganchos e nos dos concorrentes, remixar sem copiar." },
+    { "nome": "Loop do vício (stakes, pergunta, finta, religar)", "resumo": "Dopamina é previsão: criar aposta, deixar prever, quebrar a previsão com lógica e abrir a próxima pergunta na mesma frase." },
+    { "nome": "Audience matching", "resumo": "Mesmo tema para o mesmo avatar, sempre, para o algoritmo acertar o grupo de amostra de 200 pessoas." },
+    { "nome": "Os 4 atributos do vídeo que engaja", "resumo": "Tema relevante, informação não óbvia e aplicável, alta absorção, distância curta para aplicar." },
+    { "nome": "Especialista querido (likable expert)", "resumo": "Autoridade + afinidade: acreditar no que diz, estar feliz de estar ali, prova pesada, perguntar \"como sou útil?\", admitir uma dificuldade real." },
+    { "nome": "Micro-fama e densidade de autoridade", "resumo": "Ser o nome nº 1 do nicho para quem te segue vale mais do que seguidores; não comprar seguidor." },
+    { "nome": "7 atributos de posicionamento + transposicionamento", "resumo": "Tema, profundidade, histórias, avatar, entrega, formato de história, formato visual; quando não há espaço, trazer o que funciona de um nicho distante." },
+    { "nome": "3-2-1 (e as variantes 3-3-1, 5-3-2, 6×5)", "resumo": "Baldes de tema × vídeos por semana + agente do caos; versões com formatos e layouts visuais nos carrosséis dele." },
+    { "nome": "Outros nomes que ele usa nos Reels", "resumo": "Double Aha, Comprehension Maxxing, Illusion of Novelty, Internet Echo, Audience Math, Format Pyramid, Goldilocks Format, Application Content, Whiteboard Explainer, A vs B, 3 Levels, S-Tier Ranking, Viral Trap, Virality Stack, One Degree Rule, Story Lens, Fandom Funnel, Bullseye Positioning, Worldbuilding, Double Tap, Idea Pipes, Memory Stacking, Flashbang Brain, Pavlovian Effect, Modern Content Stack, Dopamine Ladder, Anchor Terms, Zig Zag test, High Effort Era, Rich vs Broke Viewers. Cada um é um vídeo de 60–100 s com o nome no título." }
+  ]
+}

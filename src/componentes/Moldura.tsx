@@ -20,6 +20,7 @@ export function Moldura() {
           <NavLink to="/" end>
             Ganchos virais
           </NavLink>
+          <NavLink to="/referencias">Referências</NavLink>
           <NavLink to="/conteudo">Gerenciar dias</NavLink>
         </nav>
         )}
