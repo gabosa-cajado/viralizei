@@ -61,7 +61,7 @@ export function Calendario() {
   if (dias.length === 0) {
     return (
       <section className="vazio">
-        <p className="vazio-titulo">O calendário está vazio</p>
+        <p className="vazio-titulo">Nenhum gancho ainda</p>
         {podeEditar ? (
           <>
             <p className="vazio-texto">

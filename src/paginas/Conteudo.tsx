@@ -404,7 +404,7 @@ export function Conteudo() {
                 )}
                 {dias.some((d) => d.id === rascunho.id) && (
                   <Link to={`/dia/${rascunho.numero}`} className="botao botao-texto">
-                    Ver no calendário
+                    Abrir o dia
                   </Link>
                 )}
                 {podeEditar && (

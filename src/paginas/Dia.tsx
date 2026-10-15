@@ -55,9 +55,9 @@ export function Dia() {
     return (
       <section className="vazio vazio-inicio">
         <p className="vazio-titulo">Este dia não existe.</p>
-        <p className="vazio-texto">Ele pode ter sido apagado em Conteúdo. Volte ao calendário e escolha outro.</p>
+        <p className="vazio-texto">Ele pode ter sido apagado em Gerenciar dias. Volte aos ganchos virais e escolha outro.</p>
         <Link className="botao botao-primario" to="/">
-          Voltar ao calendário
+          Voltar aos ganchos virais
         </Link>
       </section>
     );
@@ -92,7 +92,7 @@ export function Dia() {
     <article className="dia">
       <nav className="dia-topo" aria-label="Navegação do dia">
         <Link to="/" className="link-voltar">
-          Calendário
+          Ganchos virais
         </Link>
         <span className="dia-setas">
           {anterior ? (

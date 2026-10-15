@@ -12,13 +12,13 @@ export function Moldura() {
   return (
     <div className="moldura">
       <header className="topo">
-        <NavLink to="/" className="marca" aria-label="Viralizei, ir para o calendário">
+        <NavLink to="/" className="marca" aria-label="Viralizei, ir para os ganchos virais">
           Viralizei
         </NavLink>
         {modo !== "login" && (
         <nav className="navegacao" aria-label="Seções">
           <NavLink to="/" end>
-            Calendário
+            Ganchos virais
           </NavLink>
           <NavLink to="/conteudo">Gerenciar dias</NavLink>
         </nav>
