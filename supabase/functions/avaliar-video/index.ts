@@ -31,9 +31,9 @@ Deno.serve(async (req) => {
   } catch {
     return responder(400, { erro: "Pedido inválido." });
   }
-  const chave = Deno.env.get("ANTHROPIC_API_KEY");
+  const chave = (Deno.env.get("ANTHROPIC_API_KEY_VIRALIZEI") ?? Deno.env.get("ANTHROPIC_API_KEY"));
   // Sonda: o navegador pergunta o que existe antes de transcrever ou enviar áudio.
-  if (bruto.sonda) return responder(200, { ia: !!chave, transcricao: !!Deno.env.get("OPENAI_API_KEY") });
+  if (bruto.sonda) return responder(200, { ia: !!chave, transcricao: !!(Deno.env.get("OPENAI_API_KEY_VIRALIZEI") ?? Deno.env.get("OPENAI_API_KEY")) });
   const e = bruto;
   if (!e.medidas || !Array.isArray(e.quadros) || e.quadros.length === 0) {
     return responder(400, { erro: "Pedido inválido: faltam as medidas ou os quadros do vídeo." });
@@ -42,11 +42,12 @@ Deno.serve(async (req) => {
   if (!chave) return responder(503, { erro: "A avaliação com IA ainda não foi ligada. O dono precisa cadastrar a chave da Anthropic no Supabase." });
 
   try {
-    return responder(200, await avaliarVideo(e, chave, Deno.env.get("OPENAI_API_KEY")));
+    return responder(200, await avaliarVideo(e, chave, (Deno.env.get("OPENAI_API_KEY_VIRALIZEI") ?? Deno.env.get("OPENAI_API_KEY"))));
   } catch (erro) {
     if (erro instanceof Anthropic.AuthenticationError) return responder(502, { erro: "A chave da Anthropic foi recusada. O dono precisa conferir o segredo no Supabase." });
     if (erro instanceof Anthropic.RateLimitError) return responder(429, { erro: "Muitos pedidos seguidos. Espere um minuto e tente de novo." });
-    if (erro instanceof Anthropic.APIError) return responder(502, { erro: `O serviço de IA respondeu com erro ${erro.status}. Tente de novo em instantes.` });
+    if (erro instanceof Anthropic.APIError && /credit balance/i.test(erro.message)) return responder(402, { erro: "A conta da Anthropic está sem crédito. O dono precisa comprar créditos em console.anthropic.com (Plans & Billing); a chave está certa." });
+    if (erro instanceof Anthropic.APIError) return responder(502, { erro: `O serviço de IA respondeu com erro ${erro.status}: ${erro.message.slice(0, 200)}` });
     if (erro instanceof Error && erro.message === "recusa") return responder(422, { erro: "O modelo recusou avaliar este vídeo." });
     return responder(502, { erro: "A avaliação não terminou. Tente de novo em instantes." });
   }

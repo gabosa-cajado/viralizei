@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
   }
   if (!e.nicho || !e.tema) return responder(400, { erro: "Preencha o nicho e o tema do vídeo." });
 
-  const chave = Deno.env.get("ANTHROPIC_API_KEY");
+  const chave = (Deno.env.get("ANTHROPIC_API_KEY_VIRALIZEI") ?? Deno.env.get("ANTHROPIC_API_KEY"));
   if (!chave) {
     return responder(503, { erro: "A IA ainda não foi ligada. O dono precisa cadastrar a chave da Anthropic no Supabase." });
   }
@@ -104,7 +104,8 @@ Deno.serve(async (req) => {
       return responder(502, { erro: "A chave da Anthropic foi recusada. O dono precisa conferir o segredo no Supabase." });
     }
     if (erro instanceof Anthropic.RateLimitError) return responder(429, { erro: "Muitos pedidos seguidos. Espere um minuto e tente de novo." });
-    if (erro instanceof Anthropic.APIError) return responder(502, { erro: `O serviço de IA respondeu com erro ${erro.status}. Tente de novo em instantes.` });
+    if (erro instanceof Anthropic.APIError && /credit balance/i.test(erro.message)) return responder(402, { erro: "A conta da Anthropic está sem crédito. O dono precisa comprar créditos em console.anthropic.com (Plans & Billing); a chave está certa." });
+    if (erro instanceof Anthropic.APIError) return responder(502, { erro: `O serviço de IA respondeu com erro ${erro.status}: ${erro.message.slice(0, 200)}` });
     return responder(502, { erro: "Não foi possível falar com o serviço de IA. Tente de novo." });
   }
 });

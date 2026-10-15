@@ -235,7 +235,8 @@ Deno.serve(async (req) => {
   let ideias: Ideia[] = [];
   let resumo = "";
   let modelo = "regras";
-  const chave = Deno.env.get("ANTHROPIC_API_KEY");
+  let motivo = "";
+  const chave = (Deno.env.get("ANTHROPIC_API_KEY_VIRALIZEI") ?? Deno.env.get("ANTHROPIC_API_KEY"));
   if (chave && (tendencias.length || videos.length)) {
     try {
       const cliente = new Anthropic({ apiKey: chave });
@@ -263,14 +264,17 @@ Nada de emoji, hashtag ou aspas decorativas.`,
         resumo = resposta.parsed_output.resumo;
         modelo = resposta.model ?? "claude";
       }
-    } catch {
+    } catch (erro) {
       // Sem modelo hoje: as regras abaixo garantem o radar mesmo assim.
+      motivo = erro instanceof Anthropic.APIError && /credit balance/i.test(erro.message)
+        ? "a conta da Anthropic está sem crédito"
+        : erro instanceof Error ? erro.message.slice(0, 120) : "erro desconhecido";
     }
   }
   if (ideias.length === 0) {
     ideias = ideiasSemModelo(tendencias, videos, dias);
     resumo = chave
-      ? "O modelo não respondeu hoje; as ideias abaixo vieram só do cruzamento de tendência com gancho."
+      ? `O modelo não respondeu hoje (${motivo}); as ideias abaixo vieram só do cruzamento de tendência com gancho.`
       : "Sem chave da Anthropic no Supabase: as ideias abaixo vieram só do cruzamento de tendência com gancho. O dono liga a IA cadastrando ANTHROPIC_API_KEY.";
   }
 

@@ -86,7 +86,8 @@ export function criarRotaRoteiro(chave: string | undefined) {
     } catch (erro) {
       if (erro instanceof Anthropic.AuthenticationError) return responder(res, 401, { erro: "A chave da Anthropic foi recusada. Confira ANTHROPIC_API_KEY no .env." });
       if (erro instanceof Anthropic.RateLimitError) return responder(res, 429, { erro: "Muitos pedidos seguidos. Espere um minuto e tente de novo." });
-      if (erro instanceof Anthropic.APIError) return responder(res, 502, { erro: `O serviço de IA respondeu com erro ${erro.status}. Tente de novo em instantes.` });
+      if (erro instanceof Anthropic.APIError && /credit balance/i.test(erro.message)) return responder(res, 402, { erro: "A conta da Anthropic está sem crédito. O dono precisa comprar créditos em console.anthropic.com (Plans & Billing); a chave está certa." });
+      if (erro instanceof Anthropic.APIError) return responder(res, 502, { erro: `O serviço de IA respondeu com erro ${erro.status}: ${erro.message.slice(0, 200)}` });
       return responder(res, 502, { erro: "Não foi possível falar com o serviço de IA. Confira a internet e tente de novo." });
     }
   };

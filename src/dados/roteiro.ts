@@ -78,7 +78,12 @@ function maiusculaInicial(t: string) {
 }
 
 function numeroDe(texto: string): string | null {
-  const m = texto.match(/R?\$?\s?\d[\d.,]*\s?(mil|milh[õo]es|%|dias?|anos?|horas?|views|seguidores|clientes)?/i);
+  // Prefere dinheiro e porcentagem; depois número com unidade; número solto só por último.
+  const m =
+    texto.match(/R\$\s?\d[\d.,]*(\s?(mil|milh[õo]es))?(\s?por\s(m[êe]s|ano|dia))?/i) ??
+    texto.match(/\d[\d.,]*\s?%/) ??
+    texto.match(/\d[\d.,]*\s?(mil|milh[õo]es|dias?|anos?|horas?|meses|semanas?|views|seguidores|clientes|cl[íi]nicas|vendas|pacientes|alunos)\b/i) ??
+    texto.match(/\b\d[\d.,]*\b/);
   return m ? m[0].trim() : null;
 }
 
