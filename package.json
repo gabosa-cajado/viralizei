@@ -9,7 +9,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "artefato": "node scripts/artefato.mjs",
-    "build:site": "tsc --noEmit && vite build --mode site --outDir dist-site --emptyOutDir"
+    "build:site": "tsc --noEmit && vite build --mode site --outDir dist-site --emptyOutDir",
+    "publicar": "zsh scripts/publicar-site.sh"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.134.0",
