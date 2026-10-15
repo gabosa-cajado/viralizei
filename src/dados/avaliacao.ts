@@ -219,3 +219,127 @@ export function avaliar(m: MedidasVideo | null, t: TextosVideo, manual: Record<s
   const pontos = c.reduce((a, x) => a + (x.estado === "ok" ? x.peso : x.estado === "conferir" ? x.peso * 0.4 : 0), 0);
   return { criterios: c, nota: total ? Math.round((pontos / total) * 100) : 0 };
 }
+
+// ---------- Avaliação automática com IA ----------
+// O navegador tira 8 quadros e converte o áudio em WAV 16 kHz mono; a função
+// transcreve (OpenAI, se houver chave) e o Claude lê os quadros e julga os
+// critérios. O vídeo inteiro não sai do computador: vão os quadros e o áudio.
+
+export interface CriterioIA {
+  id: string;
+  nome: string;
+  estado: Estado;
+  detalhe: string;
+  peso: number;
+}
+
+export interface AvaliacaoIA {
+  nota: number;
+  resumo: string;
+  transcricao: string;
+  ganchoFalado: string;
+  textoNaTela: string;
+  criterios: CriterioIA[];
+  melhorias: string[];
+  avisos: string[];
+}
+
+export async function extrairQuadros(arquivo: File, largura = 540): Promise<{ tempo: number; imagem: string }[]> {
+  const url = URL.createObjectURL(arquivo);
+  const v = document.createElement("video");
+  v.muted = true;
+  v.preload = "auto";
+  v.playsInline = true;
+  v.src = url;
+  try {
+    await esperar(new Promise<void>((r, j) => { v.onloadeddata = () => r(); v.onerror = () => j(new Error("x")); }), 20000, "O navegador não conseguiu abrir este vídeo. Use mp4 ou mov.");
+    const d = v.duration;
+    const tempos = [0.3, 1.5, 3, 6, d * 0.25, d * 0.5, d * 0.75, Math.max(0, d - 0.6)]
+      .filter((t, i, a) => t < d && a.indexOf(t) === i)
+      .sort((a, b) => a - b);
+    const canvas = document.createElement("canvas");
+    const escala = largura / Math.max(v.videoWidth, 1);
+    canvas.width = Math.round(v.videoWidth * escala);
+    canvas.height = Math.round(v.videoHeight * escala);
+    const ctx = canvas.getContext("2d")!;
+    const quadros: { tempo: number; imagem: string }[] = [];
+    for (const t of tempos) {
+      v.currentTime = t;
+      await esperar(new Promise<void>((r) => { v.onseeked = () => r(); }), 8000, "O vídeo demorou demais para responder.");
+      ctx.drawImage(v, 0, 0, canvas.width, canvas.height);
+      quadros.push({ tempo: +t.toFixed(1), imagem: canvas.toDataURL("image/jpeg", 0.72).split(",")[1] });
+    }
+    return quadros;
+  } finally {
+    v.removeAttribute("src");
+    v.load();
+    URL.revokeObjectURL(url);
+  }
+}
+
+/** Áudio do vídeo como WAV 16 kHz mono em base64 (uns 2 MB por minuto). */
+export async function audioWav16k(arquivo: File, maxSeg = 180): Promise<string | null> {
+  try {
+    const buf = await arquivo.arrayBuffer();
+    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ctx = new Ctx();
+    const ab = await ctx.decodeAudioData(buf);
+    void ctx.close();
+    const taxa = 16000;
+    const n = Math.min(ab.length, Math.floor(maxSeg * ab.sampleRate));
+    const off = new OfflineAudioContext(1, Math.ceil((n / ab.sampleRate) * taxa), taxa);
+    const fonte = off.createBufferSource();
+    fonte.buffer = ab;
+    fonte.connect(off.destination);
+    fonte.start();
+    const mono = (await off.startRendering()).getChannelData(0);
+    const dados = new DataView(new ArrayBuffer(44 + mono.length * 2));
+    const texto = (p: number, s: string) => { for (let i = 0; i < s.length; i++) dados.setUint8(p + i, s.charCodeAt(i)); };
+    texto(0, "RIFF"); dados.setUint32(4, 36 + mono.length * 2, true); texto(8, "WAVE"); texto(12, "fmt ");
+    dados.setUint32(16, 16, true); dados.setUint16(20, 1, true); dados.setUint16(22, 1, true);
+    dados.setUint32(24, taxa, true); dados.setUint32(28, taxa * 2, true); dados.setUint16(32, 2, true); dados.setUint16(34, 16, true);
+    texto(36, "data"); dados.setUint32(40, mono.length * 2, true);
+    for (let i = 0; i < mono.length; i++) {
+      const x = Math.max(-1, Math.min(1, mono[i]));
+      dados.setInt16(44 + i * 2, x < 0 ? x * 0x8000 : x * 0x7fff, true);
+    }
+    const bytes = new Uint8Array(dados.buffer);
+    let bin = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+    return btoa(bin);
+  } catch {
+    return null;
+  }
+}
+
+export async function avaliarComIA(entrada: {
+  medidas: MedidasVideo;
+  quadros: { tempo: number; imagem: string }[];
+  audioWav: string | null;
+}): Promise<AvaliacaoIA> {
+  const corpo = {
+    medidas: { ...entrada.medidas, quadros: undefined },
+    quadros: entrada.quadros,
+    audioWav: entrada.audioWav,
+  };
+  const { noArtefato } = await import("./plataforma");
+  const { noSite, supabase } = await import("./site");
+  if (!noArtefato && noSite && supabase) {
+    const { data, error } = await supabase.functions.invoke("avaliar-video", { body: corpo });
+    if (error) {
+      const { FunctionsHttpError } = await import("@supabase/supabase-js");
+      const c = error instanceof FunctionsHttpError ? await error.context.json().catch(() => ({})) : {};
+      throw new Error(c.erro ?? "A avaliação com IA não respondeu. Tente de novo.");
+    }
+    return data as AvaliacaoIA;
+  }
+  if (!noArtefato) {
+    const r = await fetch("/api/avaliar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo) }).catch(() => {
+      throw new Error("Sem conexão com o app. Confira se ele ainda está rodando.");
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.erro ?? "A avaliação com IA não respondeu.");
+    return d as AvaliacaoIA;
+  }
+  throw new Error("A avaliação com IA existe só no site.");
+}

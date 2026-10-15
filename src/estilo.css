@@ -2276,6 +2276,36 @@ a.abertura-gancho:hover .gancho {
   }
 }
 
+.avaliar-resumo {
+  font-size: var(--t-20);
+  font-weight: 600;
+  line-height: 1.35;
+  max-width: 60ch;
+  margin-bottom: 1rem;
+}
+
+.melhorias {
+  margin: 0.5rem 0 0;
+  padding-left: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 60ch;
+}
+
+.melhorias li::marker {
+  font-weight: 800;
+  color: var(--vermelho);
+}
+
+.transcricao {
+  font-size: var(--t-14);
+  color: var(--tinta-2);
+  line-height: 1.5;
+  max-height: 12rem;
+  overflow: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
