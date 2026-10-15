@@ -1,0 +1,1351 @@
+{
+ "versao": 1,
+ "formatos": [
+  {
+   "id": "camera",
+   "nome": "Fala para câmera"
+  },
+  {
+   "id": "narrado",
+   "nome": "Narrado"
+  },
+  {
+   "id": "texto",
+   "nome": "Texto na tela"
+  },
+  {
+   "id": "lista",
+   "nome": "Lista"
+  },
+  {
+   "id": "dividida",
+   "nome": "Tela dividida"
+  },
+  {
+   "id": "react",
+   "nome": "React"
+  },
+  {
+   "id": "lofi",
+   "nome": "Lofi"
+  },
+  {
+   "id": "comparativo",
+   "nome": "Comparativo"
+  },
+  {
+   "id": "conversa",
+   "nome": "Conversa"
+  },
+  {
+   "id": "tutorial",
+   "nome": "Tutorial na tela"
+  },
+  {
+   "id": "bastidores",
+   "nome": "Bastidores"
+  },
+  {
+   "id": "pov",
+   "nome": "POV encenado"
+  }
+ ],
+ "dias": [
+  {
+   "id": "d1",
+   "numero": 1,
+   "gancho": "O erro que eu repeti por ___ anos",
+   "descricao": "Conte um erro seu e quanto tempo levou para perceber. Quem está no mesmo ponto se reconhece e fica até o fim para saber a saída.",
+   "formatoId": "camera",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Arquitetura",
+     "texto": "O erro que eu repeti por 6 anos: desenhar antes de ouvir a rotina da família"
+    },
+    {
+     "nicho": "Personal trainer",
+     "texto": "O erro que eu repeti por 4 anos: montar treino sem perguntar como o aluno dorme"
+    }
+   ]
+  },
+  {
+   "id": "d2",
+   "numero": 2,
+   "gancho": "Ninguém te avisa que ___ quando você começa em ___",
+   "descricao": "Uma verdade da profissão que só aparece na prática. Gera identificação em quem começou agora e respeito em quem já passou por isso.",
+   "formatoId": "texto",
+   "referenciaUrl": "https://www.youtube.com/shorts/g2tSaCNfdUM",
+   "exemplos": [
+    {
+     "nicho": "Odontologia",
+     "texto": "Ninguém te avisa que metade do trabalho é acalmar quando você começa em odontologia"
+    },
+    {
+     "nicho": "Confeitaria",
+     "texto": "Ninguém te avisa que a entrega estraga mais bolo que o forno quando você começa em confeitaria"
+    }
+   ]
+  },
+  {
+   "id": "d3",
+   "numero": 3,
+   "gancho": "Três sinais de que você ___",
+   "descricao": "Um diagnóstico rápido em três itens. A pessoa confere na hora se se encaixa e tende a salvar ou mandar para alguém.",
+   "formatoId": "lista",
+   "referenciaUrl": "https://www.youtube.com/shorts/SbcHXUjwv-M",
+   "exemplos": [
+    {
+     "nicho": "Finanças pessoais",
+     "texto": "Três sinais de que você está pagando juros sem perceber"
+    },
+    {
+     "nicho": "Nutrição",
+     "texto": "Três sinais de que você come pouca proteína no café da manhã"
+    }
+   ]
+  },
+  {
+   "id": "d4",
+   "numero": 4,
+   "gancho": "Antes de ___, faça isto",
+   "descricao": "Um cuidado que evita um prejuízo comum. Funciona porque a pessoa sente que ganhou um atalho antes de errar.",
+   "formatoId": "narrado",
+   "referenciaUrl": "https://www.youtube.com/shorts/87cMzcDFCZQ",
+   "exemplos": [
+    {
+     "nicho": "Imóveis",
+     "texto": "Antes de assinar o aluguel, faça isto com o medidor de luz"
+    },
+    {
+     "nicho": "Direito do consumidor",
+     "texto": "Antes de cancelar o plano pelo telefone, faça isto"
+    }
+   ]
+  },
+  {
+   "id": "d5",
+   "numero": 5,
+   "gancho": "O que muda quando você para de ___",
+   "descricao": "Mostre o antes e o depois de largar um hábito. A comparação lado a lado prende porque o público quer ver a diferença.",
+   "formatoId": "dividida",
+   "referenciaUrl": "https://www.youtube.com/watch?v=_1scteWucOs",
+   "exemplos": [
+    {
+     "nicho": "Fotografia",
+     "texto": "O que muda quando você para de fotografar no automático"
+    },
+    {
+     "nicho": "Skincare",
+     "texto": "O que muda quando você para de trocar de produto toda semana"
+    }
+   ]
+  },
+  {
+   "id": "d6",
+   "numero": 6,
+   "gancho": "Pare de ___. Faça isto no lugar",
+   "descricao": "Corta um hábito comum e já entrega a troca. A ordem direta dá autoridade e a solução evita que soe só como bronca.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/dL-R8Au_jUM",
+   "exemplos": [
+    {
+     "nicho": "Marketing",
+     "texto": "Pare de postar todo dia. Faça isto no lugar"
+    },
+    {
+     "nicho": "Corrida",
+     "texto": "Pare de alongar antes de correr. Faça isto no lugar"
+    }
+   ]
+  },
+  {
+   "id": "d7",
+   "numero": 7,
+   "gancho": "Você está fazendo ___ errado, e não é culpa sua",
+   "descricao": "Aponta o erro sem culpar quem assiste. A pessoa baixa a guarda, quer saber o jeito certo e não se sente atacada.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/54FcEF0Wzks",
+   "exemplos": [
+    {
+     "nicho": "Fisioterapia",
+     "texto": "Você está sentando errado no trabalho, e não é culpa sua"
+    },
+    {
+     "nicho": "Cozinha",
+     "texto": "Você está cozinhando arroz errado, e não é culpa sua"
+    }
+   ]
+  },
+  {
+   "id": "d8",
+   "numero": 8,
+   "gancho": "Se eu começasse em ___ hoje, faria só isto",
+   "descricao": "Conselho de quem já passou pelo caminho, resumido no essencial. Quem está começando salva para seguir depois.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/VmIcbT_8ekM",
+   "exemplos": [
+    {
+     "nicho": "Design",
+     "texto": "Se eu começasse em design hoje, faria só isto nos primeiros 90 dias"
+    },
+    {
+     "nicho": "Investimentos",
+     "texto": "Se eu começasse a investir hoje, faria só isto"
+    }
+   ]
+  },
+  {
+   "id": "d9",
+   "numero": 9,
+   "gancho": "Um dia comigo sendo ___",
+   "descricao": "Mostra a rotina real da profissão. Curiosidade sobre a vida dos outros segura a atenção e aproxima quem assiste.",
+   "formatoId": "bastidores",
+   "referenciaUrl": "https://www.youtube.com/shorts/QUXlH6_wvEU",
+   "exemplos": [
+    {
+     "nicho": "Veterinária",
+     "texto": "Um dia comigo sendo veterinária de plantão"
+    },
+    {
+     "nicho": "Restaurante",
+     "texto": "Um dia comigo sendo dono de um restaurante pequeno"
+    }
+   ]
+  },
+  {
+   "id": "d10",
+   "numero": 10,
+   "gancho": "Isso aqui custa ___ e quase ninguém sabe",
+   "descricao": "Revela um custo escondido. Dinheiro chama atenção na hora e a pessoa quer conferir se está pagando também.",
+   "formatoId": "camera",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Contabilidade",
+     "texto": "Isso aqui custa R$ 400 por ano e quase ninguém sabe que paga"
+    },
+    {
+     "nicho": "Banco",
+     "texto": "Essa tarifa custa R$ 30 por mês e quase ninguém sabe"
+    }
+   ]
+  },
+  {
+   "id": "d11",
+   "numero": 11,
+   "gancho": "Eu testei ___ por 30 dias. Olha o que aconteceu",
+   "descricao": "Um experimento pessoal com prazo e resultado. A promessa de um desfecho mantém a pessoa até o fim.",
+   "formatoId": "narrado",
+   "referenciaUrl": "https://www.youtube.com/shorts/Et_xJkvz-EY",
+   "exemplos": [
+    {
+     "nicho": "Fitness",
+     "texto": "Eu testei treinar 15 minutos por dia por 30 dias. Olha o que aconteceu"
+    },
+    {
+     "nicho": "Produtividade",
+     "texto": "Eu testei acordar às 5h por 30 dias. Olha o que aconteceu"
+    }
+   ]
+  },
+  {
+   "id": "d12",
+   "numero": 12,
+   "gancho": "A pergunta que eu mais ouço sobre ___",
+   "descricao": "Responde uma dúvida real e repetida. Se muita gente pergunta, muita gente quer a resposta, e o vídeo vira referência.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/IZD9jcfQHwk",
+   "exemplos": [
+    {
+     "nicho": "Pediatria",
+     "texto": "A pergunta que eu mais ouço sobre febre em criança"
+    },
+    {
+     "nicho": "Imóveis",
+     "texto": "A pergunta que eu mais ouço sobre financiamento"
+    }
+   ]
+  },
+  {
+   "id": "d13",
+   "numero": 13,
+   "gancho": "___ ou ___: qual vale mais a pena?",
+   "descricao": "Compara duas opções que o público já está pesando. Quem está decidindo assiste até o veredito e comenta a própria escolha.",
+   "formatoId": "comparativo",
+   "referenciaUrl": "https://www.youtube.com/shorts/zawoyPgKGbY",
+   "exemplos": [
+    {
+     "nicho": "Carro",
+     "texto": "Carro elétrico ou híbrido: qual vale mais a pena?"
+    },
+    {
+     "nicho": "Educação",
+     "texto": "Faculdade ou curso técnico: qual vale mais a pena?"
+    }
+   ]
+  },
+  {
+   "id": "d14",
+   "numero": 14,
+   "gancho": "O jeito certo e o jeito que todo mundo faz: ___",
+   "descricao": "Contraste direto entre o comum e o correto. A pessoa se reconhece no jeito errado e quer ver a diferença.",
+   "formatoId": "dividida",
+   "referenciaUrl": "https://www.youtube.com/shorts/y2ylZkMx_NU",
+   "exemplos": [
+    {
+     "nicho": "Cozinha",
+     "texto": "O jeito certo e o jeito que todo mundo faz: cortar cebola"
+    },
+    {
+     "nicho": "Academia",
+     "texto": "O jeito certo e o jeito que todo mundo faz: agachamento"
+    }
+   ]
+  },
+  {
+   "id": "d15",
+   "numero": 15,
+   "gancho": "Três coisas que eu nunca faria sendo ___",
+   "descricao": "Regras pessoais de quem conhece a área por dentro. Soa como segredo de bastidor e gera debate nos comentários.",
+   "formatoId": "lista",
+   "referenciaUrl": "https://www.youtube.com/shorts/nPNr9WVpVmY",
+   "exemplos": [
+    {
+     "nicho": "Dermatologia",
+     "texto": "Três coisas que eu nunca faria sendo dermatologista"
+    },
+    {
+     "nicho": "Advocacia",
+     "texto": "Três coisas que eu nunca faria sendo advogado"
+    }
+   ]
+  },
+  {
+   "id": "d16",
+   "numero": 16,
+   "gancho": "Quanto custa de verdade ___",
+   "descricao": "Abre a conta que ninguém mostra. Transparência sobre dinheiro gera curiosidade e muito compartilhamento.",
+   "formatoId": "lista",
+   "referenciaUrl": "https://www.youtube.com/shorts/_kAxkssITpk",
+   "exemplos": [
+    {
+     "nicho": "Casamento",
+     "texto": "Quanto custa de verdade um casamento para 100 pessoas"
+    },
+    {
+     "nicho": "Empreendedorismo",
+     "texto": "Quanto custa de verdade abrir uma cafeteria"
+    }
+   ]
+  },
+  {
+   "id": "d17",
+   "numero": 17,
+   "gancho": "POV: você é ___ e o cliente pede ___",
+   "descricao": "Encena uma situação típica do atendimento. Quem é da área se identifica e marca os colegas.",
+   "formatoId": "pov",
+   "referenciaUrl": "https://www.youtube.com/shorts/wFK8hEGa0-Y",
+   "exemplos": [
+    {
+     "nicho": "Design",
+     "texto": "POV: você é designer e o cliente pede para aumentar a logo"
+    },
+    {
+     "nicho": "Cabeleireira",
+     "texto": "POV: você é cabeleireira e a cliente pede só pontinhas"
+    }
+   ]
+  },
+  {
+   "id": "d18",
+   "numero": 18,
+   "gancho": "Mito ou verdade: ___",
+   "descricao": "Julga uma crença popular da área. A resposta curta e firme gera discussão e posiciona como quem entende.",
+   "formatoId": "texto",
+   "referenciaUrl": "https://www.youtube.com/shorts/HvEX3MVKQXk",
+   "exemplos": [
+    {
+     "nicho": "Nutrição",
+     "texto": "Mito ou verdade: comer ovo aumenta o colesterol"
+    },
+    {
+     "nicho": "Carro",
+     "texto": "Mito ou verdade: deixar o carro ligado esquentando faz bem"
+    }
+   ]
+  },
+  {
+   "id": "d19",
+   "numero": 19,
+   "gancho": "O detalhe que entrega quem é iniciante em ___",
+   "descricao": "Mostra um sinal pequeno que separa o novato do experiente. Quem é da área concorda e quem é iniciante quer corrigir.",
+   "formatoId": "comparativo",
+   "referenciaUrl": "https://www.youtube.com/shorts/BsfOLUntQxw",
+   "exemplos": [
+    {
+     "nicho": "Fotografia",
+     "texto": "O detalhe que entrega quem é iniciante em fotografia de produto"
+    },
+    {
+     "nicho": "Cozinha",
+     "texto": "O detalhe que entrega quem é iniciante na cozinha"
+    }
+   ]
+  },
+  {
+   "id": "d20",
+   "numero": 20,
+   "gancho": "Te explico ___ em um minuto",
+   "descricao": "Promete simplificar um assunto difícil num tempo curto. O prazo segura a atenção e a clareza gera salvamentos.",
+   "formatoId": "tutorial",
+   "referenciaUrl": "https://www.youtube.com/shorts/H8sVhXC9_1Q",
+   "exemplos": [
+    {
+     "nicho": "Investimentos",
+     "texto": "Te explico o Tesouro Direto em um minuto"
+    },
+    {
+     "nicho": "Impostos",
+     "texto": "Te explico o imposto de renda em um minuto"
+    }
+   ]
+  },
+  {
+   "id": "d21",
+   "numero": 21,
+   "gancho": "O conselho que eu daria para mim no primeiro dia de ___",
+   "descricao": "Conselho retroativo, em tom pessoal. Une vulnerabilidade e experiência, e quem está começando se vê no lugar.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/PWiqU73A-hc",
+   "exemplos": [
+    {
+     "nicho": "Medicina",
+     "texto": "O conselho que eu daria para mim no primeiro dia de residência"
+    },
+    {
+     "nicho": "Freelancer",
+     "texto": "O conselho que eu daria para mim no primeiro dia como freelancer"
+    }
+   ]
+  },
+  {
+   "id": "d22",
+   "numero": 22,
+   "gancho": "Não compre ___ antes de ver isto",
+   "descricao": "Um alerta antes de uma compra que o público está prestes a fazer. Evitar prejuízo é motivo forte para assistir e salvar.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/rQ94OyrcAs8",
+   "exemplos": [
+    {
+     "nicho": "Tecnologia",
+     "texto": "Não compre notebook antes de ver isto"
+    },
+    {
+     "nicho": "Imóveis",
+     "texto": "Não compre apartamento na planta antes de ver isto"
+    }
+   ]
+  },
+  {
+   "id": "d23",
+   "numero": 23,
+   "gancho": "O que eu queria ter sabido antes de ___",
+   "descricao": "Lições que só a experiência ensinou, contadas para quem ainda vai passar por isso. Gera identificação e gratidão.",
+   "formatoId": "lista",
+   "referenciaUrl": "https://www.youtube.com/shorts/Ls2cmVH5iMI",
+   "exemplos": [
+    {
+     "nicho": "Mudança",
+     "texto": "O que eu queria ter sabido antes de morar sozinho"
+    },
+    {
+     "nicho": "Negócio próprio",
+     "texto": "O que eu queria ter sabido antes de abrir empresa"
+    }
+   ]
+  },
+  {
+   "id": "d24",
+   "numero": 24,
+   "gancho": "Esse hábito está atrasando o seu ___",
+   "descricao": "Liga um hábito comum a um resultado que a pessoa quer. A dúvida \"será que sou eu?\" prende até o fim.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/d-7kzjggcQE",
+   "exemplos": [
+    {
+     "nicho": "Emagrecimento",
+     "texto": "Esse hábito está atrasando o seu emagrecimento"
+    },
+    {
+     "nicho": "Carreira",
+     "texto": "Esse hábito está atrasando a sua promoção"
+    }
+   ]
+  },
+  {
+   "id": "d25",
+   "numero": 25,
+   "gancho": "Por que ___ não funciona para você",
+   "descricao": "Explica uma frustração comum do público. Quem já tentou e falhou quer entender o motivo.",
+   "formatoId": "narrado",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Dieta",
+     "texto": "Por que a dieta não funciona para você"
+    },
+    {
+     "nicho": "Marketing",
+     "texto": "Por que o tráfego pago não funciona para você"
+    }
+   ]
+  },
+  {
+   "id": "d26",
+   "numero": 26,
+   "gancho": "O passo a passo que eu uso para ___",
+   "descricao": "Entrega um método pronto, em etapas. Conteúdo prático é salvo para usar depois.",
+   "formatoId": "tutorial",
+   "referenciaUrl": "https://www.youtube.com/shorts/yUuwfg0_zUs",
+   "exemplos": [
+    {
+     "nicho": "Organização",
+     "texto": "O passo a passo que eu uso para planejar a semana"
+    },
+    {
+     "nicho": "Vendas",
+     "texto": "O passo a passo que eu uso para responder orçamento no WhatsApp"
+    }
+   ]
+  },
+  {
+   "id": "d27",
+   "numero": 27,
+   "gancho": "Reagindo a ___ dos meus seguidores",
+   "descricao": "Comenta o que o público mandou. Gera participação, mais envios e a sensação de conversa.",
+   "formatoId": "react",
+   "referenciaUrl": "https://www.youtube.com/shorts/19sbJ95tJ08",
+   "exemplos": [
+    {
+     "nicho": "Decoração",
+     "texto": "Reagindo às salas dos meus seguidores"
+    },
+    {
+     "nicho": "Finanças",
+     "texto": "Reagindo aos gastos do mês dos meus seguidores"
+    }
+   ]
+  },
+  {
+   "id": "d28",
+   "numero": 28,
+   "gancho": "O que dá para fazer com ___ reais",
+   "descricao": "Um valor concreto e o que ele rende. Números reais despertam curiosidade e comparação com a própria vida.",
+   "formatoId": "lista",
+   "referenciaUrl": "https://www.youtube.com/shorts/ikWTXhJFIpE",
+   "exemplos": [
+    {
+     "nicho": "Mercado",
+     "texto": "O que dá para comprar com 100 reais no mercado"
+    },
+    {
+     "nicho": "Investimentos",
+     "texto": "O que dá para fazer com 500 reais por mês investindo"
+    }
+   ]
+  },
+  {
+   "id": "d29",
+   "numero": 29,
+   "gancho": "Ninguém acredita quando eu digo que ___",
+   "descricao": "Uma afirmação que parece improvável sobre a sua área. O choque inicial segura e a explicação convence.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/WluyZTtCRvA",
+   "exemplos": [
+    {
+     "nicho": "Nutrição",
+     "texto": "Ninguém acredita quando eu digo que como pão todo dia"
+    },
+    {
+     "nicho": "Programação",
+     "texto": "Ninguém acredita quando eu digo que aprendi a programar depois dos 40"
+    }
+   ]
+  },
+  {
+   "id": "d30",
+   "numero": 30,
+   "gancho": "A frase que todo ___ já ouviu",
+   "descricao": "Uma fala repetida que a profissão inteira conhece. Identificação imediata e muito compartilhamento entre colegas.",
+   "formatoId": "pov",
+   "referenciaUrl": "https://www.youtube.com/shorts/DCF8MEYiCsM",
+   "exemplos": [
+    {
+     "nicho": "Professor",
+     "texto": "A frase que todo professor já ouviu na reunião de pais"
+    },
+    {
+     "nicho": "Garçom",
+     "texto": "A frase que todo garçom já ouviu no fim do expediente"
+    }
+   ]
+  },
+  {
+   "id": "d31",
+   "numero": 31,
+   "gancho": "Três ferramentas que eu uso todo dia para ___",
+   "descricao": "Recomendações práticas e testadas. Lista de ferramentas é salva e mandada para colegas.",
+   "formatoId": "tutorial",
+   "referenciaUrl": "https://www.youtube.com/shorts/7Qc5vPn5Nfw",
+   "exemplos": [
+    {
+     "nicho": "Produtividade",
+     "texto": "Três ferramentas que eu uso todo dia para organizar o trabalho"
+    },
+    {
+     "nicho": "Edição",
+     "texto": "Três ferramentas que eu uso todo dia para editar vídeo"
+    }
+   ]
+  },
+  {
+   "id": "d32",
+   "numero": 32,
+   "gancho": "O antes e depois de ___",
+   "descricao": "Prova visual de transformação. O contraste fala sozinho e a pessoa quer ver o resultado final.",
+   "formatoId": "dividida",
+   "referenciaUrl": "https://www.youtube.com/shorts/B02Gh6gOtTA",
+   "exemplos": [
+    {
+     "nicho": "Reforma",
+     "texto": "O antes e depois de uma cozinha de 6 metros"
+    },
+    {
+     "nicho": "Jardinagem",
+     "texto": "O antes e depois de uma varanda abandonada"
+    }
+   ]
+  },
+  {
+   "id": "d33",
+   "numero": 33,
+   "gancho": "Se você ___, este vídeo é para você",
+   "descricao": "Chama o público certo logo na primeira frase. Quem se encaixa sente que o vídeo foi feito para ele.",
+   "formatoId": "camera",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Ansiedade",
+     "texto": "Se você acorda cansado mesmo dormindo 8 horas, este vídeo é para você"
+    },
+    {
+     "nicho": "Freelancer",
+     "texto": "Se você cobra barato com medo de perder cliente, este vídeo é para você"
+    }
+   ]
+  },
+  {
+   "id": "d34",
+   "numero": 34,
+   "gancho": "A verdade sobre ___ que ninguém fala",
+   "descricao": "Promete um lado escondido de algo conhecido. Tom de bastidor gera curiosidade e debate.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/I-bCHf9EhG4",
+   "exemplos": [
+    {
+     "nicho": "Influência",
+     "texto": "A verdade sobre ganhar dinheiro com Instagram que ninguém fala"
+    },
+    {
+     "nicho": "Concursos",
+     "texto": "A verdade sobre passar em concurso que ninguém fala"
+    }
+   ]
+  },
+  {
+   "id": "d35",
+   "numero": 35,
+   "gancho": "O que acontece com ___ quando você ___",
+   "descricao": "Explica um efeito que o público sente mas não entende. A curiosidade sobre o mecanismo segura a atenção.",
+   "formatoId": "narrado",
+   "referenciaUrl": "https://www.youtube.com/shorts/J2ZoBGjWd7o",
+   "exemplos": [
+    {
+     "nicho": "Saúde",
+     "texto": "O que acontece com o seu corpo quando você fica sem açúcar"
+    },
+    {
+     "nicho": "Finanças",
+     "texto": "O que acontece com o seu dinheiro quando você atrasa o cartão"
+    }
+   ]
+  },
+  {
+   "id": "d36",
+   "numero": 36,
+   "gancho": "Responda rápido: ___",
+   "descricao": "Um teste ou desafio curto para quem assiste. A pessoa responde mentalmente, comenta a resposta e assiste de novo.",
+   "formatoId": "texto",
+   "referenciaUrl": "https://www.youtube.com/shorts/Fc5c5G6cR24",
+   "exemplos": [
+    {
+     "nicho": "Inglês",
+     "texto": "Responda rápido: como se diz \"puxa vida\" em inglês?"
+    },
+    {
+     "nicho": "Trânsito",
+     "texto": "Responda rápido: quem tem a preferência nesta rotatória?"
+    }
+   ]
+  },
+  {
+   "id": "d37",
+   "numero": 37,
+   "gancho": "O erro que eu repeti por ___ anos",
+   "descricao": "Conte um erro seu e quanto tempo levou para perceber. Quem está no mesmo ponto se reconhece e fica até o fim para saber a saída.",
+   "formatoId": "lofi",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Confeitaria",
+     "texto": "O erro que eu repeti por 3 anos: cobrar o bolo pelo peso e não pelo trabalho"
+    },
+    {
+     "nicho": "Fotografia",
+     "texto": "O erro que eu repeti por 5 anos: entregar todas as fotos em vez das melhores"
+    }
+   ]
+  },
+  {
+   "id": "d38",
+   "numero": 38,
+   "gancho": "Ninguém te avisa que ___ quando você começa em ___",
+   "descricao": "Uma verdade da profissão que só aparece na prática. Gera identificação em quem começou agora e respeito em quem já passou por isso.",
+   "formatoId": "narrado",
+   "referenciaUrl": "https://www.youtube.com/shorts/3qUwBbkltPw",
+   "exemplos": [
+    {
+     "nicho": "Marcenaria",
+     "texto": "Ninguém te avisa que o orçamento leva mais tempo que o móvel quando você começa em marcenaria"
+    },
+    {
+     "nicho": "Advocacia",
+     "texto": "Ninguém te avisa que você vira psicólogo quando começa na advocacia de família"
+    }
+   ]
+  },
+  {
+   "id": "d39",
+   "numero": 39,
+   "gancho": "Três sinais de que você ___",
+   "descricao": "Um diagnóstico rápido em três itens. A pessoa confere na hora se se encaixa e tende a salvar ou mandar para alguém.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/fmElzSBcusc",
+   "exemplos": [
+    {
+     "nicho": "Psicologia",
+     "texto": "Três sinais de que você está cansado e não preguiçoso"
+    },
+    {
+     "nicho": "Mecânica",
+     "texto": "Três sinais de que o seu carro precisa trocar a embreagem"
+    }
+   ]
+  },
+  {
+   "id": "d40",
+   "numero": 40,
+   "gancho": "Antes de ___, faça isto",
+   "descricao": "Um cuidado que evita um prejuízo comum. Funciona porque a pessoa sente que ganhou um atalho antes de errar.",
+   "formatoId": "tutorial",
+   "referenciaUrl": "https://www.youtube.com/shorts/a0m9Uml61-Q",
+   "exemplos": [
+    {
+     "nicho": "Viagem",
+     "texto": "Antes de reservar o hotel, faça isto no mapa"
+    },
+    {
+     "nicho": "Informática",
+     "texto": "Antes de formatar o computador, faça isto com as senhas"
+    }
+   ]
+  },
+  {
+   "id": "d41",
+   "numero": 41,
+   "gancho": "O que muda quando você para de ___",
+   "descricao": "Mostre o antes e o depois de largar um hábito. A comparação lado a lado prende porque o público quer ver a diferença.",
+   "formatoId": "lofi",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Produtividade",
+     "texto": "O que muda quando você para de olhar o celular ao acordar"
+    },
+    {
+     "nicho": "Saúde",
+     "texto": "O que muda quando você para de tomar refrigerante"
+    }
+   ]
+  },
+  {
+   "id": "d42",
+   "numero": 42,
+   "gancho": "Pare de ___. Faça isto no lugar",
+   "descricao": "Corta um hábito comum e já entrega a troca. A ordem direta dá autoridade e a solução evita que soe só como bronca.",
+   "formatoId": "texto",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Vendas",
+     "texto": "Pare de mandar o preço no primeiro contato. Faça isto no lugar"
+    },
+    {
+     "nicho": "Estudos",
+     "texto": "Pare de grifar o livro inteiro. Faça isto no lugar"
+    }
+   ]
+  },
+  {
+   "id": "d43",
+   "numero": 43,
+   "gancho": "Você está fazendo ___ errado, e não é culpa sua",
+   "descricao": "Aponta o erro sem culpar quem assiste. A pessoa baixa a guarda, quer saber o jeito certo e não se sente atacada.",
+   "formatoId": "tutorial",
+   "referenciaUrl": "https://www.youtube.com/shorts/cJZD8WD1pCY",
+   "exemplos": [
+    {
+     "nicho": "Excel",
+     "texto": "Você está usando o PROCV errado, e não é culpa sua"
+    },
+    {
+     "nicho": "Cabelo",
+     "texto": "Você está secando o cabelo errado, e não é culpa sua"
+    }
+   ]
+  },
+  {
+   "id": "d44",
+   "numero": 44,
+   "gancho": "Se eu começasse em ___ hoje, faria só isto",
+   "descricao": "Conselho de quem já passou pelo caminho, resumido no essencial. Quem está começando salva para seguir depois.",
+   "formatoId": "lista",
+   "referenciaUrl": "https://www.youtube.com/shorts/o9CVXZ2uAc0",
+   "exemplos": [
+    {
+     "nicho": "Instagram",
+     "texto": "Se eu começasse um perfil do zero hoje, faria só isto"
+    },
+    {
+     "nicho": "Música",
+     "texto": "Se eu começasse no violão hoje, faria só isto"
+    }
+   ]
+  },
+  {
+   "id": "d45",
+   "numero": 45,
+   "gancho": "Um dia comigo sendo ___",
+   "descricao": "Mostra a rotina real da profissão. Curiosidade sobre a vida dos outros segura a atenção e aproxima quem assiste.",
+   "formatoId": "lofi",
+   "referenciaUrl": "https://www.youtube.com/shorts/TAvOp2qyfNs",
+   "exemplos": [
+    {
+     "nicho": "Home office",
+     "texto": "Um dia comigo sendo programador em casa"
+    },
+    {
+     "nicho": "Enfermagem",
+     "texto": "Um dia comigo sendo enfermeira na UTI"
+    }
+   ]
+  },
+  {
+   "id": "d46",
+   "numero": 46,
+   "gancho": "Isso aqui custa ___ e quase ninguém sabe",
+   "descricao": "Revela um custo escondido. Dinheiro chama atenção na hora e a pessoa quer conferir se está pagando também.",
+   "formatoId": "texto",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Energia",
+     "texto": "Deixar o carregador na tomada custa isso e quase ninguém sabe"
+    },
+    {
+     "nicho": "Carro",
+     "texto": "Rodar com o pneu murcho custa isso e quase ninguém sabe"
+    }
+   ]
+  },
+  {
+   "id": "d47",
+   "numero": 47,
+   "gancho": "Eu testei ___ por 30 dias. Olha o que aconteceu",
+   "descricao": "Um experimento pessoal com prazo e resultado. A promessa de um desfecho mantém a pessoa até o fim.",
+   "formatoId": "dividida",
+   "referenciaUrl": "https://www.youtube.com/shorts/PDqEQ_Bi1KY",
+   "exemplos": [
+    {
+     "nicho": "Skincare",
+     "texto": "Eu testei só protetor solar por 30 dias. Olha o que aconteceu"
+    },
+    {
+     "nicho": "Finanças",
+     "texto": "Eu testei anotar todo gasto por 30 dias. Olha o que aconteceu"
+    }
+   ]
+  },
+  {
+   "id": "d48",
+   "numero": 48,
+   "gancho": "A pergunta que eu mais ouço sobre ___",
+   "descricao": "Responde uma dúvida real e repetida. Se muita gente pergunta, muita gente quer a resposta, e o vídeo vira referência.",
+   "formatoId": "conversa",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Nutrição",
+     "texto": "A pergunta que eu mais ouço sobre comer à noite"
+    },
+    {
+     "nicho": "Direito trabalhista",
+     "texto": "A pergunta que eu mais ouço sobre demissão"
+    }
+   ]
+  },
+  {
+   "id": "d49",
+   "numero": 49,
+   "gancho": "___ ou ___: qual vale mais a pena?",
+   "descricao": "Compara duas opções que o público já está pesando. Quem está decidindo assiste até o veredito e comenta a própria escolha.",
+   "formatoId": "dividida",
+   "referenciaUrl": "https://www.youtube.com/shorts/eAt_-EaCfnY",
+   "exemplos": [
+    {
+     "nicho": "Moradia",
+     "texto": "Alugar ou financiar: qual vale mais a pena?"
+    },
+    {
+     "nicho": "Celular",
+     "texto": "iPhone ou Android: qual vale mais a pena?"
+    }
+   ]
+  },
+  {
+   "id": "d50",
+   "numero": 50,
+   "gancho": "O jeito certo e o jeito que todo mundo faz: ___",
+   "descricao": "Contraste direto entre o comum e o correto. A pessoa se reconhece no jeito errado e quer ver a diferença.",
+   "formatoId": "comparativo",
+   "referenciaUrl": "https://www.youtube.com/shorts/p7-eZpy0PIA",
+   "exemplos": [
+    {
+     "nicho": "Escrita",
+     "texto": "O jeito certo e o jeito que todo mundo faz: e-mail de cobrança"
+    },
+    {
+     "nicho": "Limpeza",
+     "texto": "O jeito certo e o jeito que todo mundo faz: lavar a toalha"
+    }
+   ]
+  },
+  {
+   "id": "d51",
+   "numero": 51,
+   "gancho": "Três coisas que eu nunca faria sendo ___",
+   "descricao": "Regras pessoais de quem conhece a área por dentro. Soa como segredo de bastidor e gera debate nos comentários.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/Rd3BUXA70MU",
+   "exemplos": [
+    {
+     "nicho": "Comissária de bordo",
+     "texto": "Três coisas que eu nunca faria sendo comissária de bordo"
+    },
+    {
+     "nicho": "Mecânico",
+     "texto": "Três coisas que eu nunca faria sendo mecânico"
+    }
+   ]
+  },
+  {
+   "id": "d52",
+   "numero": 52,
+   "gancho": "Quanto custa de verdade ___",
+   "descricao": "Abre a conta que ninguém mostra. Transparência sobre dinheiro gera curiosidade e muito compartilhamento.",
+   "formatoId": "narrado",
+   "referenciaUrl": "https://www.youtube.com/shorts/PeitsCzwe0A",
+   "exemplos": [
+    {
+     "nicho": "Pets",
+     "texto": "Quanto custa de verdade ter um cachorro por ano"
+    },
+    {
+     "nicho": "Viagem",
+     "texto": "Quanto custa de verdade uma semana em Portugal"
+    }
+   ]
+  },
+  {
+   "id": "d53",
+   "numero": 53,
+   "gancho": "POV: você é ___ e o cliente pede ___",
+   "descricao": "Encena uma situação típica do atendimento. Quem é da área se identifica e marca os colegas.",
+   "formatoId": "conversa",
+   "referenciaUrl": "https://www.youtube.com/shorts/wC7KJSuY0nI",
+   "exemplos": [
+    {
+     "nicho": "Fotografia",
+     "texto": "POV: você é fotógrafo e o cliente pede todas as fotos sem editar"
+    },
+    {
+     "nicho": "Arquitetura",
+     "texto": "POV: você é arquiteto e o cliente pede uma casa de revista com metade do orçamento"
+    }
+   ]
+  },
+  {
+   "id": "d54",
+   "numero": 54,
+   "gancho": "Mito ou verdade: ___",
+   "descricao": "Julga uma crença popular da área. A resposta curta e firme gera discussão e posiciona como quem entende.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/u7IIyWwJHes",
+   "exemplos": [
+    {
+     "nicho": "Saúde bucal",
+     "texto": "Mito ou verdade: escovar logo depois de comer estraga o dente"
+    },
+    {
+     "nicho": "Finanças",
+     "texto": "Mito ou verdade: poupança é o investimento mais seguro"
+    }
+   ]
+  },
+  {
+   "id": "d55",
+   "numero": 55,
+   "gancho": "O detalhe que entrega quem é iniciante em ___",
+   "descricao": "Mostra um sinal pequeno que separa o novato do experiente. Quem é da área concorda e quem é iniciante quer corrigir.",
+   "formatoId": "dividida",
+   "referenciaUrl": "https://www.youtube.com/shorts/ykBmP0VEK2Y",
+   "exemplos": [
+    {
+     "nicho": "Edição de vídeo",
+     "texto": "O detalhe que entrega quem é iniciante em edição"
+    },
+    {
+     "nicho": "Vendas",
+     "texto": "O detalhe que entrega quem é iniciante em vendas"
+    }
+   ]
+  },
+  {
+   "id": "d56",
+   "numero": 56,
+   "gancho": "Te explico ___ em um minuto",
+   "descricao": "Promete simplificar um assunto difícil num tempo curto. O prazo segura a atenção e a clareza gera salvamentos.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.youtube.com/shorts/8iy49Vb91yY",
+   "exemplos": [
+    {
+     "nicho": "Medicina",
+     "texto": "Te explico o que é colesterol em um minuto"
+    },
+    {
+     "nicho": "Tecnologia",
+     "texto": "Te explico o que é inteligência artificial em um minuto"
+    }
+   ]
+  },
+  {
+   "id": "d57",
+   "numero": 57,
+   "gancho": "O conselho que eu daria para mim no primeiro dia de ___",
+   "descricao": "Conselho retroativo, em tom pessoal. Une vulnerabilidade e experiência, e quem está começando se vê no lugar.",
+   "formatoId": "lofi",
+   "referenciaUrl": "https://www.youtube.com/shorts/9XPQO_WEUAo",
+   "exemplos": [
+    {
+     "nicho": "Faculdade",
+     "texto": "O conselho que eu daria para mim no primeiro dia de faculdade"
+    },
+    {
+     "nicho": "Maternidade",
+     "texto": "O conselho que eu daria para mim no primeiro dia como mãe"
+    }
+   ]
+  },
+  {
+   "id": "d58",
+   "numero": 58,
+   "gancho": "Não compre ___ antes de ver isto",
+   "descricao": "Um alerta antes de uma compra que o público está prestes a fazer. Evitar prejuízo é motivo forte para assistir e salvar.",
+   "formatoId": "tutorial",
+   "referenciaUrl": "https://www.youtube.com/shorts/D_hVUAfOihs",
+   "exemplos": [
+    {
+     "nicho": "Carro",
+     "texto": "Não compre carro usado antes de ver isto"
+    },
+    {
+     "nicho": "Bebê",
+     "texto": "Não compre carrinho de bebê antes de ver isto"
+    }
+   ]
+  },
+  {
+   "id": "d59",
+   "numero": 59,
+   "gancho": "O que eu queria ter sabido antes de ___",
+   "descricao": "Lições que só a experiência ensinou, contadas para quem ainda vai passar por isso. Gera identificação e gratidão.",
+   "formatoId": "narrado",
+   "referenciaUrl": "https://www.youtube.com/shorts/tcuVE9qFEX4",
+   "exemplos": [
+    {
+     "nicho": "Intercâmbio",
+     "texto": "O que eu queria ter sabido antes de fazer intercâmbio"
+    },
+    {
+     "nicho": "Casamento",
+     "texto": "O que eu queria ter sabido antes de casar"
+    }
+   ]
+  },
+  {
+   "id": "d60",
+   "numero": 60,
+   "gancho": "Esse hábito está atrasando o seu ___",
+   "descricao": "Liga um hábito comum a um resultado que a pessoa quer. A dúvida \"será que sou eu?\" prende até o fim.",
+   "formatoId": "texto",
+   "referenciaUrl": "https://www.youtube.com/shorts/b3FvleFwbuo",
+   "exemplos": [
+    {
+     "nicho": "Sono",
+     "texto": "Esse hábito está atrasando o seu sono"
+    },
+    {
+     "nicho": "Inglês",
+     "texto": "Esse hábito está atrasando o seu inglês"
+    }
+   ]
+  },
+  {
+   "id": "d61",
+   "numero": 61,
+   "gancho": "Por que ___ não funciona para você",
+   "descricao": "Explica uma frustração comum do público. Quem já tentou e falhou quer entender o motivo.",
+   "formatoId": "camera",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Estudos",
+     "texto": "Por que o Pomodoro não funciona para você"
+    },
+    {
+     "nicho": "Treino",
+     "texto": "Por que treinar em casa não funciona para você"
+    }
+   ]
+  },
+  {
+   "id": "d62",
+   "numero": 62,
+   "gancho": "O passo a passo que eu uso para ___",
+   "descricao": "Entrega um método pronto, em etapas. Conteúdo prático é salvo para usar depois.",
+   "formatoId": "lista",
+   "referenciaUrl": "https://www.youtube.com/shorts/e3cYhr1HQFQ",
+   "exemplos": [
+    {
+     "nicho": "Fotografia",
+     "texto": "O passo a passo que eu uso para editar foto no celular"
+    },
+    {
+     "nicho": "Cozinha",
+     "texto": "O passo a passo que eu uso para a marmita da semana"
+    }
+   ]
+  },
+  {
+   "id": "d63",
+   "numero": 63,
+   "gancho": "Reagindo a ___ dos meus seguidores",
+   "descricao": "Comenta o que o público mandou. Gera participação, mais envios e a sensação de conversa.",
+   "formatoId": "react",
+   "referenciaUrl": "https://www.youtube.com/shorts/8GIj8y4bKB4",
+   "exemplos": [
+    {
+     "nicho": "Moda",
+     "texto": "Reagindo aos looks de trabalho dos meus seguidores"
+    },
+    {
+     "nicho": "Currículo",
+     "texto": "Reagindo aos currículos dos meus seguidores"
+    }
+   ]
+  },
+  {
+   "id": "d64",
+   "numero": 64,
+   "gancho": "O que dá para fazer com ___ reais",
+   "descricao": "Um valor concreto e o que ele rende. Números reais despertam curiosidade e comparação com a própria vida.",
+   "formatoId": "bastidores",
+   "referenciaUrl": "https://www.youtube.com/shorts/zBpEiDXj-VI",
+   "exemplos": [
+    {
+     "nicho": "Viagem",
+     "texto": "O que dá para fazer com 300 reais num fim de semana no Rio"
+    },
+    {
+     "nicho": "Decoração",
+     "texto": "O que dá para fazer com 200 reais para mudar o quarto"
+    }
+   ]
+  },
+  {
+   "id": "d65",
+   "numero": 65,
+   "gancho": "Ninguém acredita quando eu digo que ___",
+   "descricao": "Uma afirmação que parece improvável sobre a sua área. O choque inicial segura e a explicação convence.",
+   "formatoId": "texto",
+   "referenciaUrl": "https://www.youtube.com/shorts/C-VXCy-OiCo",
+   "exemplos": [
+    {
+     "nicho": "Finanças",
+     "texto": "Ninguém acredita quando eu digo que quitei 40 mil de dívida"
+    },
+    {
+     "nicho": "Corrida",
+     "texto": "Ninguém acredita quando eu digo que comecei a correr com 60 anos"
+    }
+   ]
+  },
+  {
+   "id": "d66",
+   "numero": 66,
+   "gancho": "A frase que todo ___ já ouviu",
+   "descricao": "Uma fala repetida que a profissão inteira conhece. Identificação imediata e muito compartilhamento entre colegas.",
+   "formatoId": "texto",
+   "referenciaUrl": "https://www.youtube.com/shorts/XxK80tdB7bw",
+   "exemplos": [
+    {
+     "nicho": "Designer",
+     "texto": "A frase que todo designer já ouviu: é só um ajustezinho"
+    },
+    {
+     "nicho": "Médico",
+     "texto": "A frase que todo médico já ouviu: vi na internet que..."
+    }
+   ]
+  },
+  {
+   "id": "d67",
+   "numero": 67,
+   "gancho": "Três ferramentas que eu uso todo dia para ___",
+   "descricao": "Recomendações práticas e testadas. Lista de ferramentas é salva e mandada para colegas.",
+   "formatoId": "lista",
+   "referenciaUrl": "https://www.youtube.com/shorts/X1-PlsHvIkg",
+   "exemplos": [
+    {
+     "nicho": "Estudos",
+     "texto": "Três ferramentas que eu uso todo dia para estudar"
+    },
+    {
+     "nicho": "Cozinha",
+     "texto": "Três utensílios que eu uso todo dia para cozinhar mais rápido"
+    }
+   ]
+  },
+  {
+   "id": "d68",
+   "numero": 68,
+   "gancho": "O antes e depois de ___",
+   "descricao": "Prova visual de transformação. O contraste fala sozinho e a pessoa quer ver o resultado final.",
+   "formatoId": "bastidores",
+   "referenciaUrl": "https://www.youtube.com/shorts/OitOx6_Kp3M",
+   "exemplos": [
+    {
+     "nicho": "Estética automotiva",
+     "texto": "O antes e depois de um carro de 15 anos"
+    },
+    {
+     "nicho": "Organização",
+     "texto": "O antes e depois de um guarda-roupa lotado"
+    }
+   ]
+  },
+  {
+   "id": "d69",
+   "numero": 69,
+   "gancho": "Se você ___, este vídeo é para você",
+   "descricao": "Chama o público certo logo na primeira frase. Quem se encaixa sente que o vídeo foi feito para ele.",
+   "formatoId": "narrado",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Pais",
+     "texto": "Se o seu filho não larga o celular, este vídeo é para você"
+    },
+    {
+     "nicho": "Concursos",
+     "texto": "Se você estuda e esquece tudo, este vídeo é para você"
+    }
+   ]
+  },
+  {
+   "id": "d70",
+   "numero": 70,
+   "gancho": "A verdade sobre ___ que ninguém fala",
+   "descricao": "Promete um lado escondido de algo conhecido. Tom de bastidor gera curiosidade e debate.",
+   "formatoId": "lofi",
+   "referenciaUrl": "https://www.youtube.com/shorts/lhjEG3wC4mA",
+   "exemplos": [
+    {
+     "nicho": "Morar fora",
+     "texto": "A verdade sobre morar fora que ninguém fala"
+    },
+    {
+     "nicho": "Empreender",
+     "texto": "A verdade sobre ter o próprio negócio que ninguém fala"
+    }
+   ]
+  },
+  {
+   "id": "d71",
+   "numero": 71,
+   "gancho": "O que acontece com ___ quando você ___",
+   "descricao": "Explica um efeito que o público sente mas não entende. A curiosidade sobre o mecanismo segura a atenção.",
+   "formatoId": "tutorial",
+   "referenciaUrl": "",
+   "exemplos": [
+    {
+     "nicho": "Tecnologia",
+     "texto": "O que acontece com o celular quando você fecha todos os apps"
+    },
+    {
+     "nicho": "Plantas",
+     "texto": "O que acontece com a planta quando você rega demais"
+    }
+   ]
+  },
+  {
+   "id": "d72",
+   "numero": 72,
+   "gancho": "Responda rápido: ___",
+   "descricao": "Um teste ou desafio curto para quem assiste. A pessoa responde mentalmente, comenta a resposta e assiste de novo.",
+   "formatoId": "conversa",
+   "referenciaUrl": "https://www.youtube.com/shorts/U5IA4F4D7UA",
+   "exemplos": [
+    {
+     "nicho": "Matemática",
+     "texto": "Responda rápido: quanto é 15% de 80?"
+    },
+    {
+     "nicho": "Português",
+     "texto": "Responda rápido: é \"a nível de\" ou \"em nível de\"?"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+.env.local
+dist-artefato
+dist-site
+# Fica só no computador: material de estudo do app original e instruções locais.
+replica/
+CLAUDE.md
