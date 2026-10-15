@@ -1048,9 +1048,11 @@ a.abertura-gancho:hover .gancho {
   background: #000000;
 }
 
-/* O embed do Instagram tem cabeçalho e legenda: um pouco mais de largura. */
+/* O player do Instagram tem cabeçalho, mídia e rodapé próprios e cresce até
+   540px de largura: ocupa essa largura e a altura toda, sem proporção fixa. */
 .tela-inteira-instagram {
-  aspect-ratio: 9 / 18;
+  aspect-ratio: auto;
+  width: min(540px, 100%);
 }
 
 .tela-inteira-video iframe {
