@@ -180,7 +180,7 @@ export function Dia() {
             </dl>
             {referencia && !noArtefato && (
               <div className="video-bloco">
-                <div className="moldura-video">
+                <div className={`moldura-video${referencia.plataforma === "Instagram" ? " recorte-instagram" : ""}`}>
                   <QuadroVideo
                     referencia={referencia}
                     titulo={`Vídeo de referência do dia ${dia.numero} no ${referencia.plataforma}`}
