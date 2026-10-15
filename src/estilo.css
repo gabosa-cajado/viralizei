@@ -961,11 +961,14 @@ a.abertura-gancho:hover .gancho {
   font-size: var(--t-14);
 }
 
+/* Caixa vertical 9:16 que corta o que passa dela: o player do Instagram
+   cresce com a largura e o rodapé dele (curtidas, legenda) fica fora. */
 .moldura-video {
   position: relative;
   aspect-ratio: 9 / 16;
   width: 100%;
-  max-width: 18rem;
+  max-width: 24rem;
+  overflow: hidden;
   border: 2px solid var(--fio);
   background: var(--papel-2);
 }
@@ -1045,14 +1048,8 @@ a.abertura-gancho:hover .gancho {
   max-height: 100%;
   aspect-ratio: 9 / 16;
   max-width: 100%;
+  overflow: hidden;
   background: #000000;
-}
-
-/* O player do Instagram tem cabeçalho, mídia e rodapé próprios e cresce até
-   540px de largura: ocupa essa largura e a altura toda, sem proporção fixa. */
-.tela-inteira-instagram {
-  aspect-ratio: auto;
-  width: min(540px, 100%);
 }
 
 .tela-inteira-video iframe {
