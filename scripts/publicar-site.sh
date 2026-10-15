@@ -6,6 +6,8 @@ cd "$(dirname "$0")/.."
 npm run build:site
 touch dist-site/.nojekyll
 cd dist-site
+# O Vite esvazia a pasta mas preserva .git: começa sempre de um repositório novo.
+rm -rf .git
 git init -q
 git checkout -q -b gh-pages
 git add -A
