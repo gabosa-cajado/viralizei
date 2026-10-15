@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Gancho, GanchoEditavel, montarGancho } from "../componentes/Gancho";
 import { Gravadores, nomeDe, usePerfis } from "../componentes/Pessoas";
+import { QuadroVideo, VideoTelaInteira } from "../componentes/Video";
 import { alternarGravado, diasOrdenados, emEquipe, nomeDoFormato, quemGravou, salvarNicho, useEstado } from "../dados/armazenamento";
 import { gerarGanchos } from "../dados/ia";
 import { noArtefato } from "../dados/plataforma";
@@ -42,10 +43,13 @@ export function Dia() {
   const [nichoCampo, setNichoCampo] = useState(nicho);
   const [geracao, setGeracao] = useState<Geracao>({ estado: "parado" });
   const { copiado, copiar } = useCopiar();
+  const [telaInteira, setTelaInteira] = useState(false);
+  const fecharTelaInteira = useCallback(() => setTelaInteira(false), []);
   const quem = dia ? quemGravou(dia.id) : [];
   const perfis = usePerfis(quem);
 
   useEffect(() => {
+    setTelaInteira(false);
     setLacunas([]);
     setGeracao({ estado: "parado" });
     window.scrollTo(0, 0);
@@ -143,10 +147,12 @@ export function Dia() {
               <div>
                 <dt>Referência</dt>
                 <dd>
-                  {referencia ? (
+                  {referencia && noArtefato ? (
                     <a className="botao botao-secundario botao-pequeno" href={referencia.original} target="_blank" rel="noreferrer">
                       Assistir no {referencia.plataforma}
                     </a>
+                  ) : referencia ? (
+                    <span>Vídeo do {referencia.plataforma}, logo abaixo</span>
                   ) : (
                     <span className="sem-dado">
                       {dia.referenciaUrl ? "O link salvo não é de um vídeo. " : "Sem vídeo. "}
@@ -173,14 +179,24 @@ export function Dia() {
               )}
             </dl>
             {referencia && !noArtefato && (
-              <div className="moldura-video">
-                <iframe
-                  src={referencia.embed}
-                  title={`Vídeo de referência do dia ${dia.numero} no ${referencia.plataforma}`}
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allow="encrypted-media; picture-in-picture; fullscreen"
-                />
+              <div className="video-bloco">
+                <div className="moldura-video">
+                  <QuadroVideo
+                    referencia={referencia}
+                    titulo={`Vídeo de referência do dia ${dia.numero} no ${referencia.plataforma}`}
+                  />
+                </div>
+                <button type="button" className="botao botao-primario" onClick={() => setTelaInteira(true)}>
+                  Assistir em tela inteira
+                </button>
               </div>
+            )}
+            {telaInteira && referencia && !noArtefato && (
+              <VideoTelaInteira
+                referencia={referencia}
+                titulo={`Dia ${dia.numero}: referência no ${referencia.plataforma}`}
+                onFechar={fecharTelaInteira}
+              />
             )}
           </section>
         </li>

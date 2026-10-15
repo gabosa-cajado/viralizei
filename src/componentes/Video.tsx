@@ -1,0 +1,76 @@
+import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+import type { Referencia } from "../dados/referencia";
+
+/** O vídeo do Instagram, TikTok ou YouTube embutido na página. */
+export function QuadroVideo({ referencia, titulo }: { referencia: Referencia; titulo: string }) {
+  return (
+    <iframe
+      src={referencia.embed}
+      title={titulo}
+      referrerPolicy="strict-origin-when-cross-origin"
+      allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+      allowFullScreen
+    />
+  );
+}
+
+interface Props {
+  referencia: Referencia;
+  titulo: string;
+  onFechar: () => void;
+}
+
+/**
+ * Camada de tela inteira, sem sair do site. Vai num portal no <body>: a
+ * animação de entrada das telas (transform) quebraria um position: fixed
+ * aninhado. Pede também a tela cheia do navegador; onde ele não deixa
+ * (iPhone), a camada já cobre a janela toda.
+ */
+export function VideoTelaInteira({ referencia, titulo, onFechar }: Props) {
+  const camada = useRef<HTMLDivElement>(null);
+  const fechar = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const antes = document.activeElement as HTMLElement | null;
+    const rolagem = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    fechar.current?.focus();
+    camada.current?.requestFullscreen?.().catch(() => undefined);
+
+    // Esc fecha. Se o navegador estava em tela cheia, o primeiro Esc é dele:
+    // quando a tela cheia acaba, a camada fecha junto.
+    const tecla = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onFechar();
+    };
+    const saiuDaTelaCheia = () => {
+      if (!document.fullscreenElement) onFechar();
+    };
+    document.addEventListener("keydown", tecla);
+    document.addEventListener("fullscreenchange", saiuDaTelaCheia);
+    return () => {
+      document.removeEventListener("keydown", tecla);
+      document.removeEventListener("fullscreenchange", saiuDaTelaCheia);
+      if (document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
+      document.body.style.overflow = rolagem;
+      antes?.focus();
+    };
+  }, [onFechar]);
+
+  return createPortal(
+    <div ref={camada} className="tela-inteira" role="dialog" aria-modal="true" aria-label={titulo}>
+      <div className="tela-inteira-barra">
+        <p className="tela-inteira-titulo">{titulo}</p>
+        <button ref={fechar} type="button" className="botao botao-fechar" onClick={onFechar}>
+          Fechar
+        </button>
+      </div>
+      <div className="tela-inteira-palco">
+        <div className={`tela-inteira-video tela-inteira-${referencia.plataforma.toLowerCase()}`}>
+          <QuadroVideo referencia={referencia} titulo={titulo} />
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
