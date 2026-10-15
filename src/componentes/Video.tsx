@@ -2,10 +2,12 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Referencia } from "../dados/referencia";
 
-// O player do Instagram tem um cabeçalho de 54px (perfil e "View profile") e a
+// O player do Instagram tem um cabeçalho de 56px (perfil e "View profile") e a
 // mídia num retângulo 4:5; logo abaixo vem o rodapé (curtidas, legenda). Uma
-// caixa com altura = 54px + 125% da largura corta exatamente no fim do vídeo.
-export const CABECALHO_INSTAGRAM = 54;
+// caixa com altura = 56px + 125% da largura corta exatamente no fim do vídeo.
+// O iframe é 16px mais largo que a caixa: a barra de rolagem que o player
+// desenha à direita fica fora do corte e não estreita a mídia.
+export const CABECALHO_INSTAGRAM = 56;
 export const MIDIA_INSTAGRAM = 5 / 4;
 
 /** O vídeo do Instagram, TikTok ou YouTube embutido na página. */
