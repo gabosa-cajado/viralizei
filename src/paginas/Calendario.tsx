@@ -232,6 +232,14 @@ export function Calendario() {
           </ol>
         )}
       </section>
+      {podeEditar && (
+        <p className="rodape-lista">
+          <Link to="/conteudo" className="link">
+            Gerenciar dias
+          </Link>
+          <span>: criar, editar, importar e exportar os ganchos.</span>
+        </p>
+      )}
     </div>
   );
 }

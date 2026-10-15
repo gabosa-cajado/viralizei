@@ -135,6 +135,7 @@ function lerDia(d: DocSnap): Dia | null {
     formatoId: texto(b.formatoId, 80),
     referenciaUrl: texto(b.referenciaUrl, 500),
     exemplos,
+    inspiracao: texto(b.inspiracao, 80) || undefined,
   };
 }
 
@@ -216,6 +217,7 @@ async function carregarDias() {
     descricao: d.descricao,
     formatoId: d.formato_id ?? "",
     referenciaUrl: d.referencia_url,
+    inspiracao: d.inspiracao || undefined,
     exemplos: Array.isArray(d.exemplos)
       ? d.exemplos.map((e: Record<string, unknown>) => ({ nicho: texto(e?.nicho, 80), texto: texto(e?.texto, 400) }))
       : [],

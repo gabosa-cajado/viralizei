@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
 import { QuadroVideo, VideoTelaInteira } from "../componentes/Video";
+import { diasOrdenados, useEstado } from "../dados/armazenamento";
 import { noArtefato } from "../dados/plataforma";
 import { lerReferencia, type Referencia as Ref } from "../dados/referencia";
 import { criadorPorSlug, REFERENCIAS, ROTULOS_VISUAL, type VideoReferencia } from "../dados/referencias";
@@ -28,6 +29,7 @@ function Bloco({ id, titulo, children }: { id: string; titulo: string; children:
 
 export function Referencia() {
   const { slug } = useParams();
+  const { conteudo } = useEstado();
   const criador = criadorPorSlug(slug);
   const [aberto, setAberto] = useState<{ video: VideoReferencia; ref: Ref } | null>(null);
   const fechar = useCallback(() => setAberto(null), []);
@@ -49,6 +51,7 @@ export function Referencia() {
   }
 
   const indice = REFERENCIAS.criadores.findIndex((c) => c.slug === criador.slug);
+  const ganchosInspirados = diasOrdenados(conteudo).filter((d) => d.inspiracao === criador.slug);
   const anterior = REFERENCIAS.criadores[indice - 1];
   const seguinte = REFERENCIAS.criadores[indice + 1];
 
@@ -204,6 +207,20 @@ export function Referencia() {
           <p className="descricao">{criador.outrasPlataformas}</p>
           <p className="descricao">{criador.trialReels}</p>
         </Bloco>
+
+        {ganchosInspirados.length > 0 && (
+          <Bloco id="ganchos-calendario" titulo="Ganchos do calendário que saíram daqui">
+            <ul className="irmaos">
+              {ganchosInspirados.map((d) => (
+                <li key={d.id}>
+                  <Link to={`/dia/${d.numero}`} className="link">
+                    Dia {d.numero}: {d.gancho}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Bloco>
+        )}
 
         <Bloco id="copiar" titulo="O que copiar">
           <Lista itens={criador.copiar} />

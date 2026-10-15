@@ -7,6 +7,11 @@ import { alternarGravado, diasOrdenados, emEquipe, nomeDoFormato, quemGravou, sa
 import { gerarGanchos } from "../dados/ia";
 import { noArtefato } from "../dados/plataforma";
 import { lerReferencia } from "../dados/referencia";
+import { criadorPorSlug } from "../dados/referencias";
+
+function nomeDaReferencia(slug: string) {
+  return criadorPorSlug(slug)?.nome ?? slug;
+}
 
 function useCopiar() {
   const [copiado, setCopiado] = useState<string | null>(null);
@@ -165,6 +170,17 @@ export function Dia() {
                   )}
                 </dd>
               </div>
+              {dia.inspiracao && (
+                <div>
+                  <dt>Inspirado em</dt>
+                  <dd>
+                    <Link to={`/referencias/${dia.inspiracao}`} className="link">
+                      {nomeDaReferencia(dia.inspiracao)}
+                    </Link>
+                    , na seção Referências
+                  </dd>
+                </div>
+              )}
               {irmaos.length > 0 && (
                 <div>
                   <dt>Mesma ideia</dt>

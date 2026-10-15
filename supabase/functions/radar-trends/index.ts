@@ -1,0 +1,289 @@
+// Viralizei — radar diário de tendências.
+// Roda todo dia às 7h (Brasília) pelo pg_cron, ou quando um sócio pede
+// "Atualizar agora". Lê o Google Trends do Brasil e os vídeos mais vistos da
+// semana no YouTube em buscas do nicho, cruza com os ganchos do calendário e,
+// se houver ANTHROPIC_API_KEY, pede ao Claude 5 ideias para o dia. Grava em
+// public.radar (só a função escreve; sócios leem).
+//
+// Autorização: header x-viralizei-cron com o segredo guardado no Vault do
+// banco (conferido pela função public.radar_segredo_confere, chamada com a
+// chave de serviço), ou JWT de sócio (public.sou_socio).
+import Anthropic from "npm:@anthropic-ai/sdk@0.134.0";
+import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@0.134.0/helpers/beta/zod";
+import { z } from "npm:zod@4.6.7";
+import { createClient } from "npm:@supabase/supabase-js@2.75.0";
+
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-viralizei-cron",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+const CONSULTAS = [
+  "empreendedorismo",
+  "marketing digital",
+  "inteligência artificial negócios",
+  "dinheiro investimentos",
+  "produtividade carreira",
+];
+
+interface Tendencia {
+  titulo: string;
+  trafego: string;
+  noticia: string;
+  url: string;
+}
+
+interface VideoQuente {
+  consulta: string;
+  id: string;
+  titulo: string;
+  canal: string;
+  views: string;
+  viewsNumero: number;
+  publicado: string;
+  duracao: string;
+  url: string;
+}
+
+interface Ideia {
+  titulo: string;
+  porqueAgora: string;
+  textoNaTela: string;
+  ganchoFalado: string;
+  formato: string;
+  diaCalendario: number | null;
+  fonte: string;
+}
+
+const Resposta = z.object({
+  resumo: z.string(),
+  ideias: z.array(
+    z.object({
+      titulo: z.string(),
+      porqueAgora: z.string(),
+      textoNaTela: z.string(),
+      ganchoFalado: z.string(),
+      formato: z.string(),
+      diaCalendario: z.number().nullable(),
+      fonte: z.string(),
+    }),
+  ).min(3).max(6),
+});
+
+function responder(status: number, dados: unknown) {
+  return new Response(JSON.stringify(dados), {
+    status,
+    headers: { ...CORS, "Content-Type": "application/json; charset=utf-8" },
+  });
+}
+
+function limpar(texto: string) {
+  return texto
+    .replace(/<!\[CDATA\[|\]\]>/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .trim();
+}
+
+async function lerTendencias(): Promise<Tendencia[]> {
+  try {
+    const r = await fetch("https://trends.google.com/trending/rss?geo=BR", {
+      headers: { "Accept-Language": "pt-BR,pt;q=0.9", "User-Agent": "Mozilla/5.0 (Viralizei radar)" },
+      signal: AbortSignal.timeout(15000),
+    });
+    const xml = await r.text();
+    const itens = xml.split("<item>").slice(1, 21);
+    return itens.map((it) => {
+      const pega = (tag: string) => limpar((it.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`)) ?? [])[1] ?? "");
+      return {
+        titulo: pega("title"),
+        trafego: pega("ht:approx_traffic"),
+        noticia: pega("ht:news_item_title"),
+        url: pega("ht:news_item_url"),
+      };
+    }).filter((t) => t.titulo);
+  } catch {
+    return [];
+  }
+}
+
+function numeroDeViews(texto: string): number {
+  const m = texto.replace(/\./g, "").match(/([\d,]+)\s*(mi|mil|k|m)?/i);
+  if (!m) return 0;
+  const n = parseFloat(m[1].replace(",", "."));
+  const u = (m[2] ?? "").toLowerCase();
+  return Math.round(n * (u === "mi" || u === "m" ? 1_000_000 : u === "mil" || u === "k" ? 1_000 : 1));
+}
+
+async function lerYouTube(consulta: string): Promise<VideoQuente[]> {
+  try {
+    // sp=CAMSBAgDEAE: ordenar por visualizações, enviados esta semana.
+    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(consulta)}&sp=CAMSBAgDEAE%3D&hl=pt&gl=BR`;
+    const r = await fetch(url, {
+      headers: {
+        "Accept-Language": "pt-BR,pt;q=0.9",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129 Safari/537.36",
+        Cookie: "CONSENT=YES+1; SOCS=CAI",
+      },
+      signal: AbortSignal.timeout(20000),
+    });
+    const html = await r.text();
+    const m = html.match(/var ytInitialData = (\{[\s\S]*?\});<\/script>/);
+    if (!m) return [];
+    const dados = JSON.parse(m[1]);
+    const achados: VideoQuente[] = [];
+    const andar = (o: unknown, prof: number) => {
+      if (!o || typeof o !== "object" || prof > 40 || achados.length >= 12) return;
+      if (Array.isArray(o)) {
+        for (const x of o) andar(x, prof + 1);
+        return;
+      }
+      const obj = o as Record<string, unknown>;
+      const v = obj.videoRenderer as Record<string, unknown> | undefined;
+      if (v && typeof v.videoId === "string") {
+        const texto = (x: unknown) => {
+          const t = x as { simpleText?: string; runs?: { text: string }[] } | undefined;
+          return t?.simpleText ?? t?.runs?.map((r) => r.text).join("") ?? "";
+        };
+        const views = texto(v.viewCountText);
+        achados.push({
+          consulta,
+          id: v.videoId,
+          titulo: texto(v.title).slice(0, 120),
+          canal: texto(v.ownerText).slice(0, 60),
+          views,
+          viewsNumero: numeroDeViews(views),
+          publicado: texto(v.publishedTimeText),
+          duracao: texto(v.lengthText),
+          url: `https://www.youtube.com/watch?v=${v.videoId}`,
+        });
+        return;
+      }
+      for (const k in obj) andar(obj[k], prof + 1);
+    };
+    andar(dados, 0);
+    return achados.sort((a, b) => b.viewsNumero - a.viewsNumero).slice(0, 5);
+  } catch {
+    return [];
+  }
+}
+
+const PADROES = `O que se repete nos criadores que mais crescem no nicho (estudo de 15/10/2026): a primeira palavra sai antes de 0,3 s; sempre há texto na tela, com título de no máximo 2 linhas; prova na tela (print, número, nome); uma assinatura visual fixa; vocabulário próprio (ideia batizada, metáfora repetida); gente maior no vídeo em coautoria; palavra-chave nos comentários; 4 a 11 posts por semana; vídeos de 36 a 150 s; uma posição firme, sem meio-termo; quase nenhuma hashtag; documentar a jornada com placar público.`;
+
+function ideiasSemModelo(tendencias: Tendencia[], videos: VideoQuente[], dias: { numero: number; gancho: string }[]): Ideia[] {
+  const ideias: Ideia[] = [];
+  const ganchos = dias.length ? dias : [{ numero: 0, gancho: "Te explico ___ em um minuto" }];
+  tendencias.slice(0, 3).forEach((t, i) => {
+    const g = ganchos[(i * 7) % ganchos.length];
+    ideias.push({
+      titulo: `${t.titulo}: o que isso tem a ver com o seu negócio`,
+      porqueAgora: `Está entre os assuntos mais buscados do Brasil hoje (${t.trafego || "tráfego alto"}).`,
+      textoNaTela: `${t.titulo.toUpperCase()} E O SEU BOLSO`,
+      ganchoFalado: g.gancho.replace(/___/g, t.titulo),
+      formato: "Fala para câmera",
+      diaCalendario: g.numero || null,
+      fonte: t.noticia || t.titulo,
+    });
+  });
+  videos.slice(0, 2).forEach((v, i) => {
+    const g = ganchos[(i * 11 + 3) % ganchos.length];
+    ideias.push({
+      titulo: `Reagir a "${v.titulo}"`,
+      porqueAgora: `${v.views} em uma semana no YouTube (${v.canal}).`,
+      textoNaTela: `O VÍDEO DE ${v.views.toUpperCase()} ESTÁ ERRADO?`,
+      ganchoFalado: g.gancho.replace(/___/g, v.titulo.split(/[:|(]/)[0].trim()),
+      formato: "React",
+      diaCalendario: g.numero || null,
+      fonte: v.url,
+    });
+  });
+  return ideias;
+}
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (req.method !== "POST") return responder(405, { erro: "Use POST." });
+
+  const url = Deno.env.get("SUPABASE_URL")!;
+  const servico = createClient(url, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+
+  // Quem chama: o cron (segredo do Vault) ou um sócio logado.
+  const segredo = req.headers.get("x-viralizei-cron");
+  let autorizado = false;
+  if (segredo) {
+    const { data } = await servico.rpc("radar_segredo_confere", { s: segredo });
+    autorizado = data === true;
+  } else {
+    const autorizacao = req.headers.get("Authorization") ?? "";
+    const comoUsuario = createClient(url, Deno.env.get("SUPABASE_ANON_KEY")!, {
+      global: { headers: { Authorization: autorizacao } },
+    });
+    const { data } = await comoUsuario.rpc("sou_socio");
+    autorizado = data === true;
+  }
+  if (!autorizado) return responder(403, { erro: "Só o cron do banco ou um sócio podem rodar o radar." });
+
+  const [tendencias, ...porConsulta] = await Promise.all([lerTendencias(), ...CONSULTAS.map(lerYouTube)]);
+  const videos = porConsulta.flat().sort((a, b) => b.viewsNumero - a.viewsNumero);
+  const { data: diasBanco } = await servico.from("dias").select("numero, gancho").order("numero");
+  const dias = (diasBanco ?? []) as { numero: number; gancho: string }[];
+
+  let ideias: Ideia[] = [];
+  let resumo = "";
+  let modelo = "regras";
+  const chave = Deno.env.get("ANTHROPIC_API_KEY");
+  if (chave && (tendencias.length || videos.length)) {
+    try {
+      const cliente = new Anthropic({ apiKey: chave });
+      const resposta = await cliente.beta.messages.parse({
+        model: "claude-opus-5-5",
+        betas: ["server-side-fallback-2026-07-01"],
+        fallbacks: "default",
+        max_tokens: 4000,
+        output_config: { effort: "medium", format: betaZodOutputFormat(Resposta) },
+        system: `Você é o radar diário do Viralizei, um time que grava Reels sobre negócios, tecnologia e motivação em português do Brasil.
+Recebe os assuntos mais buscados no Brasil hoje, os vídeos mais vistos da semana no YouTube em buscas do nicho e a lista de ganchos do calendário do time.
+Devolva um resumo de 2 frases sobre o que está quente hoje e de 4 a 6 ideias de vídeo que peguem carona nesse interesse sem sair do nicho (negócios, dinheiro, tecnologia, carreira, mentalidade). Ignore esporte, celebridade, novela, crime e política partidária, a menos que haja um ângulo claro de negócio ou dinheiro.
+Cada ideia: título curto; por que agora (cite o dado: tráfego ou views); texto na tela (até 2 linhas, sem pontuação, com número ou nome próprio quando houver); gancho falado (até 12 palavras, assunto + o que a pessoa ganha); formato (Fala para câmera, React, Lista, Comparativo, Tutorial na tela, Conversa, Bastidores); número do dia do calendário cujo gancho melhor serve (ou null); fonte (título da notícia ou URL do vídeo).
+${PADROES}
+Nada de emoji, hashtag ou aspas decorativas.`,
+        messages: [
+          {
+            role: "user",
+            content: `Assuntos mais buscados no Brasil hoje:\n${tendencias.map((t) => `- ${t.titulo} (${t.trafego}) — ${t.noticia}`).join("\n") || "(sem dados)"}\n\nVídeos mais vistos da semana no YouTube:\n${videos.slice(0, 15).map((v) => `- [${v.consulta}] ${v.titulo} — ${v.canal} — ${v.views} — ${v.url}`).join("\n") || "(sem dados)"}\n\nGanchos do calendário:\n${dias.map((d) => `${d.numero}. ${d.gancho}`).join("\n")}`,
+          },
+        ],
+      });
+      if (resposta.parsed_output) {
+        ideias = resposta.parsed_output.ideias;
+        resumo = resposta.parsed_output.resumo;
+        modelo = resposta.model ?? "claude";
+      }
+    } catch {
+      // Sem modelo hoje: as regras abaixo garantem o radar mesmo assim.
+    }
+  }
+  if (ideias.length === 0) {
+    ideias = ideiasSemModelo(tendencias, videos, dias);
+    resumo = chave
+      ? "O modelo não respondeu hoje; as ideias abaixo vieram só do cruzamento de tendência com gancho."
+      : "Sem chave da Anthropic no Supabase: as ideias abaixo vieram só do cruzamento de tendência com gancho. O dono liga a IA cadastrando ANTHROPIC_API_KEY.";
+  }
+
+  const hoje = new Date(Date.now() - 3 * 3600 * 1000).toISOString().slice(0, 10); // Brasília (sem horário de verão)
+  const linha = {
+    data: hoje,
+    fontes: { tendencias, videos: videos.slice(0, 20), consultas: CONSULTAS },
+    ideias,
+    resumo,
+    modelo,
+    criado_em: new Date().toISOString(),
+  };
+  const { error } = await servico.from("radar").upsert(linha, { onConflict: "data" });
+  if (error) return responder(500, { erro: "Não deu para gravar o radar: " + error.message });
+  return responder(200, linha);
+});

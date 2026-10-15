@@ -1,4 +1,5 @@
-# Fonte dos 72 dias da Pauta: 36 ganchos, cada um em dois formatos.
+# Fonte dos dias do Viralizei: 36 ganchos próprios + 10 vindos do estudo de
+# referências, cada um em dois formatos (92 dias).
 # Texto escrito para a Pauta. Gera conteudo/pauta.json (versão 1).
 import json, os
 
@@ -205,20 +206,105 @@ VIDEOS = {
 }
 
 assert len(G) == 36, len(G)
-dias = []
-n = 0
-for k, (gancho, porque, *formatos) in enumerate(G, 1):
-    vids = VIDEOS.get(k, ("", ""))
-    for i, (fmt, exemplos) in enumerate(formatos):
-        n += 1
-        assert fmt in dict(FORMATOS), fmt
-        dias.append({
-            "id": f"d{n}", "numero": n, "gancho": gancho, "descricao": porque,
-            "formatoId": fmt, "referenciaUrl": vids[i],
-            "exemplos": [{"nicho": a, "texto": b} for a, b in exemplos],
-        })
-# Intercala para o mesmo gancho não cair em dias seguidos: A dos 36 primeiro, depois B.
-ordem = dias[0::2] + dias[1::2]
+
+# ---------- Ganchos vindos do estudo de referências (15/10/2026) ----------
+# Estrutura observada nos cinco criadores estudados (conteudo/referencias.json),
+# com texto nosso. Entram DEPOIS dos 72 primeiros dias para não mudar a
+# numeração que os sócios já marcaram. inspiracao = slug do criador.
+G_NOVOS = [
+ ("Entrevistando o meu eu de ___ atrás",
+  "Você conversa com um vídeo antigo seu num quadro menor. Robert McKeaveney fez 1,2 milhão com isso: o contraste entre quem você era e quem é vira prova de evolução sem precisar se gabar.",
+  "robert-mckeaveney",
+  ("dividida", [("Confeitaria", "Entrevistando o meu eu de 2 anos atrás, que achava que bolo bonito vendia sozinho"), ("Programação", "Entrevistando o meu eu de 3 anos atrás, que não sabia cobrar")]),
+  ("pov", [("Nutrição", "Entrevistando o meu eu de 1 ano atrás, antes do primeiro paciente"), ("Marketing", "Entrevistando o meu eu de 6 meses atrás, que postava sem gancho")])),
+ ("Dia ___ construindo ___ do zero",
+  "Diário com placar. Luka Choi numera os dias (\"Dia 1 do zero ao milhão\") e coloca a meta na legenda: quem assiste acompanha uma história com número, e volta para ver o próximo capítulo.",
+  "luka-choi",
+  ("bastidores", [("Cafeteria", "Dia 12 construindo uma cafeteria do zero: hoje chegou a máquina"), ("App", "Dia 3 construindo o app do zero: a primeira tela ficou pronta")]),
+  ("lofi", [("Marca de roupa", "Dia 40 construindo uma marca de roupa do zero: a amostra chegou errada"), ("Consultório", "Dia 1 construindo o consultório do zero: sala vazia e um contrato")])),
+ ("Tem gente que ___. E tem gente que ___",
+  "Duas atitudes em contraste, uma frase cada. Benchimol fez 6,5 milhões com \"vitimista constrói muros, protagonista constrói pontes\": a pessoa se coloca de um lado e comenta de qual.",
+  "guilherme-benchimol",
+  ("camera", [("Vendas", "Tem gente que espera o cliente ligar. E tem gente que liga antes do cliente saber que precisa"), ("Estudos", "Tem gente que estuda para passar. E tem gente que estuda para nunca mais depender da prova")]),
+  ("texto", [("Empreender", "Tem gente que reclama do mercado. E tem gente que abre uma loja no mesmo mercado"), ("Finanças", "Tem gente que ganha mais para gastar mais. E tem gente que ganha mais para comprar tempo")])),
+ ("Perguntei para ___: se você tivesse ___ hoje, o que faria?",
+  "Uma pergunta boa para quem é maior que você, câmera na mão. Os cinco maiores vídeos do Tarik Lopes são assim: o nome do convidado no título e a resposta dele no vídeo. Publique em coautoria.",
+  "tarik-lopes",
+  ("conversa", [("Investimentos", "Perguntei para um gestor de fundo: se você tivesse R$ 1.000 hoje, o que faria?"), ("Gastronomia", "Perguntei para o chef: se você tivesse um restaurante vazio hoje, o que faria?")]),
+  ("bastidores", [("Tecnologia", "Perguntei para o fundador: se você tivesse 18 anos hoje, o que faria?"), ("Marketing", "Perguntei para quem tem 1 milhão de seguidores: se você tivesse zero hoje, o que faria?")])),
+ ("Esse vídeo foi ___ por ___. Olha o resultado",
+  "O resultado aparece antes da explicação. Luka Choi fez 902 mil com \"vídeo 100% editado por IA\": a pessoa vê a prova no primeiro segundo e fica para saber como.",
+  "luka-choi",
+  ("tutorial", [("Edição", "Esse vídeo foi editado inteiro por uma IA em 4 minutos. Olha o resultado"), ("Arquitetura", "Esse projeto foi desenhado em 1 hora com IA. Olha o resultado")]),
+  ("dividida", [("Fotografia", "Essa foto foi tratada só pelo celular. Olha o resultado"), ("Culinária", "Esse pão foi feito sem sovar. Olha o resultado")])),
+ ("Um vídeo meu fez ___ e o outro fez ___. A diferença foi ___",
+  "Comparação com os seus próprios números na tela. Kallaway mostra \"14 milhões contra 40 mil\" e explica a única diferença: prova própria e lição no mesmo vídeo.",
+  "kallaway",
+  ("comparativo", [("Instagram", "Um vídeo meu fez 300 mil e o outro fez 2 mil. A diferença foi a primeira frase"), ("Vendas", "Um anúncio fez 40 vendas e o outro fez 3. A diferença foi o preço aparecer")]),
+  ("dividida", [("YouTube", "Um vídeo meu fez 1 milhão e o outro fez 10 mil. A diferença foi a capa"), ("Loja", "Um post vendeu 80 peças e o outro zero. A diferença foi mostrar a peça no corpo")])),
+ ("Isso se chama ___, e é por isso que ___",
+  "Batize a ideia. Kallaway dá nome a tudo (Loop da dopamina, Zona de trava): o nome vira termo que o público repete e cita, e o vídeo vira a definição.",
+  "kallaway",
+  ("camera", [("Produtividade", "Isso se chama dívida de decisão, e é por isso que você cansa antes do almoço"), ("Vendas", "Isso se chama objeção fantasma, e é por isso que o cliente some depois do orçamento")]),
+  ("texto", [("Finanças", "Isso se chama inflação do estilo de vida, e é por isso que o aumento não aparece na conta"), ("Fitness", "Isso se chama treino de cardápio, e é por isso que você treina e não muda")])),
+ ("Comenta ___ que eu te mando ___",
+  "Palavra-chave nos comentários em troca de um material. Luka teve 1.644 comentários num vídeo de 160 mil; Kallaway tem posts com mais comentários do que curtidas. O comentário é sinal para o algoritmo e lead na DM.",
+  "luka-choi",
+  ("camera", [("Contabilidade", "Comenta PLANILHA que eu te mando a planilha que uso para separar o dinheiro da empresa"), ("Marketing", "Comenta GANCHO que eu te mando os 20 ganchos que mais rodaram este mês")]),
+  ("tutorial", [("Inglês", "Comenta LISTA que eu te mando as 50 frases que resolvem uma viagem"), ("Nutrição", "Comenta CARDÁPIO que eu te mando o cardápio da semana")])),
+ ("Peguei o roteiro que fez ___ views e gravei do meu jeito",
+  "Remix declarado. Robert McKeaveney regrava roteiros virais de outros criadores, credita o original na legenda e passou de 900 mil várias vezes: o roteiro já foi testado, o risco é zero.",
+  "robert-mckeaveney",
+  ("react", [("Empreender", "Peguei o roteiro que fez 5 milhões de views e gravei do meu jeito, com a minha loja"), ("Carreira", "Peguei o roteiro que fez 2 milhões e gravei com a minha história de demissão")]),
+  ("camera", [("Fitness", "Peguei o roteiro que fez 1 milhão e gravei com o meu treino de 15 minutos"), ("Educação", "Peguei o roteiro que fez 800 mil e gravei com a minha sala de aula")])),
+ ("___ me disse uma coisa que mudou ___",
+  "Uma frase de alguém que importa, e o efeito dela em você. Benchimol conta quem acreditou nele quando ele não acreditava; Kallaway abre a história com \"ela me disse algo que mudou os próximos 6 meses\": a pessoa quer saber a frase.",
+  "guilherme-benchimol",
+  ("narrado", [("Empreender", "Um cliente me disse uma coisa que mudou o jeito como eu cobro"), ("Música", "Meu primeiro professor me disse uma coisa que mudou como eu estudo")]),
+  ("camera", [("Gestão", "Um funcionário me disse uma coisa que mudou a minha empresa"), ("Saúde", "Um paciente me disse uma coisa que mudou como eu atendo")])),
+]
+assert len(G_NOVOS) == 10, len(G_NOVOS)
+
+VIDEOS_NOVOS = {
+    1: (ig("DdfEWGkzmi_"), ig("Dda4Os4zC2o")),
+    2: (ig("Db_OnmHOBND"), ig("DcpOJC8pDit")),
+    3: (ig("DZxEIHqI-fT"), ig("DaNbMD6onFc")),
+    4: (ig("DeQQ4EIt3oA"), ig("DbJD6WVRopH")),
+    5: (ig("DeH8GG8JPgO"), ig("DeQNs6LJeHh")),
+    6: (ig("DedJoRVumq-"), ig("Dc8wYJBum1k")),
+    7: (ig("DaiCxAkOpNb"), ig("DctOlsPOxL-")),
+    8: (ig("DeQNs6LJeHh"), ig("Ddbf_CmuR_Y")),
+    9: (ig("Ddm08FwTdVt"), ig("DdqGLRhzMCj")),
+    10: (ig("Dd938Mloerz"), ig("DaEFwRLoKIr")),
+}
+
+def montar(lista, videos, inspiracoes=None):
+    dias = []
+    n = 0
+    for k, item in enumerate(lista, 1):
+        gancho, porque = item[0], item[1]
+        if inspiracoes is None:
+            formatos = item[2:]
+            insp = None
+        else:
+            insp = item[2]
+            formatos = item[3:]
+        vids = videos.get(k, ("", ""))
+        for i, (fmt, exemplos) in enumerate(formatos):
+            n += 1
+            assert fmt in dict(FORMATOS), fmt
+            d = {
+                "id": f"d{n}", "numero": n, "gancho": gancho, "descricao": porque,
+                "formatoId": fmt, "referenciaUrl": vids[i],
+                "exemplos": [{"nicho": a, "texto": b} for a, b in exemplos],
+            }
+            if insp:
+                d["inspiracao"] = insp
+            dias.append(d)
+    # Intercala para o mesmo gancho não cair em dias seguidos: A de todos primeiro, depois B.
+    return dias[0::2] + dias[1::2]
+
+ordem = montar(G, VIDEOS) + montar(G_NOVOS, VIDEOS_NOVOS, inspiracoes=True)
 for i, d in enumerate(ordem, 1):
     d["numero"] = i
     d["id"] = f"d{i}"

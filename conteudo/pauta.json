@@ -1346,6 +1346,386 @@
      "texto": "Responda rápido: é \"a nível de\" ou \"em nível de\"?"
     }
    ]
+  },
+  {
+   "id": "d73",
+   "numero": 73,
+   "gancho": "Entrevistando o meu eu de ___ atrás",
+   "descricao": "Você conversa com um vídeo antigo seu num quadro menor. Robert McKeaveney fez 1,2 milhão com isso: o contraste entre quem você era e quem é vira prova de evolução sem precisar se gabar.",
+   "formatoId": "dividida",
+   "referenciaUrl": "https://www.instagram.com/reel/DdfEWGkzmi_/",
+   "exemplos": [
+    {
+     "nicho": "Confeitaria",
+     "texto": "Entrevistando o meu eu de 2 anos atrás, que achava que bolo bonito vendia sozinho"
+    },
+    {
+     "nicho": "Programação",
+     "texto": "Entrevistando o meu eu de 3 anos atrás, que não sabia cobrar"
+    }
+   ],
+   "inspiracao": "robert-mckeaveney"
+  },
+  {
+   "id": "d74",
+   "numero": 74,
+   "gancho": "Dia ___ construindo ___ do zero",
+   "descricao": "Diário com placar. Luka Choi numera os dias (\"Dia 1 do zero ao milhão\") e coloca a meta na legenda: quem assiste acompanha uma história com número, e volta para ver o próximo capítulo.",
+   "formatoId": "bastidores",
+   "referenciaUrl": "https://www.instagram.com/reel/Db_OnmHOBND/",
+   "exemplos": [
+    {
+     "nicho": "Cafeteria",
+     "texto": "Dia 12 construindo uma cafeteria do zero: hoje chegou a máquina"
+    },
+    {
+     "nicho": "App",
+     "texto": "Dia 3 construindo o app do zero: a primeira tela ficou pronta"
+    }
+   ],
+   "inspiracao": "luka-choi"
+  },
+  {
+   "id": "d75",
+   "numero": 75,
+   "gancho": "Tem gente que ___. E tem gente que ___",
+   "descricao": "Duas atitudes em contraste, uma frase cada. Benchimol fez 6,5 milhões com \"vitimista constrói muros, protagonista constrói pontes\": a pessoa se coloca de um lado e comenta de qual.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.instagram.com/reel/DZxEIHqI-fT/",
+   "exemplos": [
+    {
+     "nicho": "Vendas",
+     "texto": "Tem gente que espera o cliente ligar. E tem gente que liga antes do cliente saber que precisa"
+    },
+    {
+     "nicho": "Estudos",
+     "texto": "Tem gente que estuda para passar. E tem gente que estuda para nunca mais depender da prova"
+    }
+   ],
+   "inspiracao": "guilherme-benchimol"
+  },
+  {
+   "id": "d76",
+   "numero": 76,
+   "gancho": "Perguntei para ___: se você tivesse ___ hoje, o que faria?",
+   "descricao": "Uma pergunta boa para quem é maior que você, câmera na mão. Os cinco maiores vídeos do Tarik Lopes são assim: o nome do convidado no título e a resposta dele no vídeo. Publique em coautoria.",
+   "formatoId": "conversa",
+   "referenciaUrl": "https://www.instagram.com/reel/DeQQ4EIt3oA/",
+   "exemplos": [
+    {
+     "nicho": "Investimentos",
+     "texto": "Perguntei para um gestor de fundo: se você tivesse R$ 1.000 hoje, o que faria?"
+    },
+    {
+     "nicho": "Gastronomia",
+     "texto": "Perguntei para o chef: se você tivesse um restaurante vazio hoje, o que faria?"
+    }
+   ],
+   "inspiracao": "tarik-lopes"
+  },
+  {
+   "id": "d77",
+   "numero": 77,
+   "gancho": "Esse vídeo foi ___ por ___. Olha o resultado",
+   "descricao": "O resultado aparece antes da explicação. Luka Choi fez 902 mil com \"vídeo 100% editado por IA\": a pessoa vê a prova no primeiro segundo e fica para saber como.",
+   "formatoId": "tutorial",
+   "referenciaUrl": "https://www.instagram.com/reel/DeH8GG8JPgO/",
+   "exemplos": [
+    {
+     "nicho": "Edição",
+     "texto": "Esse vídeo foi editado inteiro por uma IA em 4 minutos. Olha o resultado"
+    },
+    {
+     "nicho": "Arquitetura",
+     "texto": "Esse projeto foi desenhado em 1 hora com IA. Olha o resultado"
+    }
+   ],
+   "inspiracao": "luka-choi"
+  },
+  {
+   "id": "d78",
+   "numero": 78,
+   "gancho": "Um vídeo meu fez ___ e o outro fez ___. A diferença foi ___",
+   "descricao": "Comparação com os seus próprios números na tela. Kallaway mostra \"14 milhões contra 40 mil\" e explica a única diferença: prova própria e lição no mesmo vídeo.",
+   "formatoId": "comparativo",
+   "referenciaUrl": "https://www.instagram.com/reel/DedJoRVumq-/",
+   "exemplos": [
+    {
+     "nicho": "Instagram",
+     "texto": "Um vídeo meu fez 300 mil e o outro fez 2 mil. A diferença foi a primeira frase"
+    },
+    {
+     "nicho": "Vendas",
+     "texto": "Um anúncio fez 40 vendas e o outro fez 3. A diferença foi o preço aparecer"
+    }
+   ],
+   "inspiracao": "kallaway"
+  },
+  {
+   "id": "d79",
+   "numero": 79,
+   "gancho": "Isso se chama ___, e é por isso que ___",
+   "descricao": "Batize a ideia. Kallaway dá nome a tudo (Loop da dopamina, Zona de trava): o nome vira termo que o público repete e cita, e o vídeo vira a definição.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.instagram.com/reel/DaiCxAkOpNb/",
+   "exemplos": [
+    {
+     "nicho": "Produtividade",
+     "texto": "Isso se chama dívida de decisão, e é por isso que você cansa antes do almoço"
+    },
+    {
+     "nicho": "Vendas",
+     "texto": "Isso se chama objeção fantasma, e é por isso que o cliente some depois do orçamento"
+    }
+   ],
+   "inspiracao": "kallaway"
+  },
+  {
+   "id": "d80",
+   "numero": 80,
+   "gancho": "Comenta ___ que eu te mando ___",
+   "descricao": "Palavra-chave nos comentários em troca de um material. Luka teve 1.644 comentários num vídeo de 160 mil; Kallaway tem posts com mais comentários do que curtidas. O comentário é sinal para o algoritmo e lead na DM.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.instagram.com/reel/DeQNs6LJeHh/",
+   "exemplos": [
+    {
+     "nicho": "Contabilidade",
+     "texto": "Comenta PLANILHA que eu te mando a planilha que uso para separar o dinheiro da empresa"
+    },
+    {
+     "nicho": "Marketing",
+     "texto": "Comenta GANCHO que eu te mando os 20 ganchos que mais rodaram este mês"
+    }
+   ],
+   "inspiracao": "luka-choi"
+  },
+  {
+   "id": "d81",
+   "numero": 81,
+   "gancho": "Peguei o roteiro que fez ___ views e gravei do meu jeito",
+   "descricao": "Remix declarado. Robert McKeaveney regrava roteiros virais de outros criadores, credita o original na legenda e passou de 900 mil várias vezes: o roteiro já foi testado, o risco é zero.",
+   "formatoId": "react",
+   "referenciaUrl": "https://www.instagram.com/reel/Ddm08FwTdVt/",
+   "exemplos": [
+    {
+     "nicho": "Empreender",
+     "texto": "Peguei o roteiro que fez 5 milhões de views e gravei do meu jeito, com a minha loja"
+    },
+    {
+     "nicho": "Carreira",
+     "texto": "Peguei o roteiro que fez 2 milhões e gravei com a minha história de demissão"
+    }
+   ],
+   "inspiracao": "robert-mckeaveney"
+  },
+  {
+   "id": "d82",
+   "numero": 82,
+   "gancho": "___ me disse uma coisa que mudou ___",
+   "descricao": "Uma frase de alguém que importa, e o efeito dela em você. Benchimol conta quem acreditou nele quando ele não acreditava; Kallaway abre a história com \"ela me disse algo que mudou os próximos 6 meses\": a pessoa quer saber a frase.",
+   "formatoId": "narrado",
+   "referenciaUrl": "https://www.instagram.com/reel/Dd938Mloerz/",
+   "exemplos": [
+    {
+     "nicho": "Empreender",
+     "texto": "Um cliente me disse uma coisa que mudou o jeito como eu cobro"
+    },
+    {
+     "nicho": "Música",
+     "texto": "Meu primeiro professor me disse uma coisa que mudou como eu estudo"
+    }
+   ],
+   "inspiracao": "guilherme-benchimol"
+  },
+  {
+   "id": "d83",
+   "numero": 83,
+   "gancho": "Entrevistando o meu eu de ___ atrás",
+   "descricao": "Você conversa com um vídeo antigo seu num quadro menor. Robert McKeaveney fez 1,2 milhão com isso: o contraste entre quem você era e quem é vira prova de evolução sem precisar se gabar.",
+   "formatoId": "pov",
+   "referenciaUrl": "https://www.instagram.com/reel/Dda4Os4zC2o/",
+   "exemplos": [
+    {
+     "nicho": "Nutrição",
+     "texto": "Entrevistando o meu eu de 1 ano atrás, antes do primeiro paciente"
+    },
+    {
+     "nicho": "Marketing",
+     "texto": "Entrevistando o meu eu de 6 meses atrás, que postava sem gancho"
+    }
+   ],
+   "inspiracao": "robert-mckeaveney"
+  },
+  {
+   "id": "d84",
+   "numero": 84,
+   "gancho": "Dia ___ construindo ___ do zero",
+   "descricao": "Diário com placar. Luka Choi numera os dias (\"Dia 1 do zero ao milhão\") e coloca a meta na legenda: quem assiste acompanha uma história com número, e volta para ver o próximo capítulo.",
+   "formatoId": "lofi",
+   "referenciaUrl": "https://www.instagram.com/reel/DcpOJC8pDit/",
+   "exemplos": [
+    {
+     "nicho": "Marca de roupa",
+     "texto": "Dia 40 construindo uma marca de roupa do zero: a amostra chegou errada"
+    },
+    {
+     "nicho": "Consultório",
+     "texto": "Dia 1 construindo o consultório do zero: sala vazia e um contrato"
+    }
+   ],
+   "inspiracao": "luka-choi"
+  },
+  {
+   "id": "d85",
+   "numero": 85,
+   "gancho": "Tem gente que ___. E tem gente que ___",
+   "descricao": "Duas atitudes em contraste, uma frase cada. Benchimol fez 6,5 milhões com \"vitimista constrói muros, protagonista constrói pontes\": a pessoa se coloca de um lado e comenta de qual.",
+   "formatoId": "texto",
+   "referenciaUrl": "https://www.instagram.com/reel/DaNbMD6onFc/",
+   "exemplos": [
+    {
+     "nicho": "Empreender",
+     "texto": "Tem gente que reclama do mercado. E tem gente que abre uma loja no mesmo mercado"
+    },
+    {
+     "nicho": "Finanças",
+     "texto": "Tem gente que ganha mais para gastar mais. E tem gente que ganha mais para comprar tempo"
+    }
+   ],
+   "inspiracao": "guilherme-benchimol"
+  },
+  {
+   "id": "d86",
+   "numero": 86,
+   "gancho": "Perguntei para ___: se você tivesse ___ hoje, o que faria?",
+   "descricao": "Uma pergunta boa para quem é maior que você, câmera na mão. Os cinco maiores vídeos do Tarik Lopes são assim: o nome do convidado no título e a resposta dele no vídeo. Publique em coautoria.",
+   "formatoId": "bastidores",
+   "referenciaUrl": "https://www.instagram.com/reel/DbJD6WVRopH/",
+   "exemplos": [
+    {
+     "nicho": "Tecnologia",
+     "texto": "Perguntei para o fundador: se você tivesse 18 anos hoje, o que faria?"
+    },
+    {
+     "nicho": "Marketing",
+     "texto": "Perguntei para quem tem 1 milhão de seguidores: se você tivesse zero hoje, o que faria?"
+    }
+   ],
+   "inspiracao": "tarik-lopes"
+  },
+  {
+   "id": "d87",
+   "numero": 87,
+   "gancho": "Esse vídeo foi ___ por ___. Olha o resultado",
+   "descricao": "O resultado aparece antes da explicação. Luka Choi fez 902 mil com \"vídeo 100% editado por IA\": a pessoa vê a prova no primeiro segundo e fica para saber como.",
+   "formatoId": "dividida",
+   "referenciaUrl": "https://www.instagram.com/reel/DeQNs6LJeHh/",
+   "exemplos": [
+    {
+     "nicho": "Fotografia",
+     "texto": "Essa foto foi tratada só pelo celular. Olha o resultado"
+    },
+    {
+     "nicho": "Culinária",
+     "texto": "Esse pão foi feito sem sovar. Olha o resultado"
+    }
+   ],
+   "inspiracao": "luka-choi"
+  },
+  {
+   "id": "d88",
+   "numero": 88,
+   "gancho": "Um vídeo meu fez ___ e o outro fez ___. A diferença foi ___",
+   "descricao": "Comparação com os seus próprios números na tela. Kallaway mostra \"14 milhões contra 40 mil\" e explica a única diferença: prova própria e lição no mesmo vídeo.",
+   "formatoId": "dividida",
+   "referenciaUrl": "https://www.instagram.com/reel/Dc8wYJBum1k/",
+   "exemplos": [
+    {
+     "nicho": "YouTube",
+     "texto": "Um vídeo meu fez 1 milhão e o outro fez 10 mil. A diferença foi a capa"
+    },
+    {
+     "nicho": "Loja",
+     "texto": "Um post vendeu 80 peças e o outro zero. A diferença foi mostrar a peça no corpo"
+    }
+   ],
+   "inspiracao": "kallaway"
+  },
+  {
+   "id": "d89",
+   "numero": 89,
+   "gancho": "Isso se chama ___, e é por isso que ___",
+   "descricao": "Batize a ideia. Kallaway dá nome a tudo (Loop da dopamina, Zona de trava): o nome vira termo que o público repete e cita, e o vídeo vira a definição.",
+   "formatoId": "texto",
+   "referenciaUrl": "https://www.instagram.com/reel/DctOlsPOxL-/",
+   "exemplos": [
+    {
+     "nicho": "Finanças",
+     "texto": "Isso se chama inflação do estilo de vida, e é por isso que o aumento não aparece na conta"
+    },
+    {
+     "nicho": "Fitness",
+     "texto": "Isso se chama treino de cardápio, e é por isso que você treina e não muda"
+    }
+   ],
+   "inspiracao": "kallaway"
+  },
+  {
+   "id": "d90",
+   "numero": 90,
+   "gancho": "Comenta ___ que eu te mando ___",
+   "descricao": "Palavra-chave nos comentários em troca de um material. Luka teve 1.644 comentários num vídeo de 160 mil; Kallaway tem posts com mais comentários do que curtidas. O comentário é sinal para o algoritmo e lead na DM.",
+   "formatoId": "tutorial",
+   "referenciaUrl": "https://www.instagram.com/reel/Ddbf_CmuR_Y/",
+   "exemplos": [
+    {
+     "nicho": "Inglês",
+     "texto": "Comenta LISTA que eu te mando as 50 frases que resolvem uma viagem"
+    },
+    {
+     "nicho": "Nutrição",
+     "texto": "Comenta CARDÁPIO que eu te mando o cardápio da semana"
+    }
+   ],
+   "inspiracao": "luka-choi"
+  },
+  {
+   "id": "d91",
+   "numero": 91,
+   "gancho": "Peguei o roteiro que fez ___ views e gravei do meu jeito",
+   "descricao": "Remix declarado. Robert McKeaveney regrava roteiros virais de outros criadores, credita o original na legenda e passou de 900 mil várias vezes: o roteiro já foi testado, o risco é zero.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.instagram.com/reel/DdqGLRhzMCj/",
+   "exemplos": [
+    {
+     "nicho": "Fitness",
+     "texto": "Peguei o roteiro que fez 1 milhão e gravei com o meu treino de 15 minutos"
+    },
+    {
+     "nicho": "Educação",
+     "texto": "Peguei o roteiro que fez 800 mil e gravei com a minha sala de aula"
+    }
+   ],
+   "inspiracao": "robert-mckeaveney"
+  },
+  {
+   "id": "d92",
+   "numero": 92,
+   "gancho": "___ me disse uma coisa que mudou ___",
+   "descricao": "Uma frase de alguém que importa, e o efeito dela em você. Benchimol conta quem acreditou nele quando ele não acreditava; Kallaway abre a história com \"ela me disse algo que mudou os próximos 6 meses\": a pessoa quer saber a frase.",
+   "formatoId": "camera",
+   "referenciaUrl": "https://www.instagram.com/reel/DaEFwRLoKIr/",
+   "exemplos": [
+    {
+     "nicho": "Gestão",
+     "texto": "Um funcionário me disse uma coisa que mudou a minha empresa"
+    },
+    {
+     "nicho": "Saúde",
+     "texto": "Um paciente me disse uma coisa que mudou como eu atendo"
+    }
+   ],
+   "inspiracao": "guilherme-benchimol"
   }
  ]
 }

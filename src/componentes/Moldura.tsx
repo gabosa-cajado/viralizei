@@ -21,7 +21,9 @@ export function Moldura() {
             Ganchos virais
           </NavLink>
           <NavLink to="/referencias">Referências</NavLink>
-          <NavLink to="/conteudo">Gerenciar dias</NavLink>
+          <NavLink to="/roteiro">Roteiro</NavLink>
+          <NavLink to="/avaliar">Avaliar</NavLink>
+          <NavLink to="/radar">Radar</NavLink>
         </nav>
         )}
         <div className="topo-direita">
