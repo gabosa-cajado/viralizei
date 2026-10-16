@@ -1,6 +1,7 @@
 -- Viralizei: teste de permissões. Rodar depois de toda migração que mexe em
 -- política ou grant (execute_sql do Supabase). Tudo dentro de rollback.
--- Esperado: 1 >= 1 (controle), 2-5 false, 6 = 0, 7 false, 8-9 false, 10 = 0.
+-- Esperado: 1 >= 1 (controle), 2-5 false, 6 = 0, 7 false, 8-9 false, 10 = 0,
+-- 11-13 false, 14 = 0, 15 >= 1 (controle das trilhas), 16 = "1500 <hoje>".
 begin;
 create temp table r (caso text, resultado text) on commit drop;
 grant all on r to anon, authenticated;
@@ -13,11 +14,35 @@ insert into r select '4 logado pode ler socios', has_table_privilege('authentica
 insert into r select '5 logado pode gravar user_id no progresso', has_column_privilege('authenticated', 'public.progresso', 'user_id', 'insert')::text;
 insert into r select '8 logado pode escrever no radar', (has_table_privilege('authenticated', 'public.radar', 'insert') or has_table_privilege('authenticated', 'public.radar', 'update') or has_table_privilege('authenticated', 'public.radar', 'delete'))::text;
 insert into r select '9 logado pode conferir o segredo do cron', has_function_privilege('authenticated', 'public.radar_segredo_confere(text)', 'execute')::text;
+insert into r select '11 anon pode ler trilhas', has_table_privilege('anon', 'public.trilhas', 'select')::text;
+insert into r select '12 logado pode gravar user_id no uso de trilha', has_column_privilege('authenticated', 'public.trilha_usos', 'user_id', 'insert')::text;
+insert into r select '13 logado pode forjar a contagem de reels', (has_column_privilege('authenticated', 'public.trilhas', 'reels_numero', 'update') or has_column_privilege('authenticated', 'public.trilhas', 'criado_por', 'update'))::text;
+insert into r select '15 controle: dono do banco vê trilhas', count(*)::text from public.trilhas;
+insert into public.trilhas (id, titulo, reels_texto) values ('tteste', 'Teste', '1,5k');
+insert into r select '16 gatilho: 1,5k vira 1500 com data', reels_numero::text || ' ' || coalesce(conferido_em::text, 'sem data') from public.trilhas where id = 'tteste';
 set local role authenticated;
 select set_config('request.jwt.claims', json_build_object('sub', gen_random_uuid()::text, 'role', 'authenticated')::text, true);
 insert into r select '6 logado fora da lista vê dias', count(*)::text from public.dias;
 insert into r select '7 logado fora da lista é sócio', public.sou_socio()::text;
 insert into r select '10 logado fora da lista vê radar', count(*)::text from public.radar;
+insert into r select '14 logado fora da lista vê trilhas', count(*)::text from public.trilhas;
 reset role;
 select * from r order by caso;
+rollback;
+
+-- Controle positivo das trilhas, com um sócio real (o primeiro da lista).
+-- Esperado: true, 45 ou mais, 1, 12000.
+begin;
+create temp table r (caso text, resultado text) on commit drop;
+grant all on r to authenticated;
+select set_config('request.jwt.claims', (select json_build_object('sub', u.id::text, 'role', 'authenticated', 'email', u.email)::text from auth.users u join public.socios s on lower(s.email)=lower(u.email) limit 1), true);
+set local role authenticated;
+insert into r select 'socio é sócio', public.sou_socio()::text;
+insert into r select 'socio vê trilhas', count(*)::text from public.trilhas;
+insert into public.trilha_usos (trilha_id) values ((select id from public.trilhas limit 1));
+insert into r select 'socio registrou uso', count(*)::text from public.trilha_usos where user_id = auth.uid();
+insert into public.trilhas (titulo, artista, clima, reels_texto) values ('Teste sócio', 'X', 'leve', '12K');
+insert into r select 'socio criou trilha (12K vira 12000)', reels_numero::text from public.trilhas where titulo = 'Teste sócio';
+reset role;
+select * from r;
 rollback;
