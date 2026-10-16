@@ -2163,6 +2163,75 @@ a.abertura-gancho:hover .gancho {
   font-weight: 600;
 }
 
+/* Radar: manchete curta no topo, resumo em parágrafo normal */
+.radar-manchete {
+  max-width: 24ch;
+}
+
+.radar-resumo {
+  font-size: var(--t-16);
+  line-height: 1.5;
+  max-width: 60ch;
+  color: var(--tinta-2);
+}
+
+.radar-bloco-ajuda {
+  font-size: var(--t-14);
+  color: var(--tinta-2);
+  max-width: 60ch;
+}
+
+.ideia-secao {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-top: 0.5rem;
+}
+
+.ideia-secao .roteiro-tela {
+  font-size: var(--t-16);
+}
+
+.ideia-fazer {
+  font-size: var(--t-16);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.ideia-passos {
+  margin: 0;
+  padding-left: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: var(--t-14);
+  line-height: 1.45;
+}
+
+.ideia-passos li::marker {
+  color: var(--vermelho);
+  font-weight: 700;
+}
+
+.roteiro-padroes {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--fio);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.roteiro-padroes ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: var(--t-14);
+  line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
 .ideia-meta {
   font-size: var(--t-14);
   color: var(--tinta-2);

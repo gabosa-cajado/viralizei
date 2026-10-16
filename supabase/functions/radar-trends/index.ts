@@ -2,8 +2,10 @@
 // Roda todo dia às 7h (Brasília) pelo pg_cron, ou quando um sócio pede
 // "Atualizar agora". Lê o Google Trends do Brasil e os vídeos mais vistos da
 // semana no YouTube em buscas do nicho, cruza com os ganchos do calendário e,
-// se houver ANTHROPIC_API_KEY, pede ao Claude 5 ideias para o dia. Grava em
-// public.radar (só a função escreve; sócios leem).
+// com a chave da Anthropic, pede ao Claude uma manchete, um resumo e 4 a 6
+// ideias, cada uma com o que fazer e como aplicar. Grava em public.radar (só
+// a função escreve; sócios leem). As regras do estudo de referências vêm de
+// regras.ts (npm run regras).
 //
 // Autorização: header x-viralizei-cron com o segredo guardado no Vault do
 // banco (conferido pela função public.radar_segredo_confere, chamada com a
@@ -12,6 +14,7 @@ import Anthropic from "npm:@anthropic-ai/sdk@0.134.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@0.134.0/helpers/beta/zod";
 import { z } from "npm:zod@4.6.7";
 import { createClient } from "npm:@supabase/supabase-js@2.75.0";
+import { REGRAS } from "./regras.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -49,21 +52,28 @@ interface VideoQuente {
 interface Ideia {
   titulo: string;
   porqueAgora: string;
+  oQueFazer: string;
+  comoAplicar: string[];
   textoNaTela: string;
   ganchoFalado: string;
+  provaNaTela: string;
   formato: string;
   diaCalendario: number | null;
   fonte: string;
 }
 
 const Resposta = z.object({
+  manchete: z.string(),
   resumo: z.string(),
   ideias: z.array(
     z.object({
       titulo: z.string(),
       porqueAgora: z.string(),
+      oQueFazer: z.string(),
+      comoAplicar: z.array(z.string()).min(3).max(5),
       textoNaTela: z.string(),
       ganchoFalado: z.string(),
+      provaNaTela: z.string(),
       formato: z.string(),
       diaCalendario: z.number().nullable(),
       fonte: z.string(),
@@ -84,9 +94,20 @@ function limpar(texto: string) {
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .trim();
+}
+
+/** "500000+" vira "500 mil+"; "20000+" vira "20 mil+". */
+function trafegoLegivel(bruto: string) {
+  const m = bruto.match(/^(\d+)(\+?)$/);
+  if (!m) return bruto;
+  const n = Number(m[1]);
+  if (n >= 1_000_000) return `${(n / 1_000_000).toLocaleString("pt-BR", { maximumFractionDigits: 1 })} mi${m[2]}`;
+  if (n >= 1_000) return `${Math.round(n / 1_000)} mil${m[2]}`;
+  return bruto;
 }
 
 async function lerTendencias(): Promise<Tendencia[]> {
@@ -101,7 +122,7 @@ async function lerTendencias(): Promise<Tendencia[]> {
       const pega = (tag: string) => limpar((it.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`)) ?? [])[1] ?? "");
       return {
         titulo: pega("title"),
-        trafego: pega("ht:approx_traffic"),
+        trafego: trafegoLegivel(pega("ht:approx_traffic")),
         noticia: pega("ht:news_item_title"),
         url: pega("ht:news_item_url"),
       };
@@ -172,18 +193,49 @@ async function lerYouTube(consulta: string): Promise<VideoQuente[]> {
   }
 }
 
-const PADROES = `O que se repete nos criadores que mais crescem no nicho (estudo de 15/10/2026): a primeira palavra sai antes de 0,3 s; sempre há texto na tela, com título de no máximo 2 linhas; prova na tela (print, número, nome); uma assinatura visual fixa; vocabulário próprio (ideia batizada, metáfora repetida); gente maior no vídeo em coautoria; palavra-chave nos comentários; 4 a 11 posts por semana; vídeos de 36 a 150 s; uma posição firme, sem meio-termo; quase nenhuma hashtag; documentar a jornada com placar público.`;
+const SISTEMA = `Você é o radar diário do Viralizei, um time que grava Reels sobre negócios, tecnologia e motivação em português do Brasil. Todo dia de manhã você lê o que o Brasil está buscando e os vídeos mais vistos da semana no nicho, e diz ao time o que gravar hoje e como.
+
+Recebe: os assuntos mais buscados no Brasil hoje (com tráfego aproximado), os vídeos mais vistos da semana no YouTube em buscas do nicho, e a lista de ganchos do calendário do time.
+
+Devolva:
+- manchete: uma frase de até 12 palavras dizendo o que está quente hoje e o ângulo (ex.: "Dívida pública em alta: dia de falar de dinheiro no bolso").
+- resumo: 2 ou 3 frases curtas, uma ideia por frase, explicando o que puxa atenção hoje e por que o time deve pegar carona. Números com separador legível (500 mil, 10 mil, 1,2 mi), nunca "500000+".
+- ideias: de 4 a 6, só dentro do nicho (negócios, dinheiro, tecnologia, carreira, mentalidade). Ignore esporte, celebridade, novela, crime e política partidária, a menos que haja um ângulo claro de negócio ou dinheiro.
+Cada ideia tem:
+- titulo: curto, nomeando o assunto.
+- porqueAgora: o dado que justifica (tráfego ou views, com o número legível).
+- oQueFazer: uma frase imperativa dizendo o vídeo a gravar hoje (formato + ângulo + para quem).
+- comoAplicar: 3 a 5 passos concretos e curtos, na ordem de execução: o que mostrar nos 2 primeiros segundos, qual prova colocar na tela, como montar o corpo, a chamada no fim e o horário de postar (17h–19h). Cada passo cita o padrão do estudo que aplica.
+- textoNaTela: até 2 linhas, sem pontuação, com número ou nome próprio quando houver.
+- ganchoFalado: até 12 palavras, assunto + o que a pessoa ganha.
+- provaNaTela: o print, número, gráfico ou nome que aparece na zona de trava.
+- formato: Fala para câmera, React, Lista, Comparativo, Tutorial na tela, Conversa ou Bastidores.
+- diaCalendario: número do dia do calendário cujo gancho melhor serve (ou null).
+- fonte: título da notícia ou URL do vídeo.
+
+${REGRAS}
+
+Nada de emoji, hashtag ou aspas decorativas.`;
 
 function ideiasSemModelo(tendencias: Tendencia[], videos: VideoQuente[], dias: { numero: number; gancho: string }[]): Ideia[] {
   const ideias: Ideia[] = [];
   const ganchos = dias.length ? dias : [{ numero: 0, gancho: "Te explico ___ em um minuto" }];
+  const passosBase = (prova: string, cta: string) => [
+    `Primeiros 2 segundos: título na tela em até 2 linhas e a primeira palavra antes de 0,3 s (padrão dos cinco).`,
+    `Zona de trava: mostre ${prova} na tela logo depois do gancho (prova na tela, não na fala).`,
+    "Corpo em 2 ou 3 blocos: o que está em jogo, uma pergunta, uma virada; frases de até 12 palavras.",
+    `Fechamento: posição firme em uma frase + ${cta}. Poste entre 17h e 19h.`,
+  ];
   tendencias.slice(0, 3).forEach((t, i) => {
     const g = ganchos[(i * 7) % ganchos.length];
     ideias.push({
       titulo: `${t.titulo}: o que isso tem a ver com o seu negócio`,
       porqueAgora: `Está entre os assuntos mais buscados do Brasil hoje (${t.trafego || "tráfego alto"}).`,
-      textoNaTela: `${t.titulo.toUpperCase()} E O SEU BOLSO`,
+      oQueFazer: `Grave hoje uma fala para câmera ligando "${t.titulo}" a uma decisão de dinheiro ou negócio do seu público.`,
+      comoAplicar: passosBase(`o número da notícia (${t.trafego || "buscas de hoje"})`, "pergunta de uma palavra nos comentários"),
+      textoNaTela: `${t.titulo.toUpperCase()}\nE O SEU BOLSO`,
       ganchoFalado: g.gancho.replace(/___/g, t.titulo),
+      provaNaTela: t.noticia ? `Manchete: ${t.noticia}` : `Buscas de hoje: ${t.trafego}`,
       formato: "Fala para câmera",
       diaCalendario: g.numero || null,
       fonte: t.noticia || t.titulo,
@@ -194,8 +246,11 @@ function ideiasSemModelo(tendencias: Tendencia[], videos: VideoQuente[], dias: {
     ideias.push({
       titulo: `Reagir a "${v.titulo}"`,
       porqueAgora: `${v.views} em uma semana no YouTube (${v.canal}).`,
-      textoNaTela: `O VÍDEO DE ${v.views.toUpperCase()} ESTÁ ERRADO?`,
+      oQueFazer: `Grave um React: o vídeo em quadro menor no alto, você comenta o que concorda e o que faria diferente.`,
+      comoAplicar: passosBase(`o contador de views do vídeo original (${v.views})`, "palavra-chave nos comentários para mandar o seu material"),
+      textoNaTela: `O VÍDEO DE ${v.views.toUpperCase()}\nESTÁ ERRADO?`,
       ganchoFalado: g.gancho.replace(/___/g, v.titulo.split(/[:|(]/)[0].trim()),
+      provaNaTela: `Print do vídeo com ${v.views}`,
       formato: "React",
       diaCalendario: g.numero || null,
       fonte: v.url,
@@ -233,6 +288,7 @@ Deno.serve(async (req) => {
   const dias = (diasBanco ?? []) as { numero: number; gancho: string }[];
 
   let ideias: Ideia[] = [];
+  let manchete = "";
   let resumo = "";
   let modelo = "regras";
   let motivo = "";
@@ -244,14 +300,9 @@ Deno.serve(async (req) => {
         model: "claude-opus-5-5",
         betas: ["server-side-fallback-2026-07-01"],
         fallbacks: "default",
-        max_tokens: 4000,
+        max_tokens: 6000,
         output_config: { effort: "medium", format: betaZodOutputFormat(Resposta) },
-        system: `Você é o radar diário do Viralizei, um time que grava Reels sobre negócios, tecnologia e motivação em português do Brasil.
-Recebe os assuntos mais buscados no Brasil hoje, os vídeos mais vistos da semana no YouTube em buscas do nicho e a lista de ganchos do calendário do time.
-Devolva um resumo de 2 frases sobre o que está quente hoje e de 4 a 6 ideias de vídeo que peguem carona nesse interesse sem sair do nicho (negócios, dinheiro, tecnologia, carreira, mentalidade). Ignore esporte, celebridade, novela, crime e política partidária, a menos que haja um ângulo claro de negócio ou dinheiro.
-Cada ideia: título curto; por que agora (cite o dado: tráfego ou views); texto na tela (até 2 linhas, sem pontuação, com número ou nome próprio quando houver); gancho falado (até 12 palavras, assunto + o que a pessoa ganha); formato (Fala para câmera, React, Lista, Comparativo, Tutorial na tela, Conversa, Bastidores); número do dia do calendário cujo gancho melhor serve (ou null); fonte (título da notícia ou URL do vídeo).
-${PADROES}
-Nada de emoji, hashtag ou aspas decorativas.`,
+        system: SISTEMA,
         messages: [
           {
             role: "user",
@@ -261,6 +312,7 @@ Nada de emoji, hashtag ou aspas decorativas.`,
       });
       if (resposta.parsed_output) {
         ideias = resposta.parsed_output.ideias;
+        manchete = resposta.parsed_output.manchete;
         resumo = resposta.parsed_output.resumo;
         modelo = resposta.model ?? "claude";
       }
@@ -273,15 +325,16 @@ Nada de emoji, hashtag ou aspas decorativas.`,
   }
   if (ideias.length === 0) {
     ideias = ideiasSemModelo(tendencias, videos, dias);
+    manchete = tendencias[0] ? `${tendencias[0].titulo} lidera as buscas de hoje` : "Radar por regras, sem IA hoje";
     resumo = chave
       ? `O modelo não respondeu hoje (${motivo}); as ideias abaixo vieram só do cruzamento de tendência com gancho.`
-      : "Sem chave da Anthropic no Supabase: as ideias abaixo vieram só do cruzamento de tendência com gancho. O dono liga a IA cadastrando ANTHROPIC_API_KEY.";
+      : "Sem chave da Anthropic no Supabase: as ideias abaixo vieram só do cruzamento de tendência com gancho. O dono liga a IA cadastrando ANTHROPIC_API_KEY_VIRALIZEI.";
   }
 
   const hoje = new Date(Date.now() - 3 * 3600 * 1000).toISOString().slice(0, 10); // Brasília (sem horário de verão)
   const linha = {
     data: hoje,
-    fontes: { tendencias, videos: videos.slice(0, 20), consultas: CONSULTAS },
+    fontes: { tendencias, videos: videos.slice(0, 20), consultas: CONSULTAS, manchete, motivo: motivo || undefined },
     ideias,
     resumo,
     modelo,

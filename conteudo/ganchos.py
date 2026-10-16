@@ -158,50 +158,52 @@ G = [
   ("conversa", [("Matemática", "Responda rápido: quanto é 15% de 80?"), ("Português", "Responda rápido: é \"a nível de\" ou \"em nível de\"?")])),
 ]
 
-# Vídeos de referência, conferidos em 15/10/2026: posts públicos de Instagram,
-# TikTok e YouTube que usam o formato do gancho, filtrados para negócios,
-# tecnologia e motivação. gancho -> (vídeo do formato A, vídeo do formato B)
+# Vídeos de referência: posts públicos de Instagram, TikTok e YouTube que usam
+# o formato do gancho, filtrados para negócios, tecnologia e motivação.
+# Conferidos um a um (legenda e primeiro quadro) em 15/10/2026 à noite: 18
+# trocados porque o vídeo não tinha a ver com o gancho. gancho -> (vídeo do
+# formato A = dia k, vídeo do formato B = dia 36+k)
 def ig(c): return f"https://www.instagram.com/reel/{c}/"
 def igp(c): return f"https://www.instagram.com/p/{c}/"
 def yt(c): return f"https://www.youtube.com/shorts/{c}"
 def tt(u, v): return f"https://www.tiktok.com/@{u}/video/{v}"
 
 VIDEOS = {
-    1: (ig("DRX1K3YgRWm"), igp("DZa2KtCoj-d")),
-    2: (yt("q94i7n22HGQ"), yt("g2tSaCNfdUM")),
+    1: (yt("G3Oojz34WCA"), igp("DZa2KtCoj-d")),
+    2: (yt("OldEhn8Z51o"), yt("g2tSaCNfdUM")),
     3: (yt("vB8TJwvxIPE"), ""),
     4: (ig("DXKszt1kT2x"), yt("a0m9Uml61-Q")),
-    5: (ig("Da8tn7kvdaM"), igp("DdRmMfbxdbz")),
-    6: (ig("DYKnfVlPM0P"), ""),
+    5: (yt("K_YAjg5_a7A"), igp("DdRmMfbxdbz")),
+    6: (yt("uFki-a6KpmU"), ""),
     7: (yt("OdZ8joRvbXs"), yt("yIkiCwAH1eE")),
     8: (ig("DV6JK4-DTSS"), ig("DXPCZTGGleF")),
-    9: (ig("DW1fpjWEdo_"), yt("TAvOp2qyfNs")),
-    10: (ig("DYAALUMvfrh"), igp("DYCRTPYv5rA")),
-    11: (yt("PDqEQ_Bi1KY"), igp("DZIPokmAqBx")),
+    9: (ig("DW1fpjWEdo_"), yt("5XuIzvK3Mec")),
+    10: (yt("9kR9KM2LD0g"), igp("DYCRTPYv5rA")),
+    11: (yt("PDqEQ_Bi1KY"), yt("lHQ1Tz5cR4s")),
     12: (tt("nutrijoao", "7415377559300394246"), ""),
-    13: (ig("DWrkvjHEUZC"), yt("zawoyPgKGbY")),
+    13: (yt("qMgB3eXXHng"), yt("zawoyPgKGbY")),
     14: (tt("pitangaalessandra", "7639844947432197384"), igp("DbeJgdZxRzQ")),
     15: (tt("luanacarolina.hilg", "7545861660930526486"), yt("nPNr9WVpVmY")),
     16: (igp("DWKftPrDUwy"), igp("DWXbdCnDXwq")),
     17: (yt("FdpJ8Xy-GPw"), ""),
-    18: (igp("Db8FMjsx3HE"), ""),
+    18: (yt("BX2fCc2PHcI"), ""),
     19: (ig("DVv4fijDZnD"), tt("oficialjoaoviana", "7543449900625792261")),
-    20: (ig("DVvvKDykQTv"), yt("KJwolUHNncg")),
-    21: (ig("DYSBXX1NagN"), yt("PWiqU73A-hc")),
+    20: (ig("DVvvKDykQTv"), yt("lwsHq8ylS38")),
+    21: (yt("-0a1Qr8620g"), yt("PWiqU73A-hc")),
     22: (yt("rQ94OyrcAs8"), igp("Dcg4M3NAFV9")),
-    23: (ig("C-YqFM7PQt_"), yt("OSESiEmSFlI")),
-    24: (ig("DXMwcGxkY2V"), yt("d-7kzjggcQE")),
+    23: (ig("C-YqFM7PQt_"), yt("eCwouEs0mVM")),
+    24: (yt("tnY7-FAZhkU"), yt("d-7kzjggcQE")),
     25: (yt("oiWf0jf6vsY"), yt("edc-h_L5Kes")),
     26: (igp("DGL5Ke1P68Y"), igp("DbwPx2wJPjT")),
     27: (igp("DLbEKb7sQRp"), ""),
     28: (ig("DUNn6J5jkPz"), ig("DYVUpvPR1aF")),
-    29: (ig("DWmls5ulc0N"), igp("CmhqRRYhkU4")),
+    29: (yt("w3edT_0sEKs"), yt("_hhtjTsdDBY")),
     30: ("", tt("annacarollina.advogada", "7530282806832942342")),
     31: (yt("7Qc5vPn5Nfw"), yt("dTbnh_fsPuk")),
     32: (yt("B02Gh6gOtTA"), yt("OitOx6_Kp3M")),
-    33: (ig("DOtLOvXkfZY"), yt("EC9a6NZXNmY")),
+    33: (yt("9Uh5fNFkJBs"), yt("EC9a6NZXNmY")),
     34: (tt("raqueltributarista", "7615306495890050325"), yt("lhjEG3wC4mA")),
-    35: (ig("DbRRMdPhfbq"), ig("DW4dr8JE6Hk")),
+    35: (yt("z_Xp0NiC35w"), ig("DW4dr8JE6Hk")),
     36: (yt("Fc5c5G6cR24"), yt("U5IA4F4D7UA")),
 }
 
@@ -270,7 +272,7 @@ VIDEOS_NOVOS = {
     2: (ig("Db_OnmHOBND"), ig("DcpOJC8pDit")),
     3: (ig("DZxEIHqI-fT"), ig("DaNbMD6onFc")),
     4: (ig("DeQQ4EIt3oA"), ig("DbJD6WVRopH")),
-    5: (ig("DeH8GG8JPgO"), ig("DeQNs6LJeHh")),
+    5: (ig("DeH8GG8JPgO"), yt("FJ2wDdTIPnA")),
     6: (ig("DedJoRVumq-"), ig("Dc8wYJBum1k")),
     7: (ig("DaiCxAkOpNb"), ig("DctOlsPOxL-")),
     8: (ig("DeQNs6LJeHh"), ig("Ddbf_CmuR_Y")),

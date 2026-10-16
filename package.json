@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "artefato": "node scripts/artefato.mjs",
     "build:site": "tsc --noEmit && vite build --mode site --outDir dist-site --emptyOutDir",
-    "publicar": "zsh scripts/publicar-site.sh"
+    "publicar": "zsh scripts/publicar-site.sh",
+    "regras": "node scripts/regras-referencias.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.134.0",

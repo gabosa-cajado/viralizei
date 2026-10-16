@@ -155,6 +155,7 @@ export function Roteiro() {
                     <span className="roteiro-etiqueta">{b.titulo}</span>
                     <p className="roteiro-fala">{b.fala}</p>
                     <p className="roteiro-nota">Na tela: {b.textoNaTela}</p>
+                    {b.visual && <p className="roteiro-nota">Visual: {b.visual}</p>}
                   </li>
                 ))}
                 <li>
@@ -170,6 +171,15 @@ export function Roteiro() {
                 <ul className="roteiro-avisos">
                   {roteiro.avisos.map((a) => <li key={a}>{a}</li>)}
                 </ul>
+              )}
+              {roteiro.padroesUsados && roteiro.padroesUsados.length > 0 && (
+                <section className="roteiro-padroes" aria-labelledby="roteiro-padroes-titulo">
+                  <h2 id="roteiro-padroes-titulo" className="roteiro-etiqueta">Padrões do estudo aplicados</h2>
+                  <ul>
+                    {roteiro.padroesUsados.map((p) => <li key={p}>{p}</li>)}
+                  </ul>
+                  <p className="campo-ajuda">Os nomes são os da seção <Link to="/referencias" className="link">Referências</Link>: se um item não bate com o que está lá, o roteiro não está seguindo o estudo.</p>
+                </section>
               )}
               <p className="campo-ajuda">
                 Gravou? Passe o vídeo em <Link to="/avaliar" className="link">Avaliar</Link> antes de postar.

@@ -23,6 +23,8 @@ export interface BlocoRoteiro {
   titulo: string;
   fala: string;
   textoNaTela: string;
+  /** O que trocar na tela neste trecho (print, gráfico, PiP, objeto). */
+  visual?: string;
 }
 
 export interface Roteiro {
@@ -34,6 +36,8 @@ export interface Roteiro {
   fechamento: string;
   legenda: string;
   duracaoEstimadaSeg: number;
+  /** Padrões e frameworks do estudo de referências aplicados, com onde entraram. */
+  padroesUsados?: string[];
   avisos: string[];
 }
 
@@ -131,6 +135,7 @@ export function montarRoteiroLocal(e: EntradaRoteiro): Roteiro {
       ? `Se você é ${publico}, isso te custa todo mês. E o prazo é curto: quem não resolve agora, repete o erro no mês que vem.`
       : `Isso te custa todo mês. E o prazo é curto: quem não resolve agora, repete o erro no mês que vem.`,
     textoNaTela: "TODO MÊS",
+    visual: "Número do custo mensal entra na tela em fonte grande.",
   });
   blocos.push({
     titulo: "A pergunta",
@@ -138,12 +143,14 @@ export function montarRoteiroLocal(e: EntradaRoteiro): Roteiro {
       ? `${maiusculaInicial(historia.replace(/\.$/, ""))}. Eu achava que o problema era um. Não era.`
       : `A maioria acha que o problema em ${tema} é o óbvio. Não é. [sua história aqui: o erro que você cometeu, com data]`,
     textoNaTela: "O PROBLEMA NÃO ERA ESSE",
+    visual: "Print ou foto do momento do erro (com data) em PiP no canto.",
   });
   if (!historia) avisos.push("Sem história. Um erro seu, com data, dá peso à virada e à lição.");
   blocos.push({
     titulo: "A virada",
     fala: `O que mudou foi uma coisa só: ${posicao ? posicao.replace(/\.$/, "") : `[a regra que você aplica em ${tema}]`}. Simples, e é por isso que ninguém faz.`,
     textoNaTela: posicao ? maiusculaInicial(posicao).slice(0, 40).toUpperCase() : "A ÚNICA MUDANÇA",
+    visual: "Troca de enquadramento (mais perto) e a regra escrita na tela, palavra por palavra.",
   });
   if (!posicao) avisos.push("Sem posição firme. Diga em uma frase o que você defende, sem meio-termo: é o que gera comentário.");
 
@@ -163,7 +170,18 @@ export function montarRoteiroLocal(e: EntradaRoteiro): Roteiro {
   if (duracaoEstimadaSeg > duracao + 15) avisos.push(`O texto dá uns ${duracaoEstimadaSeg} s para uma meta de ${duracao} s: corte um bloco ou encurte as falas.`);
   if (duracaoEstimadaSeg < duracao - 20) avisos.push(`O texto dá uns ${duracaoEstimadaSeg} s para uma meta de ${duracao} s (${palavrasPorSegundo(duracao)} palavras): há espaço para um exemplo a mais.`);
 
-  return { textoNaTela, ganchoFalado, acaoVisual, zonaDeTrava, blocos, fechamento, legenda, duracaoEstimadaSeg, avisos };
+  const padroesUsados = [
+    "Gancho triplo (Kallaway): texto na tela, fala e ação visual contam a mesma coisa",
+    numero ? "Número específico no gancho (checklist Gancho): " + numero : "Assunto nomeado no gancho (checklist Gancho)",
+    "Zona de trava (Kallaway): promessa confirmada e prova logo depois do gancho",
+    "Loop do vício (Kallaway): o que está em jogo, pergunta, virada e religação entre os blocos",
+    "Uma posição, dita sem hedge (Benchimol): a virada e o fechamento",
+    e.cta.startsWith("Palavra-chave") ? "Palavra-chave nos comentários (Luka Choi, Kallaway): fechamento" : e.cta.startsWith("Seguir") ? "Documentar a jornada com placar (Luka Choi): fechamento" : "Fechamento com pergunta de uma palavra (Tarik Lopes)",
+    "Primeira linha da legenda = gancho falado (490 legendas lidas)",
+    "Trocar o visual a cada 10–15 s (checklist Visual): um visual por bloco",
+  ];
+
+  return { textoNaTela, ganchoFalado, acaoVisual, zonaDeTrava, blocos, fechamento, legenda, duracaoEstimadaSeg, padroesUsados, avisos };
 }
 
 /** Versão com IA: Edge Function no site, rota local com .env no dev. */
@@ -197,10 +215,11 @@ export function roteiroEmTexto(r: Roteiro): string {
     `GANCHO: ${r.ganchoFalado}`,
     `AÇÃO VISUAL: ${r.acaoVisual}`,
     `ZONA DE TRAVA: ${r.zonaDeTrava}`,
-    ...r.blocos.map((b) => `${b.titulo.toUpperCase()} [tela: ${b.textoNaTela}]: ${b.fala}`),
+    ...r.blocos.map((b) => `${b.titulo.toUpperCase()} [tela: ${b.textoNaTela}${b.visual ? ` · visual: ${b.visual}` : ""}]: ${b.fala}`),
     `FECHAMENTO: ${r.fechamento}`,
     "",
     "LEGENDA:",
     r.legenda,
+    ...(r.padroesUsados?.length ? ["", "PADRÕES DO ESTUDO APLICADOS:", ...r.padroesUsados.map((p) => `- ${p}`)] : []),
   ].join("\n");
 }

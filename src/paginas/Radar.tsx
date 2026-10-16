@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { VideoTelaInteira } from "../componentes/Video";
 import { useEstado } from "../dados/armazenamento";
-import { lerRadares, rodarRadar, type Radar as R, type VideoQuente } from "../dados/radar";
+import { lerRadares, mancheteDe, rodarRadar, trafegoLegivel, type Radar as R, type VideoQuente } from "../dados/radar";
 import { lerReferencia } from "../dados/referencia";
 import { noSite } from "../dados/site";
 
@@ -52,7 +52,7 @@ export function Radar() {
       <section className="vazio">
         <p className="vazio-titulo">O radar vive no site</p>
         <p className="vazio-texto">
-          Todo dia às 7h ele lê o que o Brasil está buscando e os vídeos mais vistos da semana no nicho, e cruza com os ganchos do calendário. Entre no site com a sua conta de sócio para ver.
+          Todo dia às 7h ele lê o que o Brasil está buscando e os vídeos mais vistos da semana no nicho, e diz o que gravar hoje e como. Entre no site com a sua conta de sócio para ver.
         </p>
       </section>
     );
@@ -70,7 +70,8 @@ export function Radar() {
           <h1 id="titulo-radar" className="rotulo">
             Radar do dia{radar ? `, ${dataLegivel(radar.data)}` : ""}
           </h1>
-          <p className="abertura-gancho">{radar ? radar.resumo || "Tendências de hoje e o que gravar em cima delas." : "Ainda não rodou hoje."}</p>
+          <p className="abertura-gancho radar-manchete">{radar ? mancheteDe(radar) || "O que está quente hoje e o que gravar em cima disso." : "Ainda não rodou hoje."}</p>
+          {radar && radar.resumo && <p className="radar-resumo">{radar.resumo}</p>}
           <p className="abertura-acoes">
             <button type="button" className="botao botao-primario" onClick={() => void rodar()} disabled={estado === "rodando" || estado === "carregando"}>
               {estado === "rodando" ? "Lendo tendências (até 1 min)" : "Atualizar agora"}
@@ -94,6 +95,7 @@ export function Radar() {
         <div className="radar-grade">
           <section className="radar-bloco radar-ideias" aria-labelledby="radar-ideias">
             <h2 id="radar-ideias" className="passo-titulo">O que gravar hoje</h2>
+            <p className="radar-bloco-ajuda">Cada ideia diz o que fazer e como aplicar, com o padrão do estudo de <Link to="/referencias" className="link">Referências</Link> em cada passo.</p>
             <ol className="ideias">
               {radar.ideias.map((i, n) => (
                 <li key={n} className="ideia">
@@ -101,8 +103,30 @@ export function Radar() {
                   <div className="ideia-corpo">
                     <h3 className="ideia-titulo">{i.titulo}</h3>
                     <p className="ideia-porque">{i.porqueAgora}</p>
-                    <p className="roteiro-tela">{i.textoNaTela}</p>
-                    <p className="ideia-gancho">{i.ganchoFalado}</p>
+
+                    {i.oQueFazer && (
+                      <div className="ideia-secao">
+                        <span className="roteiro-etiqueta">O que fazer</span>
+                        <p className="ideia-fazer">{i.oQueFazer}</p>
+                      </div>
+                    )}
+
+                    <div className="ideia-secao">
+                      <span className="roteiro-etiqueta">Gancho</span>
+                      <p className="roteiro-tela">{i.textoNaTela}</p>
+                      <p className="ideia-gancho">{i.ganchoFalado}</p>
+                      {i.provaNaTela && <p className="roteiro-nota">Prova na tela: {i.provaNaTela}</p>}
+                    </div>
+
+                    {i.comoAplicar && i.comoAplicar.length > 0 && (
+                      <div className="ideia-secao">
+                        <span className="roteiro-etiqueta">Como aplicar</span>
+                        <ol className="ideia-passos">
+                          {i.comoAplicar.map((p, k) => <li key={k}>{p}</li>)}
+                        </ol>
+                      </div>
+                    )}
+
                     <p className="ideia-meta">
                       {i.formato}
                       {i.diaCalendario ? (
@@ -133,7 +157,7 @@ export function Radar() {
                 {tendencias.map((t) => (
                   <li key={t.titulo}>
                     <span className="tendencia-titulo">{t.titulo}</span>
-                    <span className="tendencia-meta mono">{t.trafego}</span>
+                    <span className="tendencia-meta mono">{trafegoLegivel(t.trafego)} buscas</span>
                     {t.noticia && (
                       t.url ? <a className="tendencia-noticia link" href={t.url} target="_blank" rel="noreferrer">{t.noticia}</a> : <span className="tendencia-noticia">{t.noticia}</span>
                     )}
