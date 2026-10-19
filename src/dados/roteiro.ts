@@ -241,6 +241,14 @@ export async function gerarRoteiroIA(e: EntradaRoteiro): Promise<Roteiro> {
   throw new Error("A versão com IA do roteiro existe só no site.");
 }
 
+/** Só o que se fala, na ordem, sem rótulo nem nota: para colar no teleprompter. */
+export function roteiroSoFala(r: Roteiro): string {
+  return [r.ganchoFalado, r.zonaDeTrava, ...r.blocos.map((b) => b.fala), r.fechamento]
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .join("\n\n");
+}
+
 export function roteiroEmTexto(r: Roteiro): string {
   return [
     `TEXTO NA TELA: ${r.textoNaTela.replace(/\n/g, " / ")}`,

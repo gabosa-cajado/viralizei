@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { noArtefato } from "../dados/plataforma";
 import { noSite } from "../dados/site";
@@ -10,6 +10,7 @@ import {
   melhorarRoteiroIA,
   montarRoteiroLocal,
   roteiroEmTexto,
+  roteiroSoFala,
   type EntradaRoteiro,
   type Roteiro as R,
   type RoteiroMelhorado,
@@ -61,6 +62,8 @@ export function Roteiro() {
   const [ia, setIa] = useState<EstadoIA<R>>({ estado: "parado" });
   const [melhora, setMelhora] = useState<EstadoIA<RoteiroMelhorado>>({ estado: "parado" });
   const [copiado, setCopiado] = useState(false);
+  const [falaCopiada, setFalaCopiada] = useState(false);
+  const caixaFala = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => gravar(CHAVE, entrada), [entrada]);
   useEffect(() => gravar(CHAVE_COLADO, colado), [colado]);
@@ -100,6 +103,16 @@ export function Roteiro() {
       setMelhora({ estado: "pronto", roteiro: r });
     } catch (e) {
       setMelhora({ estado: "erro", mensagem: e instanceof Error ? e.message : "Não deu para melhorar agora." });
+    }
+  }
+
+  async function copiarFala() {
+    try {
+      await navigator.clipboard.writeText(caixaFala.current?.value ?? "");
+      setFalaCopiada(true);
+      setTimeout(() => setFalaCopiada(false), 1800);
+    } catch {
+      caixaFala.current?.select();
     }
   }
 
@@ -280,6 +293,22 @@ export function Roteiro() {
                   <p className="roteiro-legenda">{roteiro.legenda}</p>
                 </li>
               </ol>
+              <div className="roteiro-so-texto">
+                <p className="roteiro-origem">
+                  <label htmlFor="roteiro-so-fala" className="roteiro-etiqueta">Só o texto</label>
+                  <button type="button" className="botao-texto" onClick={() => void copiarFala()}>
+                    {falaCopiada ? "Copiado" : "Copiar texto"}
+                  </button>
+                </p>
+                <textarea
+                  id="roteiro-so-fala"
+                  key={roteiroSoFala(roteiro)}
+                  ref={caixaFala}
+                  defaultValue={roteiroSoFala(roteiro)}
+                  rows={12}
+                  spellCheck={false}
+                />
+              </div>
               {roteiro.avisos.length > 0 && (
                 <ul className="roteiro-avisos">
                   {roteiro.avisos.map((a) => <li key={a}>{a}</li>)}

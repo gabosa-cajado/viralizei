@@ -3132,3 +3132,32 @@ a.abertura-gancho:hover .gancho {
   max-width: 70ch;
   margin-bottom: 1rem;
 }
+
+/* Roteiro: caixa com só a fala, para colar no teleprompter */
+.roteiro-so-texto {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--fio);
+}
+
+.roteiro-so-texto .roteiro-origem {
+  margin-bottom: 0.5rem;
+}
+
+.roteiro-so-texto textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 2px solid var(--tinta);
+  border-radius: 0;
+  background: transparent;
+  color: var(--tinta);
+  font-size: var(--t-16);
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.roteiro-so-texto textarea:focus {
+  outline: none;
+  border-color: var(--vermelho);
+}
