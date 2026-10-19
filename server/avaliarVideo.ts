@@ -18,7 +18,7 @@ const Saida = z.object({
 const PESOS: Record<string, number> = {
   duracao: 8, vertical: 4, primeira: 10, silencio: 6, pausas: 4, energia: 5,
   gancho_tamanho: 8, gancho_especifico: 5, gancho_abertura: 4, tela_presente: 6, tela_linhas: 6, tela_pontuacao: 4,
-  prova: 10, alinhado: 8, posicao: 6, assinatura: 6, interrupcao: 5, luz: 4, enquadramento: 4, cta: 6,
+  prova: 10, alinhado: 8, posicao: 6, assinatura: 6, interrupcao: 5, luz: 4, enquadramento: 4, cta: 6, loop_reforco: 5, loop_meio: 6,
 };
 
 const CRITERIOS = `Julgue cada um destes critérios (id entre parênteses), com estado ok, falha ou conferir e um detalhe de uma frase citando o que você viu ou ouviu:
@@ -42,7 +42,9 @@ const CRITERIOS = `Julgue cada um destes critérios (id entre parênteses), com 
 - (luz) rosto mais claro que o fundo, sem contraluz estourada
 - (enquadramento) busto ou plano americano, câmera na altura dos olhos ou pouco abaixo, mãos aparecendo quando fala
 - (cta) termina com uma chamada que cabe em uma palavra (pergunta, palavra-chave para comentar, seguir com placar, salvar)
-Os seis primeiros vêm das medidas numéricas: aplique o número à regra. Os de texto na tela e de visual vêm dos quadros. Os de fala vêm da transcrição; sem transcrição, marque-os como conferir e diga isso no detalhe.`;
+- (loop_reforco) entre 5 e 15 s a fala aumenta a aposta do gancho em vez de começar a responder (loop de reforço do Triple Loop)
+- (loop_meio) perto da metade do vídeo (40% a 60% da fala) uma frase reabre a curiosidade ou promete algo que só vem no fim (loop de religar)
+Os seis primeiros vêm das medidas numéricas: aplique o número à regra. Os de texto na tela e de visual vêm dos quadros. Os de fala vêm da transcrição; sem transcrição, marque-os como conferir e diga isso no detalhe. Para os dois de loop, estime o segundo pela posição da frase na transcrição em relação à duração.`;
 
 const SISTEMA = `Você avalia um Reel antes de ele ser postado, usando o que o estudo dos cinco criadores que mais crescem no nicho de negócios, tecnologia e motivação mediu: fala começa antes de 0,3 s; sempre há texto na tela (título de até 2 linhas, sem pontuação); prova na tela nos primeiros segundos; assinatura visual fixa; vídeos de 36 a 150 s; posição firme; chamada de uma palavra no fim; legenda que repete o gancho.
 Você recebe: medidas numéricas do vídeo, até 8 quadros com o tempo de cada um, e a transcrição da fala (quando houver). Leia o texto que aparece nos quadros; descreva roupa, cenário, luz e enquadramento com base neles.

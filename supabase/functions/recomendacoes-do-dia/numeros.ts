@@ -23,6 +23,9 @@ export interface Pub {
   retencao: number | null;
   engajamento: number | null;
   tema: string | null;
+  formato: string | null;
+  layout: string | null;
+  tipo_gancho: string | null;
 }
 
 export interface DiaConta {
@@ -110,6 +113,26 @@ export interface Numeros {
     cidades: { chave: string; pct: number }[];
   } | null;
   temas: { tema: string; n: number; medianaViews: number | null; mediaTaxa3s: number | null; salvosPorMil: number | null }[];
+  // Fórmula de conteúdo (Kallaway): tema × formato de história × layout visual,
+  // e cada parte sozinha. Só Reels do Instagram classificados pela IA.
+  formulas: Formula[];
+  formatos: (Desempenho & { formato: string })[];
+  layouts: (Desempenho & { layout: string })[];
+  tiposGancho: (Desempenho & { tipo: string })[];
+}
+
+export interface Desempenho {
+  n: number;
+  medianaViews: number | null;
+  mediaTaxa3s: number | null;
+  salvosPorMil: number | null;
+}
+
+export interface Formula extends Desempenho {
+  tema: string;
+  formato: string;
+  layout: string;
+  exemplo: { titulo: string; url: string | null } | null;
 }
 
 const DIAS = ["", "segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo"];
@@ -327,6 +350,38 @@ export function calcular(pubs: Pub[], conta: DiaConta[], publico: LinhaPublico[]
     duracao,
     publico: publicoResumo,
     temas,
+    ...formulasDaConta(reels),
+  };
+}
+
+function desempenho(g: Pub[]): Desempenho {
+  const r = resumir(g);
+  return { n: r.n, medianaViews: r.medianaViews, mediaTaxa3s: r.mediaTaxa3s, salvosPorMil: r.salvosPorMil };
+}
+
+/** Agrupa por uma chave (nula fica de fora) e ordena pela mediana de views. */
+function agrupar(pubs: Pub[], chave: (p: Pub) => string | null): [string, Pub[]][] {
+  const m = new Map<string, Pub[]>();
+  for (const p of pubs) {
+    const k = chave(p);
+    if (k) m.set(k, [...(m.get(k) ?? []), p]);
+  }
+  return [...m.entries()].sort((a, b) => (mediana(b[1].map((p) => p.views ?? 0)) ?? 0) - (mediana(a[1].map((p) => p.views ?? 0)) ?? 0));
+}
+
+function formulasDaConta(reels: Pub[]) {
+  const formulas: Formula[] = agrupar(reels, (p) => (p.tema && p.formato && p.layout ? `${p.tema}|${p.formato}|${p.layout}` : null))
+    .map(([k, g]) => {
+      const [tema, formato, layout] = k.split("|");
+      const melhor = [...g].sort((a, b) => (b.views ?? 0) - (a.views ?? 0))[0];
+      return { tema, formato, layout, ...desempenho(g), exemplo: melhor ? { titulo: primeiraLinha(melhor.legenda), url: melhor.url } : null };
+    })
+    .slice(0, 12);
+  return {
+    formulas,
+    formatos: agrupar(reels, (p) => p.formato).map(([formato, g]) => ({ formato, ...desempenho(g) })),
+    layouts: agrupar(reels, (p) => p.layout).map(([layout, g]) => ({ layout, ...desempenho(g) })),
+    tiposGancho: agrupar(reels, (p) => p.tipo_gancho).map(([tipo, g]) => ({ tipo, ...desempenho(g) })),
   };
 }
 

@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { COMO_ESCREVER, instrucaoTamanho, orcamento, palavrasFaladas, segundosPorPalavras } from "../supabase/functions/gerar-roteiro/comum";
+import { COMO_ESCREVER, conferirLoops, instrucaoTamanho, localizarLoops, orcamento, palavrasFaladas, segundosPorPalavras } from "../supabase/functions/gerar-roteiro/comum";
 import { ESCRITA, REGRAS } from "./regras";
 
 // Mesmo roteiro da Edge Function gerar-roteiro, para o modo local (chave no .env).
@@ -19,6 +19,7 @@ const Roteiro = z.object({
   legenda: z.string(),
   duracaoEstimadaSeg: z.number(),
   padroesUsados: z.array(z.string()).min(4).max(10),
+  loops: z.object({ gancho: z.string(), reforco: z.string(), meio: z.string() }),
   avisos: z.array(z.string()),
 });
 
@@ -91,7 +92,9 @@ export function criarRotaRoteiro(chave: string | undefined) {
       const palavras = palavrasFaladas(roteiro);
       roteiro.duracaoEstimadaSeg = segundosPorPalavras(palavras);
       if (palavras < alvo.minimo * 0.85) roteiro.avisos.push(`A fala tem ${palavras} palavras, uns ${roteiro.duracaoEstimadaSeg} s, para uma meta de ${alvo.duracao} s. Gere de novo ou acrescente um exemplo.`);
-      return responder(res, 200, roteiro);
+      const loops = localizarLoops(roteiro, roteiro.loops);
+      roteiro.avisos.push(...conferirLoops(loops, roteiro.duracaoEstimadaSeg));
+      return responder(res, 200, { ...roteiro, loops });
     } catch (erro) {
       if (erro instanceof Anthropic.AuthenticationError) return responder(res, 401, { erro: "A chave da Anthropic foi recusada. Confira ANTHROPIC_API_KEY no .env." });
       if (erro instanceof Anthropic.RateLimitError) return responder(res, 429, { erro: "Muitos pedidos seguidos. Espere um minuto e tente de novo." });

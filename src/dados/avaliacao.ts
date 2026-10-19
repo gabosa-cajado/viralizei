@@ -42,6 +42,8 @@ export const CONFERIR_MANUAL: { id: string; nome: string; detalhe: string; peso:
   { id: "alinhado", nome: "Texto, fala e imagem contam a mesma coisa", detalhe: "Vendo só um dos três, dá para adivinhar os outros dois.", peso: 8 },
   { id: "posicao", nome: "Uma posição firme, sem meio-termo", detalhe: "A favor ou contra; é o que gera comentário.", peso: 6 },
   { id: "assinatura", nome: "Roupa, cenário e fonte iguais aos dos outros vídeos", detalhe: "Assinatura visual fixa: reconhecível num quadro congelado.", peso: 6 },
+  { id: "loop_reforco", nome: "Entre 5 e 15 s a fala aumenta a aposta do gancho", detalhe: "Loop de reforço: uma frase que promete mais do que o gancho prometeu.", peso: 5 },
+  { id: "loop_meio", nome: "Perto da metade, uma frase reabre a curiosidade", detalhe: "Loop de religar: \"e aqui vem a parte que quase ninguém conta\".", peso: 6 },
   { id: "interrupcao", nome: "Troca de visual a cada 10–15 s", detalhe: "Gráfico, print, PiP ou movimento do corpo.", peso: 5 },
   { id: "luz", nome: "Rosto mais claro que o fundo", detalhe: "Luz de frente ou janela; fundo escuro ou neutro.", peso: 4 },
   { id: "cta", nome: "Fecha com uma chamada que cabe em uma palavra", detalhe: "Pergunta de uma palavra, palavra-chave para comentar ou seguir com placar.", peso: 6 },

@@ -1,8 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Gancho } from "../componentes/Gancho";
 import { noSite as noSiteMsg } from "../dados/site";
 import { Gravadores, usePerfis } from "../componentes/Pessoas";
+import { nomeTipoGancho, TIPOS_GANCHO, tipoDoModelo } from "../../supabase/functions/gerar-roteiro/comum";
+import { lerRecomendacoes, type DesempenhoTipo } from "../dados/recomendacoes";
 import { ACOMPANHAR_GRAVADOS, alternarGravado, carregarSemente, diasOrdenados, emEquipe, nomeDoFormato, quemGravou, useEstado } from "../dados/armazenamento";
 
 function semAcento(texto: string) {
@@ -16,6 +18,8 @@ export function Calendario() {
   const [aba, setAba] = useState<Aba>(ACOMPANHAR_GRAVADOS ? "agravar" : "todos");
   const [formato, setFormato] = useState("");
   const [busca, setBusca] = useState("");
+  const [tipo, setTipo] = useState("");
+  const [desempenho, setDesempenho] = useState<DesempenhoTipo[]>([]);
   const pessoas = Object.keys(gravadosPorPessoa).filter((id) => gravadosPorPessoa[id].length > 0);
   const perfis = usePerfis(pessoas);
 
@@ -25,14 +29,35 @@ export function Calendario() {
   const feitos = dias.filter((d) => gravados.includes(d.id));
   const formatosEmUso = conteudo.formatos.filter((f) => dias.some((d) => d.formatoId === f.id));
 
+  const tipoDe = useMemo(() => new Map(dias.map((d) => [d.id, tipoDoModelo(d.gancho)])), [dias]);
+  const tiposEmUso = TIPOS_GANCHO.map((t) => ({ ...t, total: dias.filter((d) => tipoDe.get(d.id) === t.id).length })).filter((t) => t.total > 0);
+
+  // Qual tipo de gancho segura mais nos reels da conta (recomendações do dia).
+  useEffect(() => {
+    if (modo !== "site") return;
+    let vivo = true;
+    lerRecomendacoes()
+      .then((r) => {
+        if (vivo) setDesempenho(r[0]?.numeros.tiposGancho ?? []);
+      })
+      .catch(() => undefined);
+    return () => {
+      vivo = false;
+    };
+  }, [modo]);
+  const comAmostra = desempenho.filter((t) => t.n >= 2 && t.mediaTaxa3s != null);
+  const melhorTipo = [...comAmostra].sort((a, b) => (b.mediaTaxa3s ?? 0) - (a.mediaTaxa3s ?? 0))[0];
+  const piorTipo = comAmostra.length >= 3 ? [...comAmostra].sort((a, b) => (a.mediaTaxa3s ?? 0) - (b.mediaTaxa3s ?? 0))[0] : undefined;
+
   const daAba = aba === "agravar" ? aGravar : aba === "gravados" ? feitos : dias;
   const termo = semAcento(busca.trim());
   const visiveis = daAba.filter(
     (d) =>
       (!formato || d.formatoId === formato) &&
+      (!tipo || tipoDe.get(d.id) === tipo) &&
       (!termo || semAcento(`${d.gancho} ${d.descricao} ${nomeDoFormato(conteudo, d.formatoId)}`).includes(termo)),
   );
-  const filtrando = !!formato || !!termo;
+  const filtrando = !!formato || !!tipo || !!termo;
 
   if (modo === "carregando") {
     return (
@@ -184,12 +209,43 @@ export function Calendario() {
                 ))}
               </select>
             </label>
+            <label className="campo campo-compacto">
+              <span className="visualmente-oculto">Tipo de gancho</span>
+              <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
+                <option value="">Todos os tipos</option>
+                {tiposEmUso.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.nome} ({t.total})
+                  </option>
+                ))}
+              </select>
+            </label>
             <label className="campo campo-compacto busca">
               <span className="visualmente-oculto">Buscar</span>
               <input type="search" value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Buscar gancho" />
             </label>
           </div>
         </div>
+
+        {melhorTipo && (
+          <div className="tipos-desempenho">
+            <p>
+              Nos seus reels, o gancho de <strong>{nomeTipoGancho(melhorTipo.tipo)}</strong> é o que mais segura:{" "}
+              {Math.round(melhorTipo.mediaTaxa3s!)}% passam dos 3 s em {melhorTipo.n} vídeos
+              {piorTipo && piorTipo.tipo !== melhorTipo.tipo && (
+                <>
+                  , contra {Math.round(piorTipo.mediaTaxa3s!)}% em {nomeTipoGancho(piorTipo.tipo)}
+                </>
+              )}
+              .
+            </p>
+            {tiposEmUso.some((t) => t.id === melhorTipo.tipo) && tipo !== melhorTipo.tipo && (
+              <button type="button" className="botao botao-secundario botao-pequeno" onClick={() => setTipo(melhorTipo.tipo)}>
+                Ver só esse tipo
+              </button>
+            )}
+          </div>
+        )}
 
         {visiveis.length === 0 ? (
           <div className="vazio vazio-lista">
@@ -209,6 +265,7 @@ export function Calendario() {
                 onClick={() => {
                   setBusca("");
                   setFormato("");
+                  setTipo("");
                 }}
               >
                 Limpar filtros
@@ -228,7 +285,12 @@ export function Calendario() {
                   <span className="dia-cartao-numero" aria-hidden="true">{String(d.numero).padStart(2, "0")}</span>
                   <Gancho gancho={d.gancho} className="gancho dia-cartao-gancho" />
                   {d.descricao && <span className="dia-cartao-descricao">{d.descricao}</span>}
-                  <span className="dia-cartao-abrir">Abrir dia</span>
+                  <span className="dia-cartao-abrir">
+                    <span>Abrir dia</span>
+                    <span className={`dia-cartao-tipo${melhorTipo?.tipo === tipoDe.get(d.id) ? " dia-cartao-tipo-melhor" : ""}`}>
+                      {nomeTipoGancho(tipoDe.get(d.id))}
+                    </span>
+                  </span>
                 </Link>
               </li>
             ))}

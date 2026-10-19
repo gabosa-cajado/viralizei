@@ -263,6 +263,34 @@ export function Roteiro() {
                   </ol>
                 </section>
               )}
+              {roteiro.loops && (
+                <section className="roteiro-loops" aria-labelledby="roteiro-loops-titulo">
+                  <h2 id="roteiro-loops-titulo" className="roteiro-etiqueta">Três loops</h2>
+                  <div className="loops-linha" aria-hidden="true">
+                    {[roteiro.loops.gancho, roteiro.loops.reforco, roteiro.loops.meio].map((l, i) =>
+                      l.segundo == null ? null : (
+                        <span key={i} className="loops-marca" style={{ left: `${Math.min(100, (l.segundo / Math.max(1, roteiro.duracaoEstimadaSeg)) * 100)}%` }}>
+                          {l.segundo} s
+                        </span>
+                      ),
+                    )}
+                  </div>
+                  <ol className="loops-lista">
+                    {([
+                      ["Gancho", "abre a pergunta do vídeo", roteiro.loops.gancho],
+                      ["Reforço", "aumenta a aposta até uns 15 s", roteiro.loops.reforco],
+                      ["Religar", "reabre a curiosidade perto da metade", roteiro.loops.meio],
+                    ] as const).map(([nome, papel, l]) => (
+                      <li key={nome}>
+                        <span className="mono loops-segundo">{l.segundo == null ? "?" : `${l.segundo} s`}</span>
+                        <span>
+                          <strong>{nome}</strong> ({papel}): {l.frase}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              )}
               <ol className="roteiro-blocos">
                 <li>
                   <span className="roteiro-etiqueta">Texto na tela</span>

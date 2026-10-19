@@ -58,4 +58,10 @@ for (const destino of ["supabase/functions/gerar-roteiro/regras.ts", "supabase/f
   writeFileSync(join(raiz, destino), arquivo);
   console.log("escrito", destino);
 }
+// comum.ts (ritmo de fala, loops, tipos de gancho, formatos e layouts) mora em
+// gerar-roteiro; recomendacoes-do-dia leva uma cópia, porque cada Edge Function
+// é publicada só com os arquivos da própria pasta.
+const comum = readFileSync(join(raiz, "supabase/functions/gerar-roteiro/comum.ts"), "utf8");
+writeFileSync(join(raiz, "supabase/functions/recomendacoes-do-dia/comum.ts"), "// Cópia gerada por npm run regras. Edite supabase/functions/gerar-roteiro/comum.ts.\n" + comum);
+console.log("copiado comum.ts para recomendacoes-do-dia");
 console.log(texto.length, "caracteres de regras,", textoEscrita.length, "de escrita");

@@ -34,6 +34,25 @@ export interface Item {
   tema: string | null;
 }
 
+/** Desempenho de um grupo de reels (fórmula, formato, layout ou tipo de gancho). */
+export interface Desempenho {
+  n: number;
+  medianaViews: number | null;
+  mediaTaxa3s: number | null;
+  salvosPorMil: number | null;
+}
+
+export interface DesempenhoTipo extends Desempenho {
+  tipo: string;
+}
+
+export interface Formula extends Desempenho {
+  tema: string;
+  formato: string;
+  layout: string;
+  exemplo: { titulo: string; url: string | null } | null;
+}
+
 export interface Numeros {
   dadosAte: string | null;
   seguidores: { atual: number; inicio: number; desde: string; ganhosNoPeriodo: number } | null;
@@ -57,6 +76,10 @@ export interface Numeros {
     cidades: { chave: string; pct: number }[];
   } | null;
   temas: { tema: string; n: number; medianaViews: number | null; mediaTaxa3s: number | null; salvosPorMil: number | null }[];
+  formulas?: Formula[];
+  formatos?: (Desempenho & { formato: string })[];
+  layouts?: (Desempenho & { layout: string })[];
+  tiposGancho?: DesempenhoTipo[];
   sincronia?: { ok: boolean; mensagem: string; publicacoes?: number };
   publicacoesLidas?: number;
 }

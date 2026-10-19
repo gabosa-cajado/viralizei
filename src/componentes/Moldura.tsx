@@ -22,6 +22,7 @@ export function Moldura() {
           </NavLink>
           <NavLink to="/laboratorio">Laboratório</NavLink>
           <NavLink to="/referencias">Referências</NavLink>
+          <NavLink to="/plano">Plano</NavLink>
           <NavLink to="/roteiro">Roteiro</NavLink>
           <NavLink to="/avaliar">Avaliar</NavLink>
           <NavLink to="/radar">Radar</NavLink>

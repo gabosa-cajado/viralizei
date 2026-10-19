@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useEstado } from "../dados/armazenamento";
 import { lerRecomendacoes, NOME_DA_AREA, rodarRecomendacoes, type Item, type Recomendacoes as R, type Resumo } from "../dados/recomendacoes";
 import { noSite } from "../dados/site";
+import { nomeFormato, nomeLayout, nomeTipoGancho } from "../../supabase/functions/gerar-roteiro/comum";
+import type { Desempenho } from "../dados/recomendacoes";
 
 function dataLegivel(iso: string) {
   const [a, m, d] = iso.slice(0, 10).split("-");
@@ -23,6 +25,34 @@ function lugar(chave: string) {
   } catch {
     return chave;
   }
+}
+
+function TabelaPartes({ titulo, coluna, linhas, ajuda }: { titulo: string; coluna: string; linhas: (Desempenho & { nome: string })[]; ajuda?: ReactNode }) {
+  if (!linhas.length) return null;
+  return (
+    <>
+      <h3 className="rec-subtitulo">{titulo}</h3>
+      <div className="rec-tabela">
+        <table>
+          <thead>
+            <tr><th scope="col">{coluna}</th><th scope="col">Reels</th><th scope="col">Views (mediana)</th><th scope="col">Passam dos 3 s</th><th scope="col">Salvos/mil</th></tr>
+          </thead>
+          <tbody>
+            {linhas.map((l) => (
+              <tr key={l.nome}>
+                <th scope="row">{l.nome}</th>
+                <td className="mono">{l.n}</td>
+                <td className="mono">{num(l.medianaViews)}</td>
+                <td className="mono">{pct(l.mediaTaxa3s)}</td>
+                <td className="mono">{num(l.salvosPorMil, 1)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {ajuda && <p className="radar-bloco-ajuda">{ajuda}</p>}
+    </>
+  );
 }
 
 function variacao(agora: number | null, antes: number | null) {
@@ -288,6 +318,55 @@ export function Recomendacoes() {
                 <p className="radar-bloco-ajuda">Tema com menos de 5 posts é indício, não regra.</p>
               </>
             )}
+
+            {(n.formulas?.length ?? 0) > 0 && (
+              <>
+                <h3 className="rec-subtitulo">Suas fórmulas</h3>
+                <p className="radar-bloco-ajuda">
+                  Tema × formato da história × layout visual (Kallaway). Repita a combinação que roda e troque só uma parte por vez.{" "}
+                  <Link className="link" to="/plano">Montar um Plano 3-3-1</Link>
+                </p>
+                <div className="rec-tabela">
+                  <table>
+                    <thead>
+                      <tr><th scope="col">Fórmula</th><th scope="col">Reels</th><th scope="col">Views (mediana)</th><th scope="col">Passam dos 3 s</th><th scope="col">Salvos/mil</th></tr>
+                    </thead>
+                    <tbody>
+                      {n.formulas!.map((f) => (
+                        <tr key={`${f.tema}|${f.formato}|${f.layout}`}>
+                          <th scope="row">
+                            {f.tema} · {nomeFormato(f.formato)} · {nomeLayout(f.layout)}
+                            {f.exemplo && (
+                              <span className="rec-exemplo">
+                                Ex.:{" "}
+                                {f.exemplo.url ? (
+                                  <a className="link" href={f.exemplo.url} target="_blank" rel="noreferrer">{f.exemplo.titulo}</a>
+                                ) : (
+                                  f.exemplo.titulo
+                                )}
+                              </span>
+                            )}
+                          </th>
+                          <td className="mono">{f.n}</td>
+                          <td className="mono">{num(f.medianaViews)}</td>
+                          <td className="mono">{pct(f.mediaTaxa3s)}</td>
+                          <td className="mono">{num(f.salvosPorMil, 1)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            <TabelaPartes titulo="Por formato da história" coluna="Formato" linhas={(n.formatos ?? []).map((x) => ({ nome: nomeFormato(x.formato), ...x }))} />
+            <TabelaPartes titulo="Por layout visual" coluna="Layout" linhas={(n.layouts ?? []).map((x) => ({ nome: nomeLayout(x.layout), ...x }))} />
+            <TabelaPartes
+              titulo="Por tipo de gancho"
+              coluna="Tipo"
+              linhas={(n.tiposGancho ?? []).map((x) => ({ nome: nomeTipoGancho(x.tipo), ...x }))}
+              ajuda={<>Os modelos do <Link className="link" to="/">calendário</Link> têm filtro por tipo.</>}
+            />
 
             <h3 className="rec-subtitulo">Reels que mais rodaram</h3>
             <div className="rec-tabela">

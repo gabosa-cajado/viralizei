@@ -3,7 +3,8 @@
 -- Esperado: 1 >= 1 (controle), 2-5 false, 6 = 0, 7 false, 8-9 false, 10 = 0,
 -- 11-13 false, 14 = 0, 15 >= 1 (controle das trilhas), 16 = "1500 <hoje>",
 -- 17-18 false, 19 = 0, 20 >= 1 (controle das ideias), 21-23 false, 24 = 0,
--- 25 >= 1 (controle das métricas).
+-- 25 >= 1 (controle das métricas), 26-28 false, 29 = 0, 30 >= 1 (controle
+-- dos planos).
 begin;
 create temp table r (caso text, resultado text) on commit drop;
 grant all on r to anon, authenticated;
@@ -27,6 +28,11 @@ insert into r select '21 anon pode ler métricas ou recomendações', (has_table
 insert into r select '22 logado pode escrever nas métricas', (has_table_privilege('authenticated', 'public.metricas_publicacoes', 'insert') or has_table_privilege('authenticated', 'public.metricas_publicacoes', 'update') or has_table_privilege('authenticated', 'public.metricas_conta', 'insert') or has_table_privilege('authenticated', 'public.metricas_publico', 'insert') or has_table_privilege('authenticated', 'public.metricas_horarios', 'insert'))::text;
 insert into r select '23 logado pode escrever recomendações', (has_table_privilege('authenticated', 'public.recomendacoes', 'insert') or has_table_privilege('authenticated', 'public.recomendacoes', 'update') or has_table_privilege('authenticated', 'public.recomendacoes', 'delete'))::text;
 insert into r select '25 controle: dono do banco vê métricas', count(*)::text from public.metricas_publicacoes;
+insert into public.planos (titulo, temas, formatos, celulas) values ('Plano de controle', '["a","b","c"]', '["lista","erro","caso"]', '[]');
+insert into r select '26 anon pode ler planos', has_table_privilege('anon', 'public.planos', 'select')::text;
+insert into r select '27 logado pode forjar autor do plano', (has_column_privilege('authenticated', 'public.planos', 'criado_por', 'insert') or has_column_privilege('authenticated', 'public.planos', 'criado_por', 'update'))::text;
+insert into r select '28 logado pode escrever classificação das métricas', (has_column_privilege('authenticated', 'public.metricas_publicacoes', 'formato', 'update') or has_column_privilege('authenticated', 'public.metricas_publicacoes', 'tipo_gancho', 'update'))::text;
+insert into r select '30 controle: dono do banco vê planos', count(*)::text from public.planos;
 insert into r select '15 controle: dono do banco vê trilhas', count(*)::text from public.trilhas;
 insert into public.trilhas (id, titulo, reels_texto) values ('tteste', 'Teste', '1,5k');
 insert into r select '16 gatilho: 1,5k vira 1500 com data', reels_numero::text || ' ' || coalesce(conferido_em::text, 'sem data') from public.trilhas where id = 'tteste';
@@ -38,12 +44,14 @@ insert into r select '10 logado fora da lista vê radar', count(*)::text from pu
 insert into r select '14 logado fora da lista vê trilhas', count(*)::text from public.trilhas;
 insert into r select '19 logado fora da lista vê ideias', count(*)::text from public.ideias;
 insert into r select '24 logado fora da lista vê métricas ou recomendações', ((select count(*) from public.metricas_publicacoes) + (select count(*) from public.metricas_publico) + (select count(*) from public.recomendacoes))::text;
+insert into r select '29 logado fora da lista vê planos', count(*)::text from public.planos;
 reset role;
 select * from r order by caso;
 rollback;
 
 -- Controle positivo das trilhas, com um sócio real (o primeiro da lista).
--- Esperado: true, 45 ou mais, 1, 12000, "lapidada true", métricas 1 ou mais.
+-- Esperado: true, 45 ou mais, 1, 12000, "lapidada true", métricas 1 ou mais,
+-- "plano true 1".
 begin;
 create temp table r (caso text, resultado text) on commit drop;
 grant all on r to authenticated;
@@ -59,6 +67,9 @@ insert into public.ideias (texto) values ('Ideia do sócio no teste');
 update public.ideias set status = 'lapidada', lapidacao = '{"resumo":"x"}' where texto = 'Ideia do sócio no teste';
 insert into r select 'socio vê métricas', count(*)::text from public.metricas_publicacoes;
 insert into r select 'socio lapidou ideia (autor é ele)', status || ' ' || (criado_por = auth.uid())::text from public.ideias where texto = 'Ideia do sócio no teste';
+insert into public.planos (titulo, temas, formatos, celulas) values ('Plano do sócio no teste', '["a","b","c"]', '["lista","erro","caso"]', '[]');
+update public.planos set decimo = '{"titulo":"x"}' where titulo = 'Plano do sócio no teste';
+insert into r select 'socio criou plano (autor é ele, 10º salvo)', 'plano ' || (criado_por = auth.uid())::text || ' ' || (decimo is not null)::int::text from public.planos where titulo = 'Plano do sócio no teste';
 reset role;
 select * from r;
 rollback;

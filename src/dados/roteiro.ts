@@ -1,7 +1,15 @@
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import { noArtefato } from "./plataforma";
 import { noSite, supabase } from "./site";
-import { contarPalavras, orcamento, palavrasFaladas, segundosPorPalavras } from "../../supabase/functions/gerar-roteiro/comum";
+import {
+  conferirLoops,
+  contarPalavras,
+  localizarLoops,
+  orcamento,
+  palavrasFaladas,
+  segundosPorPalavras,
+  type Loops,
+} from "../../supabase/functions/gerar-roteiro/comum";
 
 // Gerador de roteiro. Sempre monta uma versão por regras no navegador (o que
 // o estudo de referências ensinou) e, quando há IA (site com chave no
@@ -39,6 +47,8 @@ export interface Roteiro {
   duracaoEstimadaSeg: number;
   /** Padrões e frameworks do estudo de referências aplicados, com onde entraram. */
   padroesUsados?: string[];
+  /** Três loops (gancho, reforço, religar no meio) com o segundo de cada. Roteiros antigos não têm. */
+  loops?: Loops;
   avisos: string[];
 }
 
@@ -248,6 +258,21 @@ export function montarRoteiroLocal(e: EntradaRoteiro): Roteiro {
 
   const legenda = `${ganchoFalado}\n${posicao ? maiusculaInicial(posicao.replace(/\.$/, "")) + "." : `Quem entende ${tema} para de perder ${primeiraPalavra(resultado) || "tempo"}.`}\n${ctaFala}`;
 
+  // Loop de religar: abre o bloco que começa mais perto da metade do vídeo.
+  const RELIGAR = "E aqui vem a parte que quase ninguém conta.";
+  let corrido = contarPalavras([ganchoFalado, zonaDeTrava].join(" "));
+  let meio = blocos.length > 1 ? 1 : 0;
+  let melhor = Infinity;
+  blocos.forEach((b, i) => {
+    const distancia = Math.abs(corrido - total / 2);
+    if (i > 0 && distancia < melhor) {
+      melhor = distancia;
+      meio = i;
+    }
+    corrido += contarPalavras(b.fala);
+  });
+  blocos[meio] = { ...blocos[meio], fala: `${RELIGAR} ${blocos[meio].fala}` };
+
   const palavras = palavrasFaladas({ ganchoFalado, zonaDeTrava, blocos, fechamento });
   const duracaoEstimadaSeg = segundosPorPalavras(palavras);
   if (palavras > alvo.maximo * 1.15) avisos.push(`O texto dá uns ${duracaoEstimadaSeg} s para uma meta de ${duracao} s: corte um bloco ou encurte as falas.`);
@@ -265,7 +290,11 @@ export function montarRoteiroLocal(e: EntradaRoteiro): Roteiro {
     "Trocar o visual a cada 10–15 s (checklist Visual): um visual por bloco",
   ];
 
-  return { textoNaTela, ganchoFalado, acaoVisual, zonaDeTrava, blocos, fechamento, legenda, duracaoEstimadaSeg, padroesUsados, avisos };
+  const loops = localizarLoops({ ganchoFalado, zonaDeTrava, blocos, fechamento }, { gancho: ganchoFalado, reforco: promessa, meio: RELIGAR });
+  avisos.push(...conferirLoops(loops, duracaoEstimadaSeg));
+  padroesUsados.push("Três loops (Kallaway): o gancho abre, a promessa da zona de trava reforça e uma frase perto da metade religa");
+
+  return { textoNaTela, ganchoFalado, acaoVisual, zonaDeTrava, blocos, fechamento, legenda, duracaoEstimadaSeg, padroesUsados, loops, avisos };
 }
 
 /** Versão com IA: Edge Function no site, rota local com .env no dev. */
@@ -312,6 +341,9 @@ export function roteiroEmTexto(r: Roteiro): string {
     "",
     "LEGENDA:",
     r.legenda,
+    ...(r.loops
+      ? ["", `LOOPS: gancho 0 s · reforço ${r.loops.reforco.segundo ?? "?"} s · religar ${r.loops.meio.segundo ?? "?"} s`]
+      : []),
     ...(r.padroesUsados?.length ? ["", "PADRÕES DO ESTUDO APLICADOS:", ...r.padroesUsados.map((p) => `- ${p}`)] : []),
   ].join("\n");
 }

@@ -6,9 +6,11 @@
 // 2. Calcula os números (numeros.ts): medianas, quem passa dos 3 s, tempo
 //    assistido, salvos e compartilhamentos por mil views, temas, chamada
 //    "comenta", vídeos repetidos, horários, duração e público.
-// 3. Com a chave da Anthropic, o Claude classifica o tema de cada publicação
-//    e escreve diagnóstico, destaques, recomendações, o que gravar hoje e o
-//    que parar; sem chave, as regras de numeros.ts.
+// 3. Com a chave da Anthropic, o Claude classifica cada publicação (tema; nos
+//    Reels também formato de história, layout visual e tipo de gancho, que
+//    viram as "fórmulas" da conta) e escreve diagnóstico, destaques,
+//    recomendações, o que gravar hoje e o que parar; sem chave, as regras de
+//    numeros.ts.
 // 4. Grava em public.recomendacoes (uma linha por dia; só a função escreve).
 // Autorização igual à do radar: x-viralizei-cron com o segredo do Vault, ou
 // JWT de sócio.
@@ -19,6 +21,10 @@ import { createClient } from "npm:@supabase/supabase-js@2.75.0";
 import { sincronizarMetricool } from "./metricool.ts";
 import { calcular, porRegras, TEMAS, temaPorPalavras, type DiaConta, type Horario, type LinhaPublico, type Pub, type Saida } from "./numeros.ts";
 import { REGRAS } from "./regras.ts";
+import { FORMATOS_HISTORIA, LAYOUTS, TIPOS_GANCHO } from "./comum.ts";
+
+const ids = (xs: { id: string }[]) => xs.map((x) => x.id) as [string, ...string[]];
+const lista = (xs: { id: string; nome: string; explicacao: string }[]) => xs.map((x) => `- ${x.id}: ${x.nome}. ${x.explicacao}`).join("\n");
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -29,7 +35,15 @@ const CORS = {
 const AREAS = ["gancho", "retencao", "tema", "formato", "chamada", "horario", "frequencia", "publico"] as const;
 
 const Resposta = z.object({
-  temas: z.array(z.object({ id: z.string(), tema: z.enum(TEMAS) })),
+  temas: z.array(
+    z.object({
+      id: z.string(),
+      tema: z.enum(TEMAS),
+      formato: z.enum(ids(FORMATOS_HISTORIA)).nullable(),
+      layout: z.enum(ids(LAYOUTS)).nullable(),
+      tipoGancho: z.enum(ids(TIPOS_GANCHO)).nullable(),
+    }),
+  ),
   manchete: z.string(),
   diagnostico: z.string(),
   destaques: z.array(z.object({ titulo: z.string(), evidencia: z.string(), leitura: z.string() })).min(2).max(5),
@@ -71,8 +85,18 @@ Regras:
 - "acao" é algo que dá para fazer hoje, concreto, curto, no imperativo.
 - Use o estudo de referências abaixo para dizer COMO corrigir (gancho triplo, zona de trava, loop do vício, palavra-chave nos comentários etc.), citando o nome do padrão.
 - gravarHoje: escolha o tema e o formato que os números mais apoiam; o ganchoTela segue um modelo do calendário (diaCalendario = número dele) preenchido para o tema.
-- temas: classifique TODAS as publicações recebidas (pelo id) em um dos temas permitidos.
+- temas: classifique TODAS as publicações recebidas (pelo id) em um dos temas permitidos. Nos Reels, classifique também pela legenda e pelo gancho: formato de história, layout visual (o mais provável pelo texto; na dúvida "camera") e tipo de gancho. Em carrossel e post, formato, layout e tipoGancho vêm null.
+- "formulas" são as combinações tema × formato × layout dos Reels (Fórmula de conteúdo, Kallaway); "tiposGancho" mostra que tipo de gancho segura mais. Com n >= 2, use-as para dizer qual combinação repetir e qual largar.
 - Português do Brasil, frases curtas, sem jargão de marketing e sem emoji.
+
+FORMATOS DE HISTÓRIA:
+${lista(FORMATOS_HISTORIA)}
+
+LAYOUTS VISUAIS:
+${lista(LAYOUTS)}
+
+TIPOS DE GANCHO:
+${lista(TIPOS_GANCHO)}
 
 ${REGRAS}`;
 
@@ -169,7 +193,9 @@ Deno.serve(async (req) => {
         model: "claude-opus-5-5",
         betas: ["server-side-fallback-2026-07-01"],
         fallbacks: "default",
-        max_tokens: 8000,
+        // O pensamento do modelo conta neste limite; com a classificação de
+        // cada Reel, 8000 cortava a resposta no meio.
+        max_tokens: 16000,
         output_config: { effort: "medium", format: betaZodOutputFormat(Resposta) },
         system: SISTEMA,
         messages: [
@@ -190,13 +216,24 @@ ${calendario}`,
       });
       const r = resposta.parsed_output;
       if (r) {
-        const temaPorId = new Map(r.temas.map((t) => [t.id, t.tema]));
-        await Promise.all(
-          pubs
-            .filter((p) => temaPorId.has(p.id) && temaPorId.get(p.id) !== p.tema)
-            .map((p) => servico.from("metricas_publicacoes").update({ tema: temaPorId.get(p.id) }).eq("id", p.id)),
-        );
-        for (const p of pubs) if (temaPorId.has(p.id)) p.tema = temaPorId.get(p.id)!;
+        const porId = new Map(r.temas.map((t) => [t.id, t]));
+        const mudancas: { p: Pub; campos: Pick<Pub, "tema" | "formato" | "layout" | "tipo_gancho"> }[] = [];
+        for (const p of pubs) {
+          const c = porId.get(p.id);
+          if (!c) continue;
+          const reel = p.tipo === "reel" || p.tipo === "video";
+          const campos = {
+            tema: c.tema,
+            formato: reel ? c.formato : null,
+            layout: reel ? c.layout : null,
+            tipo_gancho: reel ? c.tipoGancho : null,
+          };
+          if (campos.tema !== p.tema || campos.formato !== p.formato || campos.layout !== p.layout || campos.tipo_gancho !== p.tipo_gancho) {
+            mudancas.push({ p, campos });
+          }
+          Object.assign(p, campos);
+        }
+        await Promise.all(mudancas.map(({ p, campos }) => servico.from("metricas_publicacoes").update(campos).eq("id", p.id)));
         numeros = calcular(pubs, conta, publico, horarios);
         const { temas: _t, ...resto } = r;
         saida = resto;
