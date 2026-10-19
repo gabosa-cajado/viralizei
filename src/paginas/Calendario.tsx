@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Gancho } from "../componentes/Gancho";
 import { noSite as noSiteMsg } from "../dados/site";
 import { Gravadores, usePerfis } from "../componentes/Pessoas";
-import { alternarGravado, carregarSemente, diasOrdenados, emEquipe, nomeDoFormato, quemGravou, useEstado } from "../dados/armazenamento";
+import { ACOMPANHAR_GRAVADOS, alternarGravado, carregarSemente, diasOrdenados, emEquipe, nomeDoFormato, quemGravou, useEstado } from "../dados/armazenamento";
 
 function semAcento(texto: string) {
   return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
@@ -13,7 +13,7 @@ type Aba = "agravar" | "gravados" | "todos";
 
 export function Calendario() {
   const { conteudo, gravados, gravadosPorPessoa, modo, podeEditar } = useEstado();
-  const [aba, setAba] = useState<Aba>("agravar");
+  const [aba, setAba] = useState<Aba>(ACOMPANHAR_GRAVADOS ? "agravar" : "todos");
   const [formato, setFormato] = useState("");
   const [busca, setBusca] = useState("");
   const pessoas = Object.keys(gravadosPorPessoa).filter((id) => gravadosPorPessoa[id].length > 0);
@@ -97,6 +97,18 @@ export function Calendario() {
 
   return (
     <div className="calendario">
+      {!ACOMPANHAR_GRAVADOS ? (
+        <section className="abertura" aria-labelledby="titulo-calendario">
+          <p className="abertura-numero" aria-hidden="true">{String(dias.length).padStart(2, "0")}</p>
+          <div className="abertura-texto">
+            <h1 id="titulo-calendario" className="rotulo">Ganchos virais, um por dia</h1>
+            <p className="abertura-gancho">Escolha o dia, preencha as lacunas e grave.</p>
+            <p className="abertura-acoes">
+              <span>Cada cartão é um dia: o gancho, o formato e o que ele provoca. Abra para ver o vídeo de referência e os exemplos.</span>
+            </p>
+          </div>
+        </section>
+      ) : (
       <section className="abertura" aria-labelledby="titulo-proximo">
         {proximo ? (
           <>
@@ -134,12 +146,14 @@ export function Calendario() {
           </div>
         )}
       </section>
+      )}
 
       <section className="lista" aria-labelledby="titulo-lista">
         <h2 id="titulo-lista" className="visualmente-oculto">
           Dias
         </h2>
         <div className="ferramentas">
+          {ACOMPANHAR_GRAVADOS ? (
           <div className="abas" role="tablist" aria-label="Mostrar">
             {abas.map((a) => (
               <button
@@ -155,6 +169,9 @@ export function Calendario() {
               </button>
             ))}
           </div>
+          ) : (
+            <p className="ferramentas-titulo">{visiveis.length === dias.length ? `${dias.length} dias` : `${visiveis.length} de ${dias.length} dias`}</p>
+          )}
           <div className="filtros">
             <label className="campo campo-compacto">
               <span className="visualmente-oculto">Formato</span>
@@ -199,6 +216,24 @@ export function Calendario() {
             )}
           </div>
         ) : (
+          !ACOMPANHAR_GRAVADOS ? (
+          <ol className="dias-grade">
+            {visiveis.map((d) => (
+              <li key={d.id} className="dia-cartao">
+                <Link to={`/dia/${d.numero}`} className="dia-cartao-link">
+                  <span className="dia-cartao-topo">
+                    <span className="dia-cartao-rotulo">Dia {String(d.numero).padStart(2, "0")}</span>
+                    <span className="dia-cartao-formato">{nomeDoFormato(conteudo, d.formatoId)}</span>
+                  </span>
+                  <span className="dia-cartao-numero" aria-hidden="true">{String(d.numero).padStart(2, "0")}</span>
+                  <Gancho gancho={d.gancho} className="gancho dia-cartao-gancho" />
+                  {d.descricao && <span className="dia-cartao-descricao">{d.descricao}</span>}
+                  <span className="dia-cartao-abrir">Abrir dia</span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+          ) : (
           <ol className="dias" role="tabpanel">
             {visiveis.map((d) => {
               const gravado = gravados.includes(d.id);
@@ -230,6 +265,7 @@ export function Calendario() {
               );
             })}
           </ol>
+          )
         )}
       </section>
       {podeEditar && (

@@ -18,6 +18,13 @@ const CHAVE_NICHO = "pauta:nicho";
 
 export type Modo = "local" | "carregando" | "login" | "sem-acesso" | "artefato" | "site";
 
+/**
+ * Acompanhamento de gravados (o "0/92" do topo, as caixas de marcar e as abas
+ * A gravar/Gravados). Desligado a pedido do autor em 18/10/2026; os dados de
+ * progresso continuam no banco. Para religar, troque para true.
+ */
+export const ACOMPANHAR_GRAVADOS = false;
+
 /** Modos com equipe: mostram quem gravou cada dia. */
 export function emEquipe(modo: Modo) {
   return modo === "artefato" || modo === "site";

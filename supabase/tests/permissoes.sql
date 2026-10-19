@@ -1,7 +1,8 @@
 -- Viralizei: teste de permissões. Rodar depois de toda migração que mexe em
 -- política ou grant (execute_sql do Supabase). Tudo dentro de rollback.
 -- Esperado: 1 >= 1 (controle), 2-5 false, 6 = 0, 7 false, 8-9 false, 10 = 0,
--- 11-13 false, 14 = 0, 15 >= 1 (controle das trilhas), 16 = "1500 <hoje>".
+-- 11-13 false, 14 = 0, 15 >= 1 (controle das trilhas), 16 = "1500 <hoje>",
+-- 17-18 false, 19 = 0, 20 >= 1 (controle das ideias).
 begin;
 create temp table r (caso text, resultado text) on commit drop;
 grant all on r to anon, authenticated;
@@ -17,6 +18,10 @@ insert into r select '9 logado pode conferir o segredo do cron', has_function_pr
 insert into r select '11 anon pode ler trilhas', has_table_privilege('anon', 'public.trilhas', 'select')::text;
 insert into r select '12 logado pode gravar user_id no uso de trilha', has_column_privilege('authenticated', 'public.trilha_usos', 'user_id', 'insert')::text;
 insert into r select '13 logado pode forjar a contagem de reels', (has_column_privilege('authenticated', 'public.trilhas', 'reels_numero', 'update') or has_column_privilege('authenticated', 'public.trilhas', 'criado_por', 'update'))::text;
+insert into public.ideias (texto) values ('Ideia de controle do teste');
+insert into r select '17 anon pode ler ideias', has_table_privilege('anon', 'public.ideias', 'select')::text;
+insert into r select '18 logado pode forjar autor da ideia', (has_column_privilege('authenticated', 'public.ideias', 'criado_por', 'insert') or has_column_privilege('authenticated', 'public.ideias', 'criado_por', 'update'))::text;
+insert into r select '20 controle: dono do banco vê ideias', count(*)::text from public.ideias;
 insert into r select '15 controle: dono do banco vê trilhas', count(*)::text from public.trilhas;
 insert into public.trilhas (id, titulo, reels_texto) values ('tteste', 'Teste', '1,5k');
 insert into r select '16 gatilho: 1,5k vira 1500 com data', reels_numero::text || ' ' || coalesce(conferido_em::text, 'sem data') from public.trilhas where id = 'tteste';
@@ -26,12 +31,13 @@ insert into r select '6 logado fora da lista vê dias', count(*)::text from publ
 insert into r select '7 logado fora da lista é sócio', public.sou_socio()::text;
 insert into r select '10 logado fora da lista vê radar', count(*)::text from public.radar;
 insert into r select '14 logado fora da lista vê trilhas', count(*)::text from public.trilhas;
+insert into r select '19 logado fora da lista vê ideias', count(*)::text from public.ideias;
 reset role;
 select * from r order by caso;
 rollback;
 
 -- Controle positivo das trilhas, com um sócio real (o primeiro da lista).
--- Esperado: true, 45 ou mais, 1, 12000.
+-- Esperado: true, 45 ou mais, 1, 12000, "lapidada true".
 begin;
 create temp table r (caso text, resultado text) on commit drop;
 grant all on r to authenticated;
@@ -43,6 +49,9 @@ insert into public.trilha_usos (trilha_id) values ((select id from public.trilha
 insert into r select 'socio registrou uso', count(*)::text from public.trilha_usos where user_id = auth.uid();
 insert into public.trilhas (titulo, artista, clima, reels_texto) values ('Teste sócio', 'X', 'leve', '12K');
 insert into r select 'socio criou trilha (12K vira 12000)', reels_numero::text from public.trilhas where titulo = 'Teste sócio';
+insert into public.ideias (texto) values ('Ideia do sócio no teste');
+update public.ideias set status = 'lapidada', lapidacao = '{"resumo":"x"}' where texto = 'Ideia do sócio no teste';
+insert into r select 'socio lapidou ideia (autor é ele)', status || ' ' || (criado_por = auth.uid())::text from public.ideias where texto = 'Ideia do sócio no teste';
 reset role;
 select * from r;
 rollback;

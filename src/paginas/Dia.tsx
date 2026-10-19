@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Gancho, GanchoEditavel, montarGancho } from "../componentes/Gancho";
 import { Gravadores, nomeDe, usePerfis } from "../componentes/Pessoas";
 import { QuadroVideo, VideoTelaInteira } from "../componentes/Video";
-import { alternarGravado, diasOrdenados, emEquipe, nomeDoFormato, quemGravou, salvarNicho, useEstado } from "../dados/armazenamento";
+import { ACOMPANHAR_GRAVADOS, alternarGravado, diasOrdenados, emEquipe, nomeDoFormato, quemGravou, salvarNicho, useEstado } from "../dados/armazenamento";
 import { gerarGanchos } from "../dados/ia";
 import { noArtefato } from "../dados/plataforma";
 import { lerReferencia } from "../dados/referencia";
@@ -128,7 +128,7 @@ export function Dia() {
           <h1 className="gancho gancho-titulo">
             <Gancho gancho={dia.gancho} className="gancho" />
           </h1>
-          <p className={`estado${gravado ? " estado-gravado" : ""}`}>{gravado ? "Você já gravou este dia" : "Ainda não gravado"}</p>
+          {ACOMPANHAR_GRAVADOS && <p className={`estado${gravado ? " estado-gravado" : ""}`}>{gravado ? "Você já gravou este dia" : "Ainda não gravado"}</p>}
         </div>
       </header>
 
@@ -299,8 +299,27 @@ export function Dia() {
           <span className="passo-numero" aria-hidden="true">3</span>
           <section className="passo-corpo" aria-labelledby="passo-3">
             <h2 id="passo-3" className="passo-titulo">
-              Grave e marque
+              {ACOMPANHAR_GRAVADOS ? "Grave e marque" : "Grave"}
             </h2>
+            {!ACOMPANHAR_GRAVADOS ? (
+              <ul className="lista-pontos dia-proximos">
+                <li>
+                  <Link to="/roteiro" className="link">Monte o roteiro</Link> com este gancho, ou cole um roteiro pronto para a IA melhorar.
+                </li>
+                <li>
+                  <Link to="/trilhas" className="link">Escolha a trilha</Link> se o vídeo levar música.
+                </li>
+                <li>
+                  Depois de gravar, <Link to="/avaliar" className="link">avalie o vídeo</Link> antes de postar.
+                </li>
+                {seguinte && (
+                  <li>
+                    <Link to={`/dia/${seguinte.numero}`} className="link">Ir para o dia {seguinte.numero}</Link>
+                  </li>
+                )}
+              </ul>
+            ) : (
+            <>
             <button
               type="button"
               className="marcador marcador-grande"
@@ -328,6 +347,8 @@ export function Dia() {
                   Ir para o dia {seguinte.numero}
                 </Link>
               </p>
+            )}
+            </>
             )}
           </section>
         </li>

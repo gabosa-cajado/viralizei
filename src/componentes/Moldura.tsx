@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { limparErro, sair, useEstado } from "../dados/armazenamento";
+import { ACOMPANHAR_GRAVADOS, limparErro, sair, useEstado } from "../dados/armazenamento";
 import { Entrar } from "../paginas/Entrar";
 import { BotaoTema } from "./Tema";
 
@@ -7,7 +7,7 @@ export function Moldura() {
   const { erro, conteudo, gravados, modo } = useEstado();
   const total = conteudo.dias.length;
   const feitos = conteudo.dias.filter((d) => gravados.includes(d.id)).length;
-  const mostrarProgresso = total > 0 && (modo === "local" || modo === "artefato" || modo === "site");
+  const mostrarProgresso = ACOMPANHAR_GRAVADOS && total > 0 && (modo === "local" || modo === "artefato" || modo === "site");
 
   return (
     <div className="moldura">
@@ -20,6 +20,7 @@ export function Moldura() {
           <NavLink to="/" end>
             Ganchos virais
           </NavLink>
+          <NavLink to="/laboratorio">Laboratório</NavLink>
           <NavLink to="/referencias">Referências</NavLink>
           <NavLink to="/roteiro">Roteiro</NavLink>
           <NavLink to="/avaliar">Avaliar</NavLink>

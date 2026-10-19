@@ -41,6 +41,38 @@ export interface Roteiro {
   avisos: string[];
 }
 
+/** Roteiro colado pelo usuário e devolvido melhorado pela IA. */
+export interface RoteiroMelhorado extends Roteiro {
+  /** O que mudou e por quê, na ordem do vídeo. */
+  mudancas: string[];
+}
+
+export interface PedidoMelhorar {
+  roteiroOriginal: string;
+  nicho: string;
+  formato: string;
+  duracao: string;
+  cta: string;
+}
+
+/** Chama a Edge Function gerar-roteiro num dos modos extras (só no site). */
+export async function chamarRoteiroNoSite<T>(corpo: Record<string, unknown>, foraDoSite: string): Promise<T> {
+  if (noArtefato || !noSite || !supabase) throw new Error(foraDoSite);
+  const { data, error } = await supabase.functions.invoke("gerar-roteiro", { body: corpo });
+  if (error) {
+    const resposta = error instanceof FunctionsHttpError ? await error.context.json().catch(() => ({})) : {};
+    throw new Error(resposta.erro ?? "Não deu para falar com a IA agora. Confira a internet e tente de novo.");
+  }
+  return data as T;
+}
+
+export function melhorarRoteiroIA(p: PedidoMelhorar): Promise<RoteiroMelhorado> {
+  return chamarRoteiroNoSite<RoteiroMelhorado>(
+    { modo: "melhorar", ...p },
+    "Melhorar um roteiro pronto usa a IA do site. Abra o Viralizei pelo site e entre com a sua conta.",
+  );
+}
+
 export const FORMATOS_ROTEIRO = [
   "Fala para câmera",
   "Conversa com convidado",
