@@ -38,7 +38,7 @@ export const NOMES_DOS_PADROES: string[] = ${JSON.stringify(nomes)};
 export const REGRAS = ${JSON.stringify(texto)};
 `;
 
-for (const destino of ["supabase/functions/gerar-roteiro/regras.ts", "supabase/functions/radar-trends/regras.ts", "server/regras.ts"]) {
+for (const destino of ["supabase/functions/gerar-roteiro/regras.ts", "supabase/functions/radar-trends/regras.ts", "supabase/functions/recomendacoes-do-dia/regras.ts", "server/regras.ts"]) {
   writeFileSync(join(raiz, destino), arquivo);
   console.log("escrito", destino);
 }

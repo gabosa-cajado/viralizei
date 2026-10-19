@@ -2882,3 +2882,253 @@ a.abertura-gancho:hover .gancho {
     padding-left: 0.75rem;
   }
 }
+
+/* ---------- Recomendações do dia ---------- */
+
+.recomendacoes-fonte {
+  font-size: var(--t-14);
+  color: var(--tinta-2);
+  max-width: 70ch;
+}
+
+.rec-hoje {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 1.5rem var(--coluna-gap);
+  margin-top: 1rem;
+}
+
+.rec-hoje > .ideia-corpo + .ideia-corpo {
+  padding-left: var(--coluna-gap);
+  border-left: 1px solid var(--fio-fino);
+}
+
+.rec-parar-rotulo {
+  margin-top: 1rem;
+}
+
+.rec-parar,
+.rec-repetidos {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: var(--t-14);
+  line-height: 1.45;
+}
+
+.rec-parar li::marker {
+  color: var(--vermelho);
+}
+
+.rec-repetidos {
+  list-style: none;
+  padding: 0;
+  gap: 0.75rem;
+}
+
+.rec-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  font-size: var(--t-12);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tinta-2);
+}
+
+.rec-alta {
+  color: var(--vermelho);
+}
+
+.rec-destaques {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 0 var(--coluna-gap);
+}
+
+.rec-destaques li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--fio-fino);
+  min-width: 0;
+}
+
+.rec-destaque-titulo {
+  font-size: var(--t-16);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.rec-destaque-evidencia {
+  font-size: var(--t-14);
+  line-height: 1.45;
+}
+
+.rec-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 0 var(--coluna-gap);
+  margin: 1rem 0 0.75rem;
+}
+
+.rec-kpis > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem 0;
+  border-top: 2px solid var(--fio);
+  min-width: 0;
+}
+
+.rec-kpis dt {
+  font-size: var(--t-12);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tinta-2);
+}
+
+.rec-kpis dd {
+  margin: 0;
+  font-size: var(--t-40);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.rec-kpis p {
+  font-size: var(--t-14);
+  color: var(--tinta-2);
+}
+
+.rec-subtitulo {
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  font-size: var(--t-20);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.rec-tabela {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.rec-tabela table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-14);
+}
+
+.rec-tabela th,
+.rec-tabela td {
+  padding: 0.55rem 0.75rem 0.55rem 0;
+  border-top: 1px solid var(--fio-fino);
+  text-align: right;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.rec-tabela thead th {
+  border-top: 0;
+  border-bottom: 2px solid var(--fio);
+  font-size: var(--t-12);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tinta-2);
+}
+
+.rec-tabela th:first-child {
+  text-align: left;
+}
+
+.rec-tabela tbody th {
+  font-weight: 600;
+  white-space: normal;
+  min-width: 12rem;
+  max-width: 28rem;
+}
+
+.rec-colunas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: 0 calc(var(--coluna-gap) * 2);
+}
+
+.rec-colunas > div {
+  min-width: 0;
+}
+
+.rec-barras {
+  list-style: none;
+  margin: 0.5rem 0 0.75rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: var(--t-14);
+}
+
+.rec-barras li {
+  display: grid;
+  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr) 3.5rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rec-barras li > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rec-barras li > .mono {
+  text-align: right;
+}
+
+.rec-barra {
+  display: block;
+  height: 0.6rem;
+  background: var(--papel-2);
+}
+
+.rec-barra > span {
+  display: block;
+  height: 100%;
+  background: var(--tinta);
+}
+
+@media (max-width: 40rem) {
+  .rec-hoje {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rec-hoje > .ideia-corpo + .ideia-corpo {
+    padding-left: 0;
+    padding-top: 1.25rem;
+    border-left: 0;
+    border-top: 1px solid var(--fio-fino);
+  }
+
+  .rec-kpis dd {
+    font-size: var(--t-28);
+  }
+
+  .rec-barras li {
+    grid-template-columns: minmax(0, 7rem) minmax(0, 1fr) 3.25rem;
+  }
+}
+
+.rec-publico {
+  max-width: 70ch;
+  margin-bottom: 1rem;
+}

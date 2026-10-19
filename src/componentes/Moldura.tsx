@@ -25,6 +25,7 @@ export function Moldura() {
           <NavLink to="/roteiro">Roteiro</NavLink>
           <NavLink to="/avaliar">Avaliar</NavLink>
           <NavLink to="/radar">Radar</NavLink>
+          <NavLink to="/recomendacoes">Recomendações</NavLink>
           <NavLink to="/trilhas">Trilhas</NavLink>
         </nav>
         )}

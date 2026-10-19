@@ -2,7 +2,8 @@
 -- política ou grant (execute_sql do Supabase). Tudo dentro de rollback.
 -- Esperado: 1 >= 1 (controle), 2-5 false, 6 = 0, 7 false, 8-9 false, 10 = 0,
 -- 11-13 false, 14 = 0, 15 >= 1 (controle das trilhas), 16 = "1500 <hoje>",
--- 17-18 false, 19 = 0, 20 >= 1 (controle das ideias).
+-- 17-18 false, 19 = 0, 20 >= 1 (controle das ideias), 21-23 false, 24 = 0,
+-- 25 >= 1 (controle das métricas).
 begin;
 create temp table r (caso text, resultado text) on commit drop;
 grant all on r to anon, authenticated;
@@ -22,6 +23,10 @@ insert into public.ideias (texto) values ('Ideia de controle do teste');
 insert into r select '17 anon pode ler ideias', has_table_privilege('anon', 'public.ideias', 'select')::text;
 insert into r select '18 logado pode forjar autor da ideia', (has_column_privilege('authenticated', 'public.ideias', 'criado_por', 'insert') or has_column_privilege('authenticated', 'public.ideias', 'criado_por', 'update'))::text;
 insert into r select '20 controle: dono do banco vê ideias', count(*)::text from public.ideias;
+insert into r select '21 anon pode ler métricas ou recomendações', (has_table_privilege('anon', 'public.metricas_publicacoes', 'select') or has_table_privilege('anon', 'public.metricas_publico', 'select') or has_table_privilege('anon', 'public.recomendacoes', 'select'))::text;
+insert into r select '22 logado pode escrever nas métricas', (has_table_privilege('authenticated', 'public.metricas_publicacoes', 'insert') or has_table_privilege('authenticated', 'public.metricas_publicacoes', 'update') or has_table_privilege('authenticated', 'public.metricas_conta', 'insert') or has_table_privilege('authenticated', 'public.metricas_publico', 'insert') or has_table_privilege('authenticated', 'public.metricas_horarios', 'insert'))::text;
+insert into r select '23 logado pode escrever recomendações', (has_table_privilege('authenticated', 'public.recomendacoes', 'insert') or has_table_privilege('authenticated', 'public.recomendacoes', 'update') or has_table_privilege('authenticated', 'public.recomendacoes', 'delete'))::text;
+insert into r select '25 controle: dono do banco vê métricas', count(*)::text from public.metricas_publicacoes;
 insert into r select '15 controle: dono do banco vê trilhas', count(*)::text from public.trilhas;
 insert into public.trilhas (id, titulo, reels_texto) values ('tteste', 'Teste', '1,5k');
 insert into r select '16 gatilho: 1,5k vira 1500 com data', reels_numero::text || ' ' || coalesce(conferido_em::text, 'sem data') from public.trilhas where id = 'tteste';
@@ -32,12 +37,13 @@ insert into r select '7 logado fora da lista é sócio', public.sou_socio()::tex
 insert into r select '10 logado fora da lista vê radar', count(*)::text from public.radar;
 insert into r select '14 logado fora da lista vê trilhas', count(*)::text from public.trilhas;
 insert into r select '19 logado fora da lista vê ideias', count(*)::text from public.ideias;
+insert into r select '24 logado fora da lista vê métricas ou recomendações', ((select count(*) from public.metricas_publicacoes) + (select count(*) from public.metricas_publico) + (select count(*) from public.recomendacoes))::text;
 reset role;
 select * from r order by caso;
 rollback;
 
 -- Controle positivo das trilhas, com um sócio real (o primeiro da lista).
--- Esperado: true, 45 ou mais, 1, 12000, "lapidada true".
+-- Esperado: true, 45 ou mais, 1, 12000, "lapidada true", métricas 1 ou mais.
 begin;
 create temp table r (caso text, resultado text) on commit drop;
 grant all on r to authenticated;
@@ -51,6 +57,7 @@ insert into public.trilhas (titulo, artista, clima, reels_texto) values ('Teste 
 insert into r select 'socio criou trilha (12K vira 12000)', reels_numero::text from public.trilhas where titulo = 'Teste sócio';
 insert into public.ideias (texto) values ('Ideia do sócio no teste');
 update public.ideias set status = 'lapidada', lapidacao = '{"resumo":"x"}' where texto = 'Ideia do sócio no teste';
+insert into r select 'socio vê métricas', count(*)::text from public.metricas_publicacoes;
 insert into r select 'socio lapidou ideia (autor é ele)', status || ' ' || (criado_por = auth.uid())::text from public.ideias where texto = 'Ideia do sócio no teste';
 reset role;
 select * from r;

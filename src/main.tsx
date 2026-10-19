@@ -10,6 +10,7 @@ import { Referencias } from "./paginas/Referencias";
 import { Roteiro } from "./paginas/Roteiro";
 import { Avaliar } from "./paginas/Avaliar";
 import { Radar } from "./paginas/Radar";
+import { Recomendacoes } from "./paginas/Recomendacoes";
 import { Trilhas } from "./paginas/Trilhas";
 import { Laboratorio } from "./paginas/Laboratorio";
 import "./estilo.css";
@@ -27,6 +28,7 @@ createRoot(document.getElementById("raiz")!).render(
           <Route path="roteiro" element={<Roteiro />} />
           <Route path="avaliar" element={<Avaliar />} />
           <Route path="radar" element={<Radar />} />
+          <Route path="recomendacoes" element={<Recomendacoes />} />
           <Route path="trilhas" element={<Trilhas />} />
           <Route path="laboratorio" element={<Laboratorio />} />
           <Route path="*" element={<Navigate to="/" replace />} />
