@@ -2,17 +2,19 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { REGRAS } from "./regras";
+import { COMO_ESCREVER, instrucaoTamanho, orcamento, palavrasFaladas, segundosPorPalavras } from "../supabase/functions/gerar-roteiro/comum";
+import { ESCRITA, REGRAS } from "./regras";
 
 // Mesmo roteiro da Edge Function gerar-roteiro, para o modo local (chave no .env).
-// Mudou lá, mude aqui. As regras vêm de regras.ts (npm run regras).
+// Mudou lá, mude aqui. As regras vêm de regras.ts (npm run regras); o tamanho
+// e o guia de escrita, de supabase/functions/gerar-roteiro/comum.ts.
 
 const Roteiro = z.object({
   textoNaTela: z.string(),
   ganchoFalado: z.string(),
   acaoVisual: z.string(),
   zonaDeTrava: z.string(),
-  blocos: z.array(z.object({ titulo: z.string(), fala: z.string(), textoNaTela: z.string(), visual: z.string() })).min(2).max(5),
+  blocos: z.array(z.object({ titulo: z.string(), fala: z.string(), textoNaTela: z.string(), visual: z.string() })).min(2).max(9),
   fechamento: z.string(),
   legenda: z.string(),
   duracaoEstimadaSeg: z.number(),
@@ -22,21 +24,13 @@ const Roteiro = z.object({
 
 const SISTEMA = `Você escreve roteiros de Reels em português do Brasil para um time que fala de negócios, tecnologia e motivação. O roteiro é para ser lido linha por linha na câmera.
 
-Siga o estudo abaixo como regra, não como inspiração: cada parte do roteiro aplica um padrão ou framework dele, e você diz qual.
+Siga o estudo abaixo como regra, não como inspiração: cada parte do roteiro aplica um padrão ou framework dele, e você diz qual. A escrita segue o jeito de um dos cinco criadores.
 
 ${REGRAS}
 
-COMO MONTAR:
-1. Gancho triplo alinhado: texto na tela (até 2 linhas, sem pontuação, sem "e/ou/mas", com nome próprio ou número quando houver), gancho falado (até 12 palavras: assunto + o que a pessoa ganha, os 4 S) e uma ação visual nos 2 primeiros segundos. A fala começa na primeira palavra, sem "oi gente".
-2. Zona de trava (2 a 3 frases): confirma a promessa e traz a prova concreta na tela (número, print, nome, caso).
-3. Corpo em 2 a 4 blocos com o loop do vício: stakes nas 3 primeiras frases, uma pergunta específica cedo, uma virada com pista, cada bloco fecha abrindo o próximo. Double Aha: duas ideias não óbvias nos dois primeiros blocos. Cada bloco traz "visual": o que trocar na tela naquele trecho (print, gráfico, PiP, objeto), um a cada 10–15 s.
-4. Frases curtas (até 12 palavras, melhor 6), uma ideia por frase, tom de conversa, posição firme sem meio-termo, uma metáfora ou um nome batizado para a ideia central.
-5. Fechamento: a posição em uma frase + a chamada pedida (pergunta de uma palavra, palavra-chave para comentar, ou seguir com placar).
-6. Legenda: primeira linha = gancho falado; depois a tese em 1 a 2 frases e a chamada. Sem hashtag, sem emoji.
-7. Duração alvo respeitada (~2,5 palavras por segundo).
-8. padroesUsados: de 4 a 10 itens, cada um "Nome do padrão ou framework (criador): onde entrou no roteiro". Use os nomes do estudo.
-9. Avisos: o que faltou nos dados (sem prova, sem história) e o que você assumiu.
-Use a história, a prova e a posição que o usuário deu; não invente números. Se faltar prova, deixe "[sua prova aqui]" e avise.`;
+${ESCRITA}
+
+${COMO_ESCREVER}`;
 
 function lerCorpo(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -79,19 +73,25 @@ export function criarRotaRoteiro(chave: string | undefined) {
         model: "claude-opus-5-5",
         betas: ["server-side-fallback-2026-07-01"],
         fallbacks: "default",
-        max_tokens: 5000,
+        max_tokens: 8000,
         output_config: { effort: "medium", format: betaZodOutputFormat(Roteiro) },
         system: SISTEMA,
         messages: [
           {
             role: "user",
-            content: `Nicho: ${e.nicho}\nTema do vídeo: ${e.tema}\nPara quem: ${e.publico || "(não informado)"}\nO que a pessoa ganha: ${e.resultado || "(não informado)"}\nProva ou número: ${e.prova || "(nenhuma)"}\nHistória ou erro pessoal: ${e.historia || "(nenhuma)"}\nPosição firme: ${e.posicao || "(não informada)"}\nFormato: ${e.formato || "Fala para câmera"}\nDuração alvo: ${e.duracao || "60"} segundos\nChamada no fim: ${e.cta || "pergunta de uma palavra"}`,
+            content: `Nicho: ${e.nicho}\nTema do vídeo: ${e.tema}\nPara quem: ${e.publico || "(não informado)"}\nO que a pessoa ganha: ${e.resultado || "(não informado)"}\nProva ou número: ${e.prova || "(nenhuma)"}\nHistória ou erro pessoal: ${e.historia || "(nenhuma)"}\nPosição firme: ${e.posicao || "(não informada)"}\nFormato: ${e.formato || "Fala para câmera"}\nDuração alvo: ${e.duracao || "60"} segundos\nChamada no fim: ${e.cta || "pergunta de uma palavra"}\n\n${instrucaoTamanho(Number(e.duracao) || 60)}`,
           },
         ],
       });
       if (resposta.stop_reason === "refusal") return responder(res, 422, { erro: "O modelo recusou este pedido. Descreva o tema de outro jeito." });
       if (!resposta.parsed_output) return responder(res, 502, { erro: "A resposta veio incompleta. Tente gerar de novo." });
-      return responder(res, 200, resposta.parsed_output);
+      // Sem a segunda passada da Edge Function: aqui só recalcula e avisa.
+      const roteiro = resposta.parsed_output;
+      const alvo = orcamento(Number(e.duracao) || 60);
+      const palavras = palavrasFaladas(roteiro);
+      roteiro.duracaoEstimadaSeg = segundosPorPalavras(palavras);
+      if (palavras < alvo.minimo * 0.85) roteiro.avisos.push(`A fala tem ${palavras} palavras, uns ${roteiro.duracaoEstimadaSeg} s, para uma meta de ${alvo.duracao} s. Gere de novo ou acrescente um exemplo.`);
+      return responder(res, 200, roteiro);
     } catch (erro) {
       if (erro instanceof Anthropic.AuthenticationError) return responder(res, 401, { erro: "A chave da Anthropic foi recusada. Confira ANTHROPIC_API_KEY no .env." });
       if (erro instanceof Anthropic.RateLimitError) return responder(res, 429, { erro: "Muitos pedidos seguidos. Espere um minuto e tente de novo." });

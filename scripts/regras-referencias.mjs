@@ -25,6 +25,21 @@ linhas.push("FRAMEWORKS COM NOME (cite pelo nome quando usar):");
 for (const f of ref.frameworks) linhas.push(`- ${f.nome}: ${f.resumo}`);
 
 const texto = linhas.join("\n");
+
+// Como cada criador escreve: estrutura do roteiro, voz, formatos e os ganchos
+// que mais rodaram. Vai só para o prompt do roteiro (gerar-roteiro), para o
+// texto sair no ritmo de um deles, não só seguindo a lista de regras.
+const escrita = ["COMO OS CINCO ESCREVEM (modelo de estrutura e ritmo; nunca copie a frase de ninguém):"];
+for (const c of ref.criadores) {
+  escrita.push(`\n${c.nome.toUpperCase()} (${c.nicho})`);
+  escrita.push(`- Roteiro: ${c.roteiro}`);
+  escrita.push(`- Voz: ${c.voz}`);
+  escrita.push(`- Formatos: ${c.formatos.join(" | ")}`);
+  escrita.push(`- Ganchos que mais rodaram: ${c.ganchos.map((g) => `"${g.texto}" (${g.views})`).join("; ")}`);
+  escrita.push(`- Vale copiar: ${c.copiar.join(" | ")}`);
+  escrita.push(`- Evitar: ${c.evitar.join(" | ")}`);
+}
+const textoEscrita = escrita.join("\n");
 const nomes = [
   ...ref.padroes.map((p) => p.titulo),
   ...ref.frameworks.map((f) => f.nome),
@@ -36,10 +51,11 @@ export const REGRAS_ATUALIZADO = ${JSON.stringify(ref.atualizado)};
 export const CRIADORES = ${JSON.stringify(ref.criadores.map((c) => c.nome))};
 export const NOMES_DOS_PADROES: string[] = ${JSON.stringify(nomes)};
 export const REGRAS = ${JSON.stringify(texto)};
+export const ESCRITA = ${JSON.stringify(textoEscrita)};
 `;
 
 for (const destino of ["supabase/functions/gerar-roteiro/regras.ts", "supabase/functions/radar-trends/regras.ts", "supabase/functions/recomendacoes-do-dia/regras.ts", "server/regras.ts"]) {
   writeFileSync(join(raiz, destino), arquivo);
   console.log("escrito", destino);
 }
-console.log(texto.length, "caracteres de regras");
+console.log(texto.length, "caracteres de regras,", textoEscrita.length, "de escrita");

@@ -12,7 +12,8 @@ import Anthropic from "npm:@anthropic-ai/sdk@0.134.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@0.134.0/helpers/beta/zod";
 import { z } from "npm:zod@4.6.7";
 import { createClient } from "npm:@supabase/supabase-js@2.75.0";
-import { REGRAS } from "./regras.ts";
+import { ESCRITA, REGRAS } from "./regras.ts";
+import { COMO_ESCREVER, instrucaoTamanho, orcamento, palavrasFaladas, segundosPorPalavras } from "./comum.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -25,7 +26,7 @@ const Roteiro = z.object({
   ganchoFalado: z.string(),
   acaoVisual: z.string(),
   zonaDeTrava: z.string(),
-  blocos: z.array(z.object({ titulo: z.string(), fala: z.string(), textoNaTela: z.string(), visual: z.string() })).min(2).max(5),
+  blocos: z.array(z.object({ titulo: z.string(), fala: z.string(), textoNaTela: z.string(), visual: z.string() })).min(2).max(9),
   fechamento: z.string(),
   legenda: z.string(),
   duracaoEstimadaSeg: z.number(),
@@ -54,27 +55,20 @@ const Lapidacao = z.object({
 
 export const SISTEMA = `Você escreve roteiros de Reels em português do Brasil para um time que fala de negócios, tecnologia e motivação. O roteiro é para ser lido linha por linha na câmera.
 
-Siga o estudo abaixo como regra, não como inspiração: cada parte do roteiro aplica um padrão ou framework dele, e você diz qual.
+Siga o estudo abaixo como regra, não como inspiração: cada parte do roteiro aplica um padrão ou framework dele, e você diz qual. A escrita segue o jeito de um dos cinco criadores.
 
 ${REGRAS}
 
-COMO MONTAR:
-1. Gancho triplo alinhado: texto na tela (até 2 linhas, sem pontuação, sem "e/ou/mas", com nome próprio ou número quando houver), gancho falado (até 12 palavras: assunto + o que a pessoa ganha, os 4 S) e uma ação visual nos 2 primeiros segundos. A fala começa na primeira palavra, sem "oi gente".
-2. Zona de trava (2 a 3 frases): confirma a promessa e traz a prova concreta na tela (número, print, nome, caso).
-3. Corpo em 2 a 4 blocos com o loop do vício: stakes nas 3 primeiras frases, uma pergunta específica cedo, uma virada com pista, cada bloco fecha abrindo o próximo. Double Aha: duas ideias não óbvias nos dois primeiros blocos. Cada bloco traz "visual": o que trocar na tela naquele trecho (print, gráfico, PiP, objeto), um a cada 10–15 s.
-4. Frases curtas (até 12 palavras, melhor 6), uma ideia por frase, tom de conversa, posição firme sem meio-termo, uma metáfora ou um nome batizado para a ideia central.
-5. Fechamento: a posição em uma frase + a chamada pedida (pergunta de uma palavra, palavra-chave para comentar, ou seguir com placar).
-6. Legenda: primeira linha = gancho falado; depois a tese em 1 a 2 frases e a chamada. Sem hashtag, sem emoji.
-7. Duração alvo respeitada (~2,5 palavras por segundo).
-8. padroesUsados: de 4 a 10 itens, cada um "Nome do padrão ou framework (criador): onde entrou no roteiro". Use os nomes do estudo.
-9. Avisos: o que faltou nos dados (sem prova, sem história) e o que você assumiu.
-Use a história, a prova e a posição que o usuário deu; não invente números. Se faltar prova, deixe "[sua prova aqui]" e avise.`;
+${ESCRITA}
+
+${COMO_ESCREVER}`;
 
 const SISTEMA_MELHORAR = `${SISTEMA}
 
 MODO MELHORAR: o usuário colou um roteiro que já escreveu. Devolva a versão melhorada no mesmo formato acima.
 - Mantenha a ideia central, a voz, as histórias, os nomes e os números do autor. Não invente fato, número nem caso; se um trecho pede prova que não existe, deixe "[sua prova aqui]" e avise.
 - Corte o que não serve à promessa do gancho; reordene se a ordem prende menos.
+- Respeite o TAMANHO do pedido. Se o roteiro do autor for curto para a duração, aprofunde o que ele já disse (o exemplo, o passo, a consequência); se for longo, corte.
 - mudancas: de 2 a 10 itens, na ordem do vídeo, cada um "O que mudou: por quê (padrão do estudo)". Diga também o que estava bom e ficou.`;
 
 const SISTEMA_IDEIA = `Você é o laboratório de ideias de um time que grava Reels em português do Brasil sobre negócios, tecnologia e motivação. Recebe uma ideia crua e devolve o vídeo lapidado. Siga o estudo abaixo como regra.
@@ -140,13 +134,15 @@ Deno.serve(async (req) => {
   if (modo === "melhorar" && roteiroOriginal.length < 40) return responder(400, { erro: "Cole o roteiro inteiro: o texto veio curto demais para melhorar." });
   if (modo === "ideia" && ideia.length < 5) return responder(400, { erro: "Escreva a ideia em pelo menos uma frase." });
 
-  let pedido = montarPedido(e);
+  const duracaoPedida = Number(e.duracao) || 0;
+  let pedido = `${montarPedido(e)}\n\n${instrucaoTamanho(duracaoPedida || 60)}`;
   if (modo === "melhorar") {
     pedido = `Nicho: ${e.nicho || "(não informado)"}
 Formato: ${e.formato || "o mesmo do roteiro"}
 Duração alvo: ${e.duracao || "a do roteiro"} segundos
 Chamada no fim: ${e.cta || "a do roteiro, ou pergunta de uma palavra"}
 
+${duracaoPedida ? `\n${instrucaoTamanho(duracaoPedida)}\n` : ""}
 ROTEIRO DO AUTOR:
 ${roteiroOriginal}`;
   } else if (modo === "ideia") {
@@ -169,19 +165,54 @@ ${calendario || "(calendário vazio)"}`;
   }
 
   const cliente = new Anthropic({ apiKey: chave });
+  const inicio = Date.now();
   try {
     const resposta = await cliente.beta.messages.parse({
       model: "claude-opus-5-5",
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
-      max_tokens: modo === "ideia" ? 4000 : 6000,
+      max_tokens: modo === "ideia" ? 4000 : 8000,
       output_config: { effort: "medium", format: betaZodOutputFormat(esquema) },
       system: sistema,
       messages: [{ role: "user", content: pedido }],
     });
     if (resposta.stop_reason === "refusal") return responder(422, { erro: modo === "ideia" ? "O modelo recusou esta ideia. Escreva de outro jeito." : "O modelo recusou este pedido. Descreva o tema de outro jeito." });
     if (!resposta.parsed_output) return responder(502, { erro: "A resposta veio incompleta. Tente gerar de novo." });
-    return responder(200, resposta.parsed_output);
+    if (modo === "ideia") return responder(200, resposta.parsed_output);
+
+    // Confere o tamanho: o modelo erra a conta de palavras. Fora da faixa,
+    // uma segunda passada reescreve no tamanho certo (cabe nos 150 s da função).
+    let roteiro = resposta.parsed_output as z.infer<typeof RoteiroMelhorado>;
+    const duracaoAlvo = modo === "criar" ? duracaoPedida || 60 : duracaoPedida;
+    const alvo = duracaoAlvo ? orcamento(duracaoAlvo) : null;
+    const palavras = palavrasFaladas(roteiro);
+    if (alvo && (palavras < alvo.minimo * 0.92 || palavras > alvo.maximo * 1.15) && Date.now() - inicio < 80_000) {
+      const ajuste = await cliente.beta.messages.parse({
+        model: "claude-opus-5-5",
+        betas: ["server-side-fallback-2026-07-01"],
+        fallbacks: "default",
+        max_tokens: 6000,
+        output_config: { effort: "low", format: betaZodOutputFormat(esquema) },
+        system: sistema,
+        messages: [
+          { role: "user", content: pedido },
+          { role: "assistant", content: JSON.stringify(roteiro) },
+          {
+            role: "user",
+            content: palavras < alvo.minimo
+              ? `A fala ficou com ${palavras} palavras; para ${alvo.duracao} s precisa de ${alvo.minimo} a ${alvo.maximo}. Reescreva o roteiro inteiro no mesmo formato, com ${alvo.blocos} blocos de ${alvo.porBloco[0]} a ${alvo.porBloco[1]} palavras: mantenha gancho, ideia e posição, e aprofunde com substância (exemplo com nome, número, passo a passo, erro comum, objeção respondida). Sem repetir ideia nem encher.`
+              : `A fala ficou com ${palavras} palavras; para ${alvo.duracao} s cabem ${alvo.minimo} a ${alvo.maximo}. Reescreva o roteiro inteiro no mesmo formato cortando o que não serve à promessa do gancho, sem perder a virada nem a prova.`,
+          },
+        ],
+      }).catch(() => null);
+      if (ajuste?.parsed_output) roteiro = ajuste.parsed_output as typeof roteiro;
+    }
+    const final = palavrasFaladas(roteiro);
+    roteiro.duracaoEstimadaSeg = segundosPorPalavras(final);
+    if (alvo && final < alvo.minimo * 0.85) {
+      roteiro.avisos = [...roteiro.avisos, `A fala tem ${final} palavras, uns ${roteiro.duracaoEstimadaSeg} s no ritmo do estudo, para uma meta de ${alvo.duracao} s. Gere de novo ou acrescente um exemplo.`];
+    }
+    return responder(200, roteiro);
   } catch (erro) {
     if (erro instanceof Anthropic.AuthenticationError) {
       return responder(502, { erro: "A chave da Anthropic foi recusada. O dono precisa conferir o segredo no Supabase." });

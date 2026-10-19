@@ -1,6 +1,7 @@
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import { noArtefato } from "./plataforma";
 import { noSite, supabase } from "./site";
+import { contarPalavras, orcamento, palavrasFaladas, segundosPorPalavras } from "../../supabase/functions/gerar-roteiro/comum";
 
 // Gerador de roteiro. Sempre monta uma versão por regras no navegador (o que
 // o estudo de referências ensinou) e, quando há IA (site com chave no
@@ -123,10 +124,6 @@ function numeroDe(texto: string): string | null {
   return m ? m[0].trim() : null;
 }
 
-function palavrasPorSegundo(seg: number) {
-  return Math.round(seg * 2.5);
-}
-
 /** Versão por regras: segue a estrutura que apareceu nos cinco criadores. */
 export function montarRoteiroLocal(e: EntradaRoteiro): Roteiro {
   const tema = e.tema.trim().replace(/\.$/, "");
@@ -155,37 +152,80 @@ export function montarRoteiroLocal(e: EntradaRoteiro): Roteiro {
         ? "O vídeo citado aparece em quadro menor no alto desde o primeiro quadro."
         : "Incline o corpo para a câmera e mostre o print, o objeto ou o número na mão.";
 
+  const alvo = orcamento(duracao);
+  const curto = duracao <= 45;
+  const promessa = curto ? "Em segundos eu te mostro por onde começar." : `Fica até o fim que eu te mostro, em ${Math.round(duracao)} segundos, o que muda e por onde começar.`;
   const zonaDeTrava = prova
-    ? `É o seguinte: ${prova.replace(/\.$/, "")}. Eu vou te mostrar isso em ${Math.round(duracao)} segundos, sem enrolação.`
-    : `Eu já passei por isso ${nicho ? `trabalhando com ${nicho}` : ""} e vou te mostrar em ${Math.round(duracao)} segundos. [sua prova aqui: um número, um print, um nome]`;
+    ? `É o seguinte: ${prova.replace(/\.$/, "")}.${curto ? "" : " Isso não é teoria, é o que aconteceu."} ${promessa}`
+    : `Eu já passei por isso ${nicho ? `trabalhando com ${nicho}` : "na prática"}. [sua prova aqui] ${promessa}`;
   if (!prova) avisos.push("Sem prova. Coloque um número, print ou nome na zona de trava: é o que faz a pessoa ficar depois do gancho.");
-
-  const blocos: BlocoRoteiro[] = [];
-  blocos.push({
-    titulo: "O que está em jogo",
-    fala: publico
-      ? `Se você é ${publico}, isso te custa todo mês. E o prazo é curto: quem não resolve agora, repete o erro no mês que vem.`
-      : `Isso te custa todo mês. E o prazo é curto: quem não resolve agora, repete o erro no mês que vem.`,
-    textoNaTela: "TODO MÊS",
-    visual: "Número do custo mensal entra na tela em fonte grande.",
-  });
-  blocos.push({
-    titulo: "A pergunta",
-    fala: historia
-      ? `${maiusculaInicial(historia.replace(/\.$/, ""))}. Eu achava que o problema era um. Não era.`
-      : `A maioria acha que o problema em ${tema} é o óbvio. Não é. [sua história aqui: o erro que você cometeu, com data]`,
-    textoNaTela: "O PROBLEMA NÃO ERA ESSE",
-    visual: "Print ou foto do momento do erro (com data) em PiP no canto.",
-  });
   if (!historia) avisos.push("Sem história. Um erro seu, com data, dá peso à virada e à lição.");
-  blocos.push({
-    titulo: "A virada",
-    fala: `O que mudou foi uma coisa só: ${posicao ? posicao.replace(/\.$/, "") : `[a regra que você aplica em ${tema}]`}. Simples, e é por isso que ninguém faz.`,
-    textoNaTela: posicao ? maiusculaInicial(posicao).slice(0, 40).toUpperCase() : "A ÚNICA MUDANÇA",
-    visual: "Troca de enquadramento (mais perto) e a regra escrita na tela, palavra por palavra.",
-  });
   if (!posicao) avisos.push("Sem posição firme. Diga em uma frase o que você defende, sem meio-termo: é o que gera comentário.");
 
+  // Biblioteca de blocos na ordem da história; a duração decide quantos entram
+  // (orcamento: ~40 palavras por bloco a 3 palavras por segundo). A ordem de
+  // prioridade garante o loop do vício (jogo, pergunta, virada) antes do resto.
+  const ganho = resultado.replace(/\.$/, "");
+  const biblioteca: (BlocoRoteiro & { prioridade: number })[] = [
+    {
+      prioridade: 2,
+      titulo: "O que está em jogo",
+      fala: `Se você é ${publico || "quem está começando"}, isso pesa mais do que parece. Cada semana sem resolver ${tema} é uma semana longe de ${ganho}. E quem resolve primeiro sai na frente: o resto passa o ano copiando.`,
+      textoNaTela: "CADA SEMANA CONTA",
+      visual: "Número do custo (tempo ou dinheiro) entra na tela em fonte grande.",
+    },
+    {
+      prioridade: 3,
+      titulo: "A pergunta",
+      fala: historia
+        ? `${maiusculaInicial(historia.replace(/\.$/, ""))}. Eu achava que o problema era falta de esforço. Não era. A pergunta certa era outra: por que quem sabia menos que eu chegava antes? A resposta me irritou, e é ela que muda tudo.`
+        : `A maioria acha que o problema em ${tema} é falta de esforço. Não é. A pergunta certa é outra: por que quem sabe menos chega antes? [sua história aqui: o erro que você cometeu, com data] A resposta incomoda, e muda tudo.`,
+      textoNaTela: "O PROBLEMA NÃO ERA ESSE",
+      visual: "Print ou foto do momento do erro (com data) em PiP no canto.",
+    },
+    {
+      prioridade: 4,
+      titulo: "Um exemplo",
+      fala: `Um exemplo concreto: ${prova ? prova.replace(/\.$/, "") : "[um caso com nome e número: quem, o que fez, quanto mudou]"}. Repara no detalhe: não foi talento, foi uma escolha pequena, repetida todo dia. É essa escolha que quase ninguém vê de fora.`,
+      textoNaTela: "NÃO FOI TALENTO",
+      visual: "O caso na tela: print, foto ou o número antes e depois lado a lado.",
+    },
+    {
+      prioridade: 1,
+      titulo: "A virada",
+      fala: `O que mudou foi uma coisa só: ${posicao ? posicao.replace(/\.$/, "") : `[a regra que você aplica em ${tema}]`}. Parece simples demais. E é exatamente por isso que ninguém faz: a gente procura a resposta difícil e pula a óbvia.`,
+      textoNaTela: posicao ? maiusculaInicial(posicao).slice(0, 40).toUpperCase() : "A ÚNICA MUDANÇA",
+      visual: "Troca de enquadramento (mais perto) e a regra escrita na tela, palavra por palavra.",
+    },
+    {
+      prioridade: 5,
+      titulo: "Como aplicar",
+      fala: `Na prática, começa assim. Primeiro: escolhe uma parte de ${tema} e ignora o resto por uma semana. Segundo: mede um número só, todo dia, no mesmo horário. [seu passo concreto aqui] Sem isso, você não sabe se melhorou ou só se ocupou.`,
+      textoNaTela: "1 PARTE · 1 NÚMERO",
+      visual: "Os passos numerados entram um por um na tela.",
+    },
+    {
+      prioridade: 6,
+      titulo: "O erro comum",
+      fala: `O erro mais comum é querer fazer tudo de uma vez. Eu vi isso ${nicho ? `em ${nicho}` : "de perto"} [um caso real]. A pessoa se empolga na segunda, trava na quarta e desiste no domingo. Menos coisa, todo dia, ganha de muita coisa uma vez.`,
+      textoNaTela: "SEGUNDA · QUARTA · DOMINGO",
+      visual: "Calendário da semana na tela, riscando os dias.",
+    },
+    {
+      prioridade: 7,
+      titulo: "A objeção",
+      fala: `"Mas eu não tenho tempo." Tem sim: são dez minutos. O problema não é o tempo, é começar sem saber onde quer chegar. Quando o objetivo é ${ganho}, os dez minutos param de parecer sacrifício.`,
+      textoNaTela: "10 MINUTOS",
+      visual: "Cronômetro de 10 minutos rodando no canto.",
+    },
+    {
+      prioridade: 8,
+      titulo: "O que muda depois",
+      fala: `Depois de um mês, a diferença aparece onde importa: ${ganho}. E aí vem a parte boa: quem está do seu lado começa a perguntar o que você mudou. A resposta vai ser essa aqui.`,
+      textoNaTela: "30 DIAS DEPOIS",
+      visual: "Antes e depois em tela dividida.",
+    },
+  ];
   const ctaFala = e.cta.startsWith("Palavra-chave")
     ? `Comenta ${(primeiraPalavra(tema) || "QUERO").toUpperCase()} que eu te mando o passo a passo.`
     : e.cta.startsWith("Seguir")
@@ -195,12 +235,24 @@ export function montarRoteiroLocal(e: EntradaRoteiro): Roteiro {
         : `Me conta em uma palavra: você está do lado de quem faz ou de quem espera?`;
   const fechamento = `${posicao ? maiusculaInicial(posicao.replace(/\.$/, "")) + "." : `Em ${tema}, o difícil não é saber, é fazer.`} ${ctaFala}`;
 
+  // Entra bloco por prioridade enquanto a fala couber na faixa da duração.
+  const escolhidos = new Set<(typeof biblioteca)[number]>();
+  let total = contarPalavras([ganchoFalado, zonaDeTrava, fechamento].join(" "));
+  for (const b of [...biblioteca].sort((a, c) => a.prioridade - c.prioridade)) {
+    const n = contarPalavras(b.fala);
+    if (escolhidos.size >= 2 && total + n > alvo.maximo) break;
+    escolhidos.add(b);
+    total += n;
+  }
+  const blocos: BlocoRoteiro[] = biblioteca.filter((b) => escolhidos.has(b)).map(({ prioridade: _p, ...b }) => b);
+
   const legenda = `${ganchoFalado}\n${posicao ? maiusculaInicial(posicao.replace(/\.$/, "")) + "." : `Quem entende ${tema} para de perder ${primeiraPalavra(resultado) || "tempo"}.`}\n${ctaFala}`;
 
-  const palavras = [ganchoFalado, zonaDeTrava, ...blocos.map((b) => b.fala), fechamento].join(" ").split(/\s+/).length;
-  const duracaoEstimadaSeg = Math.round(palavras / 2.5);
-  if (duracaoEstimadaSeg > duracao + 15) avisos.push(`O texto dá uns ${duracaoEstimadaSeg} s para uma meta de ${duracao} s: corte um bloco ou encurte as falas.`);
-  if (duracaoEstimadaSeg < duracao - 20) avisos.push(`O texto dá uns ${duracaoEstimadaSeg} s para uma meta de ${duracao} s (${palavrasPorSegundo(duracao)} palavras): há espaço para um exemplo a mais.`);
+  const palavras = palavrasFaladas({ ganchoFalado, zonaDeTrava, blocos, fechamento });
+  const duracaoEstimadaSeg = segundosPorPalavras(palavras);
+  if (palavras > alvo.maximo * 1.15) avisos.push(`O texto dá uns ${duracaoEstimadaSeg} s para uma meta de ${duracao} s: corte um bloco ou encurte as falas.`);
+  if (palavras < alvo.minimo * 0.85) avisos.push(`O texto dá uns ${duracaoEstimadaSeg} s para uma meta de ${duracao} s (${alvo.total} palavras): preencha os trechos entre colchetes com um exemplo seu.`);
+  avisos.push("Esta é a versão por regras, um esqueleto com lacunas. Para o texto escrito no ritmo dos criadores do estudo, clique em Escrever com IA.");
 
   const padroesUsados = [
     "Gancho triplo (Kallaway): texto na tela, fala e ação visual contam a mesma coisa",

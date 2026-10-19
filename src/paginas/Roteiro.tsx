@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { palavrasFaladas } from "../../supabase/functions/gerar-roteiro/comum";
 import { Link } from "react-router-dom";
 import { noArtefato } from "../dados/plataforma";
 import { noSite } from "../dados/site";
@@ -196,7 +197,7 @@ export function Roteiro() {
             {camposComuns}
             <p className="roteiro-acoes">
               <button type="submit" className="botao botao-primario" disabled={!pronto || ia.estado === "gerando" || noArtefato}>
-                {ia.estado === "gerando" ? "Gerando com IA" : "Melhorar com IA"}
+                {ia.estado === "gerando" ? "Escrevendo com IA (até 1 min)" : "Escrever com IA"}
               </button>
               <button type="button" className="botao botao-secundario" onClick={() => { setEntrada(ENTRADA_VAZIA); setIa({ estado: "parado" }); }}>
                 Limpar
@@ -249,7 +250,7 @@ export function Roteiro() {
           ) : (
             <>
               <p className="roteiro-origem">
-                {modo === "melhorar" ? "Seu roteiro, melhorado com IA" : ia.estado === "pronto" ? "Versão com IA" : "Versão por regras"} · ~{roteiro.duracaoEstimadaSeg} s
+                {modo === "melhorar" ? "Seu roteiro, melhorado com IA" : ia.estado === "pronto" ? "Versão com IA" : "Versão por regras"} · {palavrasFaladas(roteiro)} palavras, ~{roteiro.duracaoEstimadaSeg} s
                 <button type="button" className="botao-texto" onClick={() => void copiar()}>
                   {copiado ? "Copiado" : "Copiar tudo"}
                 </button>
