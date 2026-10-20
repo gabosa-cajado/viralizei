@@ -3492,12 +3492,54 @@ a.abertura-gancho:hover .gancho {
 }
 
 .canal-capa-vazia {
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.25rem;
   height: 100%;
-  font-size: var(--t-14);
+  padding: 3.25rem 0.85rem 0.85rem;
+  background: var(--tinta);
+  color: var(--papel);
+  text-align: left;
+}
+
+.canal-capa-vazia > span {
+  min-width: 0;
+}
+
+.canal-capa-vazia-rede {
+  margin-bottom: auto;
+  font-size: var(--t-12);
   font-weight: 700;
-  color: var(--tinta-2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.canal-capa-vazia-views {
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.canal-capa-vazia-rotulo {
+  font-size: var(--t-12);
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+.canal-capa-vazia-gancho {
+  display: -webkit-box;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--vermelho);
+  overflow: hidden;
+  font-size: var(--t-16);
+  font-weight: 700;
+  line-height: 1.2;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
 }
 
 .canal-capa-nota {

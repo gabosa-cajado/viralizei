@@ -499,7 +499,7 @@ function CartaoVideo({ v, canal, favorito, analisando, virouIdeia, onAbrir, onFa
   const [semCapa, setSemCapa] = useState(false);
   const capa = capaDoVideo(v);
   const faixa = faixaOutlier(v.outlier);
-  const titulo = v.gancho_texto || tituloDoVideo(v.legenda);
+  const titulo = v.gancho_texto || (v.legenda?.trim() ? tituloDoVideo(v.legenda) : "Sem legenda na coleta: o gancho está no vídeo");
   const tocavel = !!lerReferencia(v.url);
   return (
     <li className="canal-cartao">
@@ -519,7 +519,13 @@ function CartaoVideo({ v, canal, favorito, analisando, virouIdeia, onAbrir, onFa
             }}
           />
         ) : (
-          <span className="canal-capa-vazia">{nomeRede(canal?.rede ?? "")}</span>
+          // Sem capa (Instagram até a rotina de coleta rodar): cartaz com os números e o gancho.
+          <span className="canal-capa-vazia">
+            <span className="canal-capa-vazia-rede">{nomeRede(canal?.rede ?? "")}</span>
+            <span className="canal-capa-vazia-views mono">{numeroCurto(v.views)}</span>
+            <span className="canal-capa-vazia-rotulo">views · {nomeDoCanal(canal)}</span>
+            {v.gancho_texto && <span className="canal-capa-vazia-gancho">{v.gancho_texto}</span>}
+          </span>
         )}
         <span className={`canal-capa-nota canal-nota-${faixa ?? "sem"}`} title="Views ÷ mediana de views do canal">
           {outlierLegivel(v.outlier)}
