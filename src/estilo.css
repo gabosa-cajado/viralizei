@@ -3556,6 +3556,9 @@ a.abertura-gancho:hover .gancho {
 }
 
 .tabela-rolagem {
+  /* Contém o rótulo só para leitor de tela (position: absolute), que senão
+     escapa da rolagem e alarga a página no celular. */
+  position: relative;
   overflow-x: auto;
   max-width: 100%;
 }
