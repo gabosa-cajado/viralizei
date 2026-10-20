@@ -429,7 +429,7 @@ export function RoteiroEtapas() {
             )}
             <details className="etapa-meu-gancho">
               <summary>Ou escreva o seu</summary>
-              <div className="campos-linha">
+              <div className="campos-linha campos-metades">
                 <label className="campo">
                   <span className="rotulo">Texto na tela</span>
                   <input value={meuGancho.textoNaTela} maxLength={120} onChange={(e) => setMeuGancho((m) => ({ ...m, textoNaTela: e.target.value }))} />
@@ -466,7 +466,7 @@ export function RoteiroEtapas() {
         <li className="etapa">
           <h2 className="etapa-titulo"><span className="etapa-numero">3</span> Estrutura</h2>
           <div className="etapa-corpo">
-            <div className="campos-linha">
+            <div className="campos-linha campos-metades">
               <label className="campo">
                 <span className="rotulo">Formato de história</span>
                 <select value={etapas.formatoHistoria} onChange={(e) => mudar({ formatoHistoria: e.target.value })}>
@@ -540,7 +540,7 @@ export function RoteiroEtapas() {
         <li className="etapa">
           <h2 className="etapa-titulo"><span className="etapa-numero">4</span> Roteiro</h2>
           <div className="etapa-corpo">
-            <div className="campos-linha">
+            <div className="campos-linha campos-metades">
               <label className="campo">
                 <span className="rotulo">Formato de gravação</span>
                 <select value={etapas.formato} onChange={(e) => mudar({ formato: e.target.value })}>

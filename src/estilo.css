@@ -1313,6 +1313,17 @@ a.abertura-gancho:hover .gancho {
   gap: var(--coluna-gap);
 }
 
+/* Dois campos de texto longo lado a lado (Roteiro em etapas). */
+.campos-linha.campos-metades {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 40rem) {
+  .campos-linha.campos-metades {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .campo-gancho {
   font-size: var(--t-28) !important;
   font-weight: 700;
