@@ -3445,46 +3445,99 @@ a.abertura-gancho:hover .gancho {
   margin: 0.75rem 0 0;
 }
 
-.canais-videos {
+/* Grade de vídeos com capa 9:16, como no Sandcastles. */
+.canais-grade {
   list-style: none;
-  margin: 1.5rem 0 0;
+  margin: 1rem 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: 1.5rem 1rem;
 }
 
-.canal-video {
-  display: grid;
-  grid-template-columns: 5.5rem minmax(0, 1fr);
-  gap: 0.9rem;
+.canais-grade[aria-busy="true"] {
+  opacity: 0.55;
+}
+
+.canal-cartao {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  padding: 1rem 1.1rem;
   border: 2px solid var(--tinta);
 }
 
-.canal-video-nota {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  min-width: 0;
+.canal-capa {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  max-height: 26rem;
+  padding: 0;
+  border: 0;
+  border-bottom: 2px solid var(--tinta);
+  background: var(--papel-2);
+  overflow: hidden;
+  cursor: pointer;
 }
 
-.canal-video-nota .mono {
-  font-size: var(--t-28);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  font-feature-settings: "tnum";
+.canal-capa:disabled {
+  cursor: default;
 }
 
-.canal-video-nota-rotulo {
-  margin-top: 0.3rem;
-  font-size: var(--t-12);
+.canal-capa img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.canal-capa-vazia {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font-size: var(--t-14);
+  font-weight: 700;
   color: var(--tinta-2);
 }
 
+.canal-capa-nota {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  background: var(--papel);
+  color: var(--tinta);
+  font-size: var(--t-20);
+  font-weight: 800;
+  font-feature-settings: "tnum";
+  letter-spacing: -0.02em;
+}
+
 /* Cor codifica a faixa: vermelho só para o que é fora da curva. */
+.canal-capa-nota.canal-nota-fora {
+  background: var(--vermelho);
+  color: #ffffff;
+}
+
+.canal-capa-duracao {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.1rem 0.4rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  font-size: var(--t-12);
+}
+
+.canal-cartao-corpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
+  padding: 0.8rem 0.9rem 0.9rem;
+}
+
 .canal-nota-fora .mono {
   color: var(--vermelho);
 }
@@ -3493,10 +3546,230 @@ a.abertura-gancho:hover .gancho {
   color: var(--tinta-2);
 }
 
-.canal-video-corpo {
+.canal-modelo {
+  padding: 0.55rem 0.65rem;
+  background: var(--papel-2);
+}
+
+.canal-modelo-texto {
+  margin: 0;
+  font-size: var(--t-14);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.canal-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.35rem 0 0;
+}
+
+.canal-etiquetas .etiqueta {
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--fio-fino);
+  font-size: var(--t-12);
+  font-weight: 700;
+}
+
+.canal-analise summary {
+  cursor: pointer;
+  font-size: var(--t-14);
+  font-weight: 700;
+}
+
+.canal-analise dl {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0.5rem 0 0;
+  font-size: var(--t-14);
+}
+
+.canal-analise dt {
+  font-size: var(--t-12);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tinta-2);
+}
+
+.canal-analise dd {
+  margin: 0 0 0.25rem;
+}
+
+/* Busca e filtros */
+.canais-busca {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem 1rem;
+  margin-top: 1.5rem;
+}
+
+.canais-busca-campo {
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.canais-mais-filtros {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  gap: 1rem 1.25rem;
+  align-items: end;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 2px solid var(--fio-fino);
+}
+
+.canais-faixa {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.canais-faixa legend {
+  width: 100%;
+  margin-bottom: 0.3rem;
+}
+
+.canais-faixa input {
+  flex: 1 1 4rem;
+  min-width: 0;
+  min-height: 2.5rem;
+}
+
+.canais-marcar {
+  min-height: 2.75rem;
+}
+
+.canais-filtros-acoes {
+  margin: 0;
+}
+
+.canais-salvar-filtro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem;
+  grid-column: 1 / -1;
+}
+
+.canais-salvar-filtro .campo-compacto {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+
+.canais-salvos,
+.canais-tipos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.canais-salvos li {
+  display: flex;
+  border: 2px solid var(--tinta);
+}
+
+.canais-salvo,
+.canais-salvo-apagar,
+.canais-tipo {
+  min-height: 2.75rem;
+  padding: 0 0.8rem;
+  border: 0;
+  background: none;
+  color: var(--tinta);
+  font: inherit;
+  font-size: var(--t-14);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.canais-salvo-apagar {
+  padding: 0 0.7rem;
+  border-left: 1px solid var(--fio-fino);
+  color: var(--tinta-2);
+}
+
+.canais-tipo {
+  border: 2px solid var(--tinta);
+}
+
+.canais-tipo[aria-pressed="true"] {
+  background: var(--tinta);
+  color: var(--papel);
+}
+
+.canais-contagem {
+  align-items: center;
+  padding-top: 1rem;
+  border-bottom: 0;
+}
+
+/* Banco de ganchos */
+.canais-ganchos {
+  margin-top: 1.5rem;
+}
+
+.ganchos-lista {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  gap: 1rem;
+}
+
+.gancho-modelo {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 1rem 1.1rem;
+  border: 2px solid var(--tinta);
+}
+
+.gancho-favorito {
+  border-color: var(--vermelho);
+}
+
+.gancho-modelo-texto {
+  margin: 0;
+  font-size: var(--t-20);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.gancho-modelo-origem {
+  margin: 0;
+  font-size: var(--t-14);
+  color: var(--tinta-2);
+}
+
+/* Sugestões de canais */
+.canais-sugestoes {
+  margin-top: 1.5rem;
+}
+
+.canais-sugerir {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.canais-sugerir .campo {
+  flex: 1 1 20rem;
   min-width: 0;
 }
 

@@ -202,7 +202,8 @@ ${REGRAS}
 
 ${LISTAS}
 
-Recebe: o tema, a pesquisa, os modelos de gancho do calendário (com o tipo) e os ganchos de vídeos fora da curva dos canais que o time acompanha (primeira linha da legenda, views e quantas vezes passou a mediana do canal).
+Recebe: o tema, a pesquisa, os modelos de gancho do calendário (com o tipo) e os ganchos de vídeos fora da curva dos canais que o time acompanha (views, quantas vezes passou a mediana do canal e, nos analisados, o gancho original, o modelo com lacunas ___ e o tipo entre colchetes).
+Prefira os modelos dos vídeos fora da curva com nota mais alta: eles já provaram que prendem. Os marcados [FAVORITO] foram escolhidos pelo time; quando houver, pelo menos 2 dos ganchos saem deles.
 Devolva de 4 a 6 ganchos para ESTE tema, variando o tipo (no máximo 2 do mesmo tipo). Cada um:
 - textoNaTela: até 2 linhas, sem pontuação, com número ou nome próprio quando houver.
 - ganchoFalado: até 12 palavras, começa na primeira palavra, assunto + o que a pessoa ganha.
@@ -306,20 +307,45 @@ Deno.serve(async (req) => {
   if (modo === "criar" && etapas) {
     pedido += `\n\nMATERIAL DAS ETAPAS (siga: o gancho escolhido abre o vídeo como está, os blocos seguem o esboço na ordem, fatos e números só os da pesquisa; o que faltar vira "[sua prova aqui]" e aviso):\n${etapas}`;
   }
-  // Vídeos fora da curva dos canais acompanhados: material para pesquisa e ganchos.
+  // Vídeos fora da curva dos canais acompanhados: material para pesquisa e
+  // ganchos. Os analisados trazem o gancho como modelo (aba Ganchos); os
+  // favoritos dos sócios vêm primeiro.
   let foraDaCurva = "";
   if (modo === "pesquisa" || modo === "ganchos") {
-    const { data: vids } = await supabase
-      .from("canal_videos")
-      .select("url, legenda, views, outlier, canais(nome, rede)")
-      .gte("outlier", 1.5)
-      .neq("legenda", "")
-      .order("outlier", { ascending: false })
-      .limit(30);
-    foraDaCurva = (vids ?? [])
-      .map((v: { url: string; legenda: string; views: number | null; outlier: number | null; canais: { nome: string; rede: string } | { nome: string; rede: string }[] | null }) => {
+    type Vid = {
+      id: string;
+      url: string;
+      legenda: string;
+      views: number | null;
+      outlier: number | null;
+      gancho_texto: string | null;
+      gancho_modelo: string | null;
+      gancho_tipo: string | null;
+      analise: { tema?: string; angulo?: string } | null;
+      canais: { nome: string; rede: string } | { nome: string; rede: string }[] | null;
+    };
+    const [{ data: vids }, { data: favs }] = await Promise.all([
+      supabase
+        .from("canal_videos")
+        .select("id, url, legenda, views, outlier, gancho_texto, gancho_modelo, gancho_tipo, analise, canais(nome, rede)")
+        .gte("outlier", 1.5)
+        .neq("legenda", "")
+        .order("outlier", { ascending: false })
+        .limit(40),
+      supabase.from("ganchos_favoritos").select("video_id, canal_videos(id, url, legenda, views, outlier, gancho_texto, gancho_modelo, gancho_tipo, analise, canais(nome, rede))").limit(20),
+    ]);
+    const favoritos = ((favs ?? []) as { canal_videos: Vid | Vid[] | null }[])
+      .map((f) => (Array.isArray(f.canal_videos) ? f.canal_videos[0] : f.canal_videos))
+      .filter((v): v is Vid => !!v);
+    const idsFav = new Set(favoritos.map((v) => v.id));
+    const lista = [...favoritos, ...((vids ?? []) as Vid[]).filter((v) => !idsFav.has(v.id))].slice(0, 40);
+    foraDaCurva = lista
+      .map((v) => {
         const c = Array.isArray(v.canais) ? v.canais[0] : v.canais;
-        return `- ${v.outlier}x · ${v.views ?? "?"} views · ${c?.nome ?? "?"} (${c?.rede ?? "?"}) · ${v.url} · "${v.legenda.split("\n")[0].slice(0, 140)}"`;
+        const base = `- ${idsFav.has(v.id) ? "[FAVORITO] " : ""}${v.outlier}x · ${v.views ?? "?"} views · ${c?.nome ?? "?"} (${c?.rede ?? "?"}) · ${v.url}`;
+        return v.gancho_modelo
+          ? `${base} · gancho: "${v.gancho_texto ?? ""}" · modelo: "${v.gancho_modelo}" [${v.gancho_tipo ?? "?"}]${v.analise?.angulo ? ` · ângulo: ${v.analise.angulo}` : ""}`
+          : `${base} · "${v.legenda.split("\n")[0].slice(0, 140)}"`;
       })
       .join("\n");
   }
