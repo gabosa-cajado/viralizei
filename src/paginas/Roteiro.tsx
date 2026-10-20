@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { palavrasFaladas } from "../../supabase/functions/gerar-roteiro/comum";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { RoteiroSaida } from "../componentes/RoteiroSaida";
+import { lerPersona } from "../dados/persona";
 import { noArtefato } from "../dados/plataforma";
 import { noSite } from "../dados/site";
 import {
@@ -10,18 +11,22 @@ import {
   gerarRoteiroIA,
   melhorarRoteiroIA,
   montarRoteiroLocal,
-  roteiroEmTexto,
-  roteiroSoFala,
   type EntradaRoteiro,
   type Roteiro as R,
   type RoteiroMelhorado,
 } from "../dados/roteiro";
+import { RoteiroEtapas } from "./RoteiroEtapas";
 
 const CHAVE = "pauta:roteiro-entrada";
 const CHAVE_MODO = "pauta:roteiro-modo";
 const CHAVE_COLADO = "pauta:roteiro-colado";
 
-type Modo = "montar" | "melhorar";
+type Modo = "etapas" | "montar" | "melhorar";
+
+function lerModo(): Modo {
+  const m = ler<string>(CHAVE_MODO, "montar");
+  return m === "melhorar" || m === "etapas" ? m : "montar";
+}
 
 function ler<T>(chave: string, padrao: T): T {
   try {
@@ -57,16 +62,25 @@ const CAMPOS: { chave: keyof EntradaRoteiro; rotulo: string; ajuda: string; long
 type EstadoIA<T> = { estado: "parado" } | { estado: "gerando" } | { estado: "pronto"; roteiro: T } | { estado: "erro"; mensagem: string };
 
 export function Roteiro() {
-  const [modo, setModo] = useState<Modo>(() => (ler<string>(CHAVE_MODO, "montar") === "melhorar" ? "melhorar" : "montar"));
+  const [modo, setModo] = useState<Modo>(lerModo);
   const [entrada, setEntrada] = useState<EntradaRoteiro>(lerEntrada);
   const [colado, setColado] = useState(() => ler<string>(CHAVE_COLADO, ""));
   const [ia, setIa] = useState<EstadoIA<R>>({ estado: "parado" });
   const [melhora, setMelhora] = useState<EstadoIA<RoteiroMelhorado>>({ estado: "parado" });
-  const [copiado, setCopiado] = useState(false);
-  const [falaCopiada, setFalaCopiada] = useState(false);
-  const caixaFala = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => gravar(CHAVE, entrada), [entrada]);
+  // No site, o nicho vazio vem da Persona do canal.
+  useEffect(() => {
+    if (!noSite || noArtefato || entrada.nicho.trim()) return;
+    let vivo = true;
+    lerPersona()
+      .then((p) => vivo && p.nicho && setEntrada((e) => (e.nicho.trim() ? e : { ...e, nicho: p.nicho })))
+      .catch(() => undefined);
+    return () => {
+      vivo = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => gravar(CHAVE_COLADO, colado), [colado]);
   useEffect(() => gravar(CHAVE_MODO, modo), [modo]);
 
@@ -107,27 +121,6 @@ export function Roteiro() {
     }
   }
 
-  async function copiarFala() {
-    try {
-      await navigator.clipboard.writeText(caixaFala.current?.value ?? "");
-      setFalaCopiada(true);
-      setTimeout(() => setFalaCopiada(false), 1800);
-    } catch {
-      caixaFala.current?.select();
-    }
-  }
-
-  async function copiar() {
-    if (!roteiro) return;
-    try {
-      await navigator.clipboard.writeText(roteiroEmTexto(roteiro));
-      setCopiado(true);
-      setTimeout(() => setCopiado(false), 1800);
-    } catch {
-      setCopiado(false);
-    }
-  }
-
   const camposComuns = (
     <>
       <div className="campos-linha">
@@ -160,7 +153,11 @@ export function Roteiro() {
         <div className="abertura-texto">
           <h1 id="titulo-roteiro" className="rotulo">Roteiro</h1>
           <p className="abertura-gancho">
-            {modo === "montar" ? "Preencha as caixas e saia com o roteiro pronto para ler." : "Cole o roteiro inteiro. A IA devolve a versão melhorada e diz o que mudou."}
+            {modo === "etapas"
+              ? "Pesquisa, gancho, estrutura e só então o texto. Cada versão fica guardada."
+              : modo === "montar"
+                ? "Preencha as caixas e saia com o roteiro pronto para ler."
+                : "Cole o roteiro inteiro. A IA devolve a versão melhorada e diz o que mudou."}
           </p>
           <p className="abertura-acoes">
             <span>
@@ -172,6 +169,9 @@ export function Roteiro() {
 
       <div className="ferramentas">
         <div className="abas" role="tablist" aria-label="Como montar o roteiro">
+          <button type="button" role="tab" className="aba" aria-selected={modo === "etapas"} onClick={() => setModo("etapas")}>
+            Em etapas
+          </button>
           <button type="button" role="tab" className="aba" aria-selected={modo === "montar"} onClick={() => setModo("montar")}>
             Montar do zero
           </button>
@@ -181,6 +181,9 @@ export function Roteiro() {
         </div>
       </div>
 
+      {modo === "etapas" ? (
+        <RoteiroEtapas />
+      ) : (
       <div className="roteiro-grade">
         {modo === "montar" ? (
           <form className="roteiro-formulario" onSubmit={(e) => { e.preventDefault(); void gerar(); }}>
@@ -248,117 +251,15 @@ export function Roteiro() {
                   : "Cole o roteiro e clique em Melhorar com IA. A versão melhorada aparece aqui, com a lista do que mudou e por quê."}
             </p>
           ) : (
-            <>
-              <p className="roteiro-origem">
-                {modo === "melhorar" ? "Seu roteiro, melhorado com IA" : ia.estado === "pronto" ? "Versão com IA" : "Versão por regras"} · {palavrasFaladas(roteiro)} palavras, ~{roteiro.duracaoEstimadaSeg} s
-                <button type="button" className="botao-texto" onClick={() => void copiar()}>
-                  {copiado ? "Copiado" : "Copiar tudo"}
-                </button>
-              </p>
-              {modo === "melhorar" && melhora.estado === "pronto" && melhora.roteiro.mudancas.length > 0 && (
-                <section className="roteiro-mudancas" aria-labelledby="roteiro-mudancas-titulo">
-                  <h2 id="roteiro-mudancas-titulo" className="roteiro-etiqueta">O que mudou</h2>
-                  <ol className="melhorias">
-                    {melhora.roteiro.mudancas.map((m) => <li key={m}>{m}</li>)}
-                  </ol>
-                </section>
-              )}
-              {roteiro.loops && (
-                <section className="roteiro-loops" aria-labelledby="roteiro-loops-titulo">
-                  <h2 id="roteiro-loops-titulo" className="roteiro-etiqueta">Três loops</h2>
-                  <div className="loops-linha" aria-hidden="true">
-                    {[roteiro.loops.gancho, roteiro.loops.reforco, roteiro.loops.meio].map((l, i) =>
-                      l.segundo == null ? null : (
-                        <span key={i} className="loops-marca" style={{ left: `${Math.min(100, (l.segundo / Math.max(1, roteiro.duracaoEstimadaSeg)) * 100)}%` }}>
-                          {l.segundo} s
-                        </span>
-                      ),
-                    )}
-                  </div>
-                  <ol className="loops-lista">
-                    {([
-                      ["Gancho", "abre a pergunta do vídeo", roteiro.loops.gancho],
-                      ["Reforço", "aumenta a aposta até uns 15 s", roteiro.loops.reforco],
-                      ["Religar", "reabre a curiosidade perto da metade", roteiro.loops.meio],
-                    ] as const).map(([nome, papel, l]) => (
-                      <li key={nome}>
-                        <span className="mono loops-segundo">{l.segundo == null ? "?" : `${l.segundo} s`}</span>
-                        <span>
-                          <strong>{nome}</strong> ({papel}): {l.frase}
-                        </span>
-                      </li>
-                    ))}
-                  </ol>
-                </section>
-              )}
-              <ol className="roteiro-blocos">
-                <li>
-                  <span className="roteiro-etiqueta">Texto na tela</span>
-                  <p className="roteiro-tela">{roteiro.textoNaTela}</p>
-                </li>
-                <li>
-                  <span className="roteiro-etiqueta">Gancho falado</span>
-                  <p className="roteiro-fala roteiro-gancho">{roteiro.ganchoFalado}</p>
-                  <p className="roteiro-nota">Ação visual: {roteiro.acaoVisual}</p>
-                </li>
-                <li>
-                  <span className="roteiro-etiqueta">Zona de trava</span>
-                  <p className="roteiro-fala">{roteiro.zonaDeTrava}</p>
-                </li>
-                {roteiro.blocos.map((b, i) => (
-                  <li key={i}>
-                    <span className="roteiro-etiqueta">{b.titulo}</span>
-                    <p className="roteiro-fala">{b.fala}</p>
-                    <p className="roteiro-nota">Na tela: {b.textoNaTela}</p>
-                    {b.visual && <p className="roteiro-nota">Visual: {b.visual}</p>}
-                  </li>
-                ))}
-                <li>
-                  <span className="roteiro-etiqueta">Fechamento</span>
-                  <p className="roteiro-fala">{roteiro.fechamento}</p>
-                </li>
-                <li>
-                  <span className="roteiro-etiqueta">Legenda</span>
-                  <p className="roteiro-legenda">{roteiro.legenda}</p>
-                </li>
-              </ol>
-              <div className="roteiro-so-texto">
-                <p className="roteiro-origem">
-                  <label htmlFor="roteiro-so-fala" className="roteiro-etiqueta">Só o texto</label>
-                  <button type="button" className="botao-texto" onClick={() => void copiarFala()}>
-                    {falaCopiada ? "Copiado" : "Copiar texto"}
-                  </button>
-                </p>
-                <textarea
-                  id="roteiro-so-fala"
-                  key={roteiroSoFala(roteiro)}
-                  ref={caixaFala}
-                  defaultValue={roteiroSoFala(roteiro)}
-                  rows={12}
-                  spellCheck={false}
-                />
-              </div>
-              {roteiro.avisos.length > 0 && (
-                <ul className="roteiro-avisos">
-                  {roteiro.avisos.map((a) => <li key={a}>{a}</li>)}
-                </ul>
-              )}
-              {roteiro.padroesUsados && roteiro.padroesUsados.length > 0 && (
-                <section className="roteiro-padroes" aria-labelledby="roteiro-padroes-titulo">
-                  <h2 id="roteiro-padroes-titulo" className="roteiro-etiqueta">Padrões do estudo aplicados</h2>
-                  <ul>
-                    {roteiro.padroesUsados.map((p) => <li key={p}>{p}</li>)}
-                  </ul>
-                  <p className="campo-ajuda">Os nomes são os da seção <Link to="/referencias" className="link">Referências</Link>: se um item não bate com o que está lá, o roteiro não está seguindo o estudo.</p>
-                </section>
-              )}
-              <p className="campo-ajuda">
-                Gravou? Passe o vídeo em <Link to="/avaliar" className="link">Avaliar</Link> antes de postar.
-              </p>
-            </>
+            <RoteiroSaida
+              roteiro={roteiro}
+              origem={modo === "melhorar" ? "Seu roteiro, melhorado com IA" : ia.estado === "pronto" ? "Versão com IA" : "Versão por regras"}
+              mudancas={modo === "melhorar" && melhora.estado === "pronto" ? melhora.roteiro.mudancas : undefined}
+            />
           )}
         </section>
       </div>
+      )}
     </div>
   );
 }

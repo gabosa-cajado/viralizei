@@ -4,7 +4,7 @@
 -- 11-13 false, 14 = 0, 15 >= 1 (controle das trilhas), 16 = "1500 <hoje>",
 -- 17-18 false, 19 = 0, 20 >= 1 (controle das ideias), 21-23 false, 24 = 0,
 -- 25 >= 1 (controle das métricas), 26-28 false, 29 = 0, 30 >= 1 (controle
--- dos planos).
+-- dos planos), 31 >= 1 (controle de canais e persona), 32-38 false, 39 = 0.
 begin;
 create temp table r (caso text, resultado text) on commit drop;
 grant all on r to anon, authenticated;
@@ -33,6 +33,16 @@ insert into r select '26 anon pode ler planos', has_table_privilege('anon', 'pub
 insert into r select '27 logado pode forjar autor do plano', (has_column_privilege('authenticated', 'public.planos', 'criado_por', 'insert') or has_column_privilege('authenticated', 'public.planos', 'criado_por', 'update'))::text;
 insert into r select '28 logado pode escrever classificação das métricas', (has_column_privilege('authenticated', 'public.metricas_publicacoes', 'formato', 'update') or has_column_privilege('authenticated', 'public.metricas_publicacoes', 'tipo_gancho', 'update'))::text;
 insert into r select '30 controle: dono do banco vê planos', count(*)::text from public.planos;
+insert into public.canais (rede, handle, nome) values ('youtube', 'teste_permissoes', 'Teste');
+insert into public.roteiros (titulo) values ('Roteiro de controle do teste');
+insert into r select '31 controle: dono do banco vê canais, persona e roteiros', ((select count(*) from public.canais) + (select count(*) from public.persona) + (select count(*) from public.roteiros))::text;
+insert into r select '32 anon pode ler persona, canais, vídeos, roteiros ou versões', (has_table_privilege('anon', 'public.persona', 'select') or has_table_privilege('anon', 'public.canais', 'select') or has_table_privilege('anon', 'public.canal_videos', 'select') or has_table_privilege('anon', 'public.roteiros', 'select') or has_table_privilege('anon', 'public.roteiro_versoes', 'select'))::text;
+insert into r select '33 logado pode escrever vídeos de canal', (has_table_privilege('authenticated', 'public.canal_videos', 'insert') or has_table_privilege('authenticated', 'public.canal_videos', 'update') or has_table_privilege('authenticated', 'public.canal_videos', 'delete'))::text;
+insert into r select '34 logado pode rodar carregar_canal', has_function_privilege('authenticated', 'public.carregar_canal(jsonb)', 'execute')::text;
+insert into r select '35 logado pode forjar números do canal', (has_column_privilege('authenticated', 'public.canais', 'mediana_views', 'update') or has_column_privilege('authenticated', 'public.canais', 'seguidores', 'update') or has_column_privilege('authenticated', 'public.canais', 'criado_por', 'insert'))::text;
+insert into r select '36 logado pode forjar autor da persona ou criar outra', (has_column_privilege('authenticated', 'public.persona', 'atualizado_por', 'update') or has_table_privilege('authenticated', 'public.persona', 'insert') or has_table_privilege('authenticated', 'public.persona', 'delete'))::text;
+insert into r select '37 logado pode forjar autor do roteiro ou da versão', (has_column_privilege('authenticated', 'public.roteiros', 'criado_por', 'insert') or has_column_privilege('authenticated', 'public.roteiro_versoes', 'criado_por', 'insert'))::text;
+insert into r select '38 logado pode escolher o número ou mudar versão', (has_column_privilege('authenticated', 'public.roteiro_versoes', 'numero', 'insert') or has_table_privilege('authenticated', 'public.roteiro_versoes', 'update'))::text;
 insert into r select '15 controle: dono do banco vê trilhas', count(*)::text from public.trilhas;
 insert into public.trilhas (id, titulo, reels_texto) values ('tteste', 'Teste', '1,5k');
 insert into r select '16 gatilho: 1,5k vira 1500 com data', reels_numero::text || ' ' || coalesce(conferido_em::text, 'sem data') from public.trilhas where id = 'tteste';
@@ -45,13 +55,14 @@ insert into r select '14 logado fora da lista vê trilhas', count(*)::text from 
 insert into r select '19 logado fora da lista vê ideias', count(*)::text from public.ideias;
 insert into r select '24 logado fora da lista vê métricas ou recomendações', ((select count(*) from public.metricas_publicacoes) + (select count(*) from public.metricas_publico) + (select count(*) from public.recomendacoes))::text;
 insert into r select '29 logado fora da lista vê planos', count(*)::text from public.planos;
+insert into r select '39 logado fora da lista vê persona, canais, vídeos ou roteiros', ((select count(*) from public.persona) + (select count(*) from public.canais) + (select count(*) from public.canal_videos) + (select count(*) from public.roteiros) + (select count(*) from public.roteiro_versoes))::text;
 reset role;
 select * from r order by caso;
 rollback;
 
 -- Controle positivo das trilhas, com um sócio real (o primeiro da lista).
 -- Esperado: true, 45 ou mais, 1, 12000, "lapidada true", métricas 1 ou mais,
--- "plano true 1".
+-- "plano true 1", "persona true", "canal true", "versões 1 2 true".
 begin;
 create temp table r (caso text, resultado text) on commit drop;
 grant all on r to authenticated;
@@ -70,6 +81,14 @@ insert into r select 'socio lapidou ideia (autor é ele)', status || ' ' || (cri
 insert into public.planos (titulo, temas, formatos, celulas) values ('Plano do sócio no teste', '["a","b","c"]', '["lista","erro","caso"]', '[]');
 update public.planos set decimo = '{"titulo":"x"}' where titulo = 'Plano do sócio no teste';
 insert into r select 'socio criou plano (autor é ele, 10º salvo)', 'plano ' || (criado_por = auth.uid())::text || ' ' || (decimo is not null)::int::text from public.planos where titulo = 'Plano do sócio no teste';
+update public.persona set tom = 'tom de teste' where id;
+insert into r select 'socio editou persona (autor é ele)', 'persona ' || (atualizado_por = auth.uid())::text from public.persona where tom = 'tom de teste';
+insert into public.canais (rede, handle, nome) values ('tiktok', '@Teste.Socio', 'Teste');
+insert into r select 'socio adicionou canal (@ normalizado, autor é ele)', 'canal ' || (criado_por = auth.uid())::text from public.canais where rede = 'tiktok' and handle = 'teste.socio';
+insert into public.roteiros (titulo) values ('Roteiro do sócio no teste');
+insert into public.roteiro_versoes (roteiro_id, origem, conteudo) select id, 'ia', '{}' from public.roteiros where titulo = 'Roteiro do sócio no teste';
+insert into public.roteiro_versoes (roteiro_id, origem, conteudo) select id, 'duracao', '{}' from public.roteiros where titulo = 'Roteiro do sócio no teste';
+insert into r select 'socio salvou versões (numeradas, autor é ele)', 'versões ' || string_agg(numero::text, ' ' order by numero) || ' ' || bool_and(v.criado_por = auth.uid())::text from public.roteiro_versoes v join public.roteiros t on t.id = v.roteiro_id where t.titulo = 'Roteiro do sócio no teste';
 reset role;
 select * from r;
 rollback;

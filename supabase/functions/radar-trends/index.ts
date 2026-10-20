@@ -200,7 +200,7 @@ Recebe: os assuntos mais buscados no Brasil hoje (com tráfego aproximado), os v
 Devolva:
 - manchete: uma frase de até 12 palavras dizendo o que está quente hoje e o ângulo (ex.: "Dívida pública em alta: dia de falar de dinheiro no bolso").
 - resumo: 2 ou 3 frases curtas, uma ideia por frase, explicando o que puxa atenção hoje e por que o time deve pegar carona. Números com separador legível (500 mil, 10 mil, 1,2 mi), nunca "500000+".
-- ideias: de 4 a 6, só dentro do nicho (negócios, dinheiro, tecnologia, carreira, mentalidade). Ignore esporte, celebridade, novela, crime e política partidária, a menos que haja um ângulo claro de negócio ou dinheiro.
+- ideias: de 4 a 6, só dentro do nicho (o da persona do canal, quando vier no pedido; senão negócios, dinheiro, tecnologia, carreira, mentalidade). Ignore esporte, celebridade, novela, crime e política partidária, a menos que haja um ângulo claro de negócio ou dinheiro.
 Cada ideia tem:
 - titulo: curto, nomeando o assunto.
 - porqueAgora: o dado que justifica (tráfego ou views, com o número legível).
@@ -216,6 +216,22 @@ Cada ideia tem:
 ${REGRAS}
 
 Nada de emoji, hashtag ou aspas decorativas.`;
+
+// Persona do canal (public.persona): mesmo texto de personaEmTexto em
+// gerar-roteiro/comum.ts, repetido aqui para a função não depender da pasta vizinha.
+const CAMPOS_PERSONA: [string, string][] = [
+  ["nicho", "Nicho"],
+  ["publico", "Para quem"],
+  ["tom", "Tom de voz"],
+  ["objetivo", "Objetivo do canal"],
+  ["diferencial", "Por que nós"],
+  ["evitar", "O que evitar"],
+];
+function personaEmTexto(p: Record<string, string> | null) {
+  if (!p) return "";
+  const linhas = CAMPOS_PERSONA.filter(([k]) => (p[k] ?? "").trim()).map(([k, r]) => `${r}: ${p[k].trim()}`);
+  return linhas.length ? `PERSONA DO CANAL (manda sobre nicho, público e tom; respeite o que evitar):\n${linhas.join("\n")}\n\n` : "";
+}
 
 function ideiasSemModelo(tendencias: Tendencia[], videos: VideoQuente[], dias: { numero: number; gancho: string }[]): Ideia[] {
   const ideias: Ideia[] = [];
@@ -286,6 +302,8 @@ Deno.serve(async (req) => {
   const videos = porConsulta.flat().sort((a, b) => b.viewsNumero - a.viewsNumero);
   const { data: diasBanco } = await servico.from("dias").select("numero, gancho").order("numero");
   const dias = (diasBanco ?? []) as { numero: number; gancho: string }[];
+  const { data: personaBanco } = await servico.from("persona").select("nicho, publico, tom, objetivo, diferencial, evitar").maybeSingle();
+  const blocoPersona = personaEmTexto(personaBanco as Record<string, string> | null);
 
   let ideias: Ideia[] = [];
   let manchete = "";
@@ -306,7 +324,7 @@ Deno.serve(async (req) => {
         messages: [
           {
             role: "user",
-            content: `Assuntos mais buscados no Brasil hoje:\n${tendencias.map((t) => `- ${t.titulo} (${t.trafego}) — ${t.noticia}`).join("\n") || "(sem dados)"}\n\nVídeos mais vistos da semana no YouTube:\n${videos.slice(0, 15).map((v) => `- [${v.consulta}] ${v.titulo} — ${v.canal} — ${v.views} — ${v.url}`).join("\n") || "(sem dados)"}\n\nGanchos do calendário:\n${dias.map((d) => `${d.numero}. ${d.gancho}`).join("\n")}`,
+            content: `${blocoPersona}Assuntos mais buscados no Brasil hoje:\n${tendencias.map((t) => `- ${t.titulo} (${t.trafego}) — ${t.noticia}`).join("\n") || "(sem dados)"}\n\nVídeos mais vistos da semana no YouTube:\n${videos.slice(0, 15).map((v) => `- [${v.consulta}] ${v.titulo} — ${v.canal} — ${v.views} — ${v.url}`).join("\n") || "(sem dados)"}\n\nGanchos do calendário:\n${dias.map((d) => `${d.numero}. ${d.gancho}`).join("\n")}`,
           },
         ],
       });

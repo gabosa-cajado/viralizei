@@ -272,3 +272,52 @@ export function tipoDoModelo(modelo: string): string {
   for (const [tipo, re] of PALAVRAS_DO_TIPO) if (re.test(modelo)) return tipo;
   return "historia";
 }
+
+// ---------- Persona do canal ----------
+// Uma linha só no banco (public.persona). Toda IA do Viralizei recebe este
+// bloco no pedido; ele vale acima da descrição genérica do nicho no sistema.
+
+export interface Persona {
+  nicho: string;
+  publico: string;
+  tom: string;
+  objetivo: string;
+  diferencial: string;
+  evitar: string;
+}
+
+export const CAMPOS_PERSONA: { chave: keyof Persona; rotulo: string; ajuda: string }[] = [
+  { chave: "nicho", rotulo: "Nicho", ajuda: "Do que o canal fala. Ex.: dinheiro, negócios e IA para quem tem de 18 a 30 anos" },
+  { chave: "publico", rotulo: "Para quem", ajuda: "Quem assiste e o que essa pessoa quer. Ex.: jovem CLT que quer a primeira renda extra" },
+  { chave: "tom", rotulo: "Tom de voz", ajuda: "Como falamos. Ex.: direto, com número na tela, sem guru e sem palavrão" },
+  { chave: "objetivo", rotulo: "Objetivo do canal", ajuda: "O que cada vídeo precisa trazer. Ex.: seguidores no Instagram e lista de espera do curso" },
+  { chave: "diferencial", rotulo: "Por que nós", ajuda: "O que só a gente tem. Ex.: bastidores reais de quem está construindo do zero" },
+  { chave: "evitar", rotulo: "O que evitar", ajuda: "Temas e jeitos de falar que ficam de fora" },
+];
+
+export const PERSONA_VAZIA: Persona = { nicho: "", publico: "", tom: "", objetivo: "", diferencial: "", evitar: "" };
+
+/** Bloco que vai no pedido de toda IA; vazio quando nada foi preenchido. */
+export function personaEmTexto(p: Partial<Persona> | null | undefined): string {
+  if (!p) return "";
+  const linhas = CAMPOS_PERSONA.filter((c) => (p[c.chave] ?? "").trim()).map((c) => `${c.rotulo}: ${(p[c.chave] ?? "").trim()}`);
+  if (!linhas.length) return "";
+  return `PERSONA DO CANAL (manda sobre nicho, público e tom; respeite o que evitar):\n${linhas.join("\n")}`;
+}
+
+// ---------- Nota de outlier ----------
+// Como no Sandcastles: views ÷ mediana de views do próprio canal. A partir de
+// 1x o vídeo rendeu acima do normal do canal; 1,2x já é sinal; 2x é fora da curva.
+
+export function faixaOutlier(n: number | null | undefined): "fora" | "bom" | "normal" | "abaixo" | null {
+  if (n == null) return null;
+  if (n >= 2) return "fora";
+  if (n >= 1.2) return "bom";
+  if (n >= 0.8) return "normal";
+  return "abaixo";
+}
+
+export function outlierLegivel(n: number | null | undefined): string {
+  if (n == null) return "—";
+  return `${n.toLocaleString("pt-BR", { maximumFractionDigits: n >= 10 ? 0 : 1 })}x`;
+}
