@@ -198,6 +198,8 @@ export interface CanalSugerido {
   mediana: number | null;
   maiorOutlier: number | null;
   foraDaCurva: number;
+  /** Mediana abaixo de 3 mil views: a nota fica inflada e o canal vai para o fim. */
+  pequeno: boolean;
   melhor: { url: string; titulo: string; views: number | null } | null;
   buscas: string[];
 }

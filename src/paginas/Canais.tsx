@@ -883,7 +883,7 @@ function AbaCanais({ canais, setCanais, onErro, onAviso }: PropsCanais) {
         <h2 id="titulo-sugestoes" className="ferramentas-titulo">Achar canais do nicho</h2>
         <p className="campo-ajuda">
           Busca Shorts no YouTube pelos temas (ou pelo nicho da <Link to="/persona" className="link">Persona</Link>, se ficar vazio), descobre de
-          quem são e mede cada canal: quem tem vídeos bem acima da própria mediana aparece primeiro. Leva até 2 minutos.
+          quem são e mede cada canal: primeiro vem quem tem mais Shorts acima de 2x a própria mediana. Canal com mediana abaixo de 3 mil views vai para o fim, porque um viral sobre poucas views infla a nota. Leva até 2 minutos.
         </p>
         <form className="canais-sugerir" onSubmit={(e) => void sugerir(e)}>
           <label className="campo">
@@ -905,6 +905,7 @@ function AbaCanais({ canais, setCanais, onErro, onAviso }: PropsCanais) {
                   <thead>
                     <tr>
                       <th scope="col">Canal</th>
+                      <th scope="col" className="numero">Acima de 2x</th>
                       <th scope="col" className="numero">Maior nota</th>
                       <th scope="col" className="numero">Mediana</th>
                       <th scope="col">Melhor Short</th>
@@ -921,9 +922,13 @@ function AbaCanais({ canais, setCanais, onErro, onAviso }: PropsCanais) {
                             {s.seguidores != null && ` · ${numeroCurto(s.seguidores)} inscritos`}
                           </span>
                         </td>
-                        <td className={`numero canal-nota-${faixaOutlier(s.maiorOutlier) ?? "sem"}`}>
+                        <td className="numero">
+                          <span className="mono">{s.foraDaCurva}</span>
+                          <span className="canal-handle">de {s.shorts} Shorts</span>
+                        </td>
+                        <td className={`numero canal-nota-${s.pequeno ? "sem" : faixaOutlier(s.maiorOutlier) ?? "sem"}`}>
                           <span className="mono">{outlierLegivel(s.maiorOutlier)}</span>
-                          <span className="canal-handle">{s.foraDaCurva} acima de 2x</span>
+                          {s.pequeno && <span className="canal-handle">canal pequeno: nota inflada</span>}
                         </td>
                         <td className="numero mono">{numeroCurto(s.mediana == null ? null : Math.round(s.mediana))}</td>
                         <td>

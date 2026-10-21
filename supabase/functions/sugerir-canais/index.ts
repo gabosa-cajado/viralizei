@@ -5,7 +5,8 @@
 // 3. Descobre o @ do canal de cada Short pelo oEmbed.
 // 4. Lê a aba Shorts dos canais mais frequentes e calcula a mediana de views
 //    e o maior outlier (views ÷ mediana), como na aba Canais.
-// Devolve os canais ordenados pelo maior outlier, sem os que já estão na lista.
+// Devolve os canais por constância (Shorts acima de 2x a mediana), com os de
+// mediana pequena no fim, sem os que já estão na lista.
 // Não grava nada: o sócio escolhe quem acompanhar na tela.
 // Autorização: JWT de sócio. A IA (só para as buscas) usa ANTHROPIC_API_KEY_VIRALIZEI.
 import Anthropic from "npm:@anthropic-ai/sdk@0.134.0";
@@ -37,7 +38,7 @@ function responder(status: number, dados: unknown) {
 
 /** "100 mil visualizações" → 100000; "1,2 mi" → 1200000; "987 visualizações" → 987. */
 function numeroDeViews(texto: string): number | null {
-  const t = texto.replace(/ /g, " ").toLowerCase();
+  const t = texto.replace(/\u00a0/g, " ").toLowerCase();
   const m = t.match(/([\d.,]+)\s*(mi|mil|bi)?\b/);
   if (!m) return null;
   const unidade = m[2] ?? "";
@@ -118,6 +119,9 @@ async function donoDoShort(id: string): Promise<{ handle: string; nome: string }
     return null;
   }
 }
+
+/** Abaixo disto a mediana do canal é pequena demais para a nota dizer algo. */
+const MEDIANA_MINIMA = 3000;
 
 function mediana(ns: number[]) {
   if (!ns.length) return null;
@@ -232,8 +236,12 @@ Deno.serve(async (req) => {
     };
   });
 
+  // Canal com mediana baixa tem nota inflada (um viral sobre 800 views dá
+  // 5.000x): esses vão para o fim. Entre os outros, manda a constância (quantos
+  // Shorts passaram de 2x a mediana) e depois o tamanho da mediana.
   const lista = canais
     .filter((c): c is NonNullable<typeof c> => !!c && c.shorts >= 6)
-    .sort((a, b) => (b.maiorOutlier ?? 0) - (a.maiorOutlier ?? 0));
+    .map((c) => ({ ...c, pequeno: (c.mediana ?? 0) < MEDIANA_MINIMA }))
+    .sort((a, b) => Number(a.pequeno) - Number(b.pequeno) || b.foraDaCurva - a.foraDaCurva || (b.mediana ?? 0) - (a.mediana ?? 0));
   return responder(200, { buscas, canais: lista });
 });
