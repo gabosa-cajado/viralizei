@@ -7,7 +7,6 @@ import {
   carregarTrilhas,
   desfazerUso,
   diasDesde,
-  PESQUISA,
   quandoLegivel,
   registrarUso,
   resumoDeUso,
@@ -19,7 +18,7 @@ import {
 } from "../dados/trilhas";
 
 type Aba = "lista" | "uso";
-type Ordem = "reels" | "nicho" | "nosso" | "nome";
+type Ordem = "reels" | "nosso" | "nome";
 
 const VAZIA: NovaTrilha = {
   titulo: "",
@@ -97,7 +96,6 @@ export function Trilhas() {
     .sort((a, b) => {
       if (ordem === "nome") return a.titulo.localeCompare(b.titulo, "pt-BR");
       if (ordem === "nosso") return (resumo[b.id]?.vezes ?? 0) - (resumo[a.id]?.vezes ?? 0) || (b.reelsNumero ?? 0) - (a.reelsNumero ?? 0);
-      if (ordem === "nicho") return b.nichoVistos - a.nichoVistos || (b.reelsNumero ?? 0) - (a.reelsNumero ?? 0);
       return (b.reelsNumero ?? 0) - (a.reelsNumero ?? 0);
     });
   const filtrando = !!clima || !!termo || soInstrumental;
@@ -219,12 +217,11 @@ export function Trilhas() {
       <section className="abertura" aria-labelledby="titulo-trilhas">
         <p className="abertura-numero" aria-hidden="true">{String(trilhas.length).padStart(2, "0")}</p>
         <div className="abertura-texto">
-          <h1 id="titulo-trilhas" className="rotulo">Trilhas, pesquisa de {dataCurta(PESQUISA.conferidoEm)}</h1>
+          <h1 id="titulo-trilhas" className="rotulo">Trilhas do canal</h1>
           <p className="abertura-gancho">No nosso nicho, a voz vem antes da música.</p>
           <p className="radar-resumo">
-            Dos {PESQUISA.reelsLidos} reels do nicho que lemos, {PESQUISA.audioOriginalPct}% usam só o áudio original. Os cinco criadores de{" "}
-            <Link to="/referencias" className="link">Referências</Link> também: Luka Choi tem um único reel sem fala, com música, e Guilherme Benchimol usa
-            trilha discreta embaixo da voz. A lista abaixo é o que os outros {100 - PESQUISA.audioOriginalPct}% tocam e que combina com o canal.
+            Aqui ficam só as músicas que a equipe escolheu para o canal. Adicione cada trilha que usarmos ou quisermos testar e clique em "Usei" ao
+            publicar: a lista avisa quando for hora de variar.
           </p>
         </div>
       </section>
@@ -270,7 +267,6 @@ export function Trilhas() {
               <span className="visualmente-oculto">Ordem</span>
               <select value={ordem} onChange={(e) => setOrdem(e.target.value as Ordem)}>
                 <option value="reels">Mais reels no Instagram</option>
-                <option value="nicho">Mais vista no nicho</option>
                 <option value="nosso">Mais usada por nós</option>
                 <option value="nome">Nome</option>
               </select>
@@ -330,7 +326,6 @@ export function Trilhas() {
                       </p>
                       <p className="trilha-numeros mono">
                         {t.reelsTexto ? `${t.reelsTexto} reels no Instagram` : "Reels não conferidos"}
-                        {t.nichoVistos > 0 && ` · ${t.nichoVistos} ${t.nichoVistos === 1 ? "reel" : "reels"} do nicho na pesquisa`}
                         {t.conferidoEm && ` · conferido em ${dataCurta(t.conferidoEm)}`}
                       </p>
                       {r && (
@@ -378,7 +373,6 @@ export function Trilhas() {
                       <button type="button" className="botao botao-primario botao-pequeno" onClick={() => { setRegistrando(t.id); setDiaDoUso(""); setEditando(null); setApagando(null); }} disabled={registrando === t.id}>
                         Usei
                       </button>
-                      {t.exemploUrl && <a className="botao-texto" href={t.exemploUrl} target="_blank" rel="noreferrer">Exemplo no nicho</a>}
                       <button type="button" className="botao-texto" onClick={() => abrirFormulario(t)}>Editar</button>
                       <button type="button" className="botao-texto botao-perigo" onClick={() => { setEditando(null); setRegistrando(null); setApagando(t.id); }}>Apagar</button>
                     </div>

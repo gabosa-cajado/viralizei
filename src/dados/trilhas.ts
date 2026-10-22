@@ -1,12 +1,12 @@
-import dados from "../../conteudo/trilhas.json";
 import { supabase } from "./site";
 
-// Trilhas: músicas que o nicho usa e o que nós já usamos.
+// Trilhas: as músicas que a equipe adicionou para o canal e o que já usamos.
+// A lista de ideias da pesquisa do nicho (16/10) saiu em 22/10, a pedido do
+// autor: só fica o que a equipe acrescenta.
 // - site: tabelas public.trilhas e public.trilha_usos (só sócios leem; cada
 //   um registra o próprio uso; a contagem de reels é calculada no banco a
 //   partir do texto "430K").
-// - artefato e local: a lista de conteudo/trilhas.json mais o que cada um
-//   acrescentar, tudo no navegador.
+// - artefato e local: o que cada um acrescentar, tudo no navegador.
 
 export type Clima = "epica" | "tensa" | "reflexiva" | "leve";
 
@@ -42,13 +42,10 @@ export interface Trilha {
   reelsTexto: string | null;
   reelsNumero: number | null;
   conferidoEm: string | null;
-  /** Um reel do nicho que usa a trilha. */
+  /** Colunas da pesquisa antiga do nicho; sem uso na tela. */
   exemploUrl: string | null;
-  /** Quantos dos reels lidos na pesquisa do nicho usam a trilha. */
   nichoVistos: number;
   observacao: string;
-  /** Veio da pesquisa (não se apaga no modo local). */
-  daPesquisa?: boolean;
 }
 
 export interface UsoTrilha {
@@ -61,30 +58,6 @@ export interface UsoTrilha {
 }
 
 export type NovaTrilha = Pick<Trilha, "titulo" | "artista" | "link" | "clima" | "instrumental" | "nacional" | "reelsTexto" | "observacao">;
-
-export const PESQUISA = {
-  conferidoEm: dados.conferidoEm,
-  metodo: dados.metodo,
-  audioOriginalPct: dados.audioOriginalPct,
-  reelsLidos: dados.reelsLidos,
-};
-
-const SEMENTE: Trilha[] = dados.trilhas.map((t) => ({
-  id: t.id,
-  titulo: t.titulo,
-  artista: t.artista,
-  link: t.link,
-  clima: t.clima as Clima,
-  instrumental: t.instrumental,
-  nacional: t.nacional,
-  reelsTexto: t.reelsTexto,
-  reelsNumero: t.reelsNumero,
-  conferidoEm: dados.conferidoEm,
-  exemploUrl: t.exemploUrl,
-  nichoVistos: t.nichoVistos,
-  observacao: "",
-  daPesquisa: true,
-}));
 
 /** "1,5k" vira 1500; o mesmo cálculo que o gatilho do banco faz. */
 export function contagemDoTexto(texto: string | null): number | null {
@@ -127,7 +100,7 @@ function lerProprias(): Proprias {
 
 function trilhasLocais(): Trilha[] {
   const p = lerProprias();
-  return [...SEMENTE, ...p.novas]
+  return p.novas
     .filter((t) => !p.apagadas.includes(t.id))
     .map((t) => ({ ...t, ...(p.editadas[t.id] ?? {}) }));
 }

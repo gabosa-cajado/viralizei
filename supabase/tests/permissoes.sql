@@ -68,7 +68,7 @@ select * from r order by caso;
 rollback;
 
 -- Controle positivo das trilhas, com um sócio real (o primeiro da lista).
--- Esperado: true, 45 ou mais, 1, 12000, "lapidada true", métricas 1 ou mais,
+-- Esperado: true, 1 ou mais, 1, 12000, "lapidada true", métricas 1 ou mais,
 -- "plano true 1", "persona true", "canal true", "versões 1 2 true",
 -- "favorito true", "sobrou 0".
 begin;
