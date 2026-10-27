@@ -286,7 +286,8 @@ Deno.serve(async (req) => {
   const etapas = texto(bruto.etapas, 7000);
   const formatoHistoria = FORMATOS_HISTORIA.some((f) => f.id === bruto.formatoHistoria) ? String(bruto.formatoHistoria) : "";
   const contraste = Array.isArray(bruto.contraste) ? bruto.contraste.map((x) => String(x).slice(0, 80)).slice(0, 6) : [];
-  const idioma = ["inglês", "espanhol"].includes(String(bruto.idioma)) ? String(bruto.idioma) : "";
+  const IDIOMAS: Record<string, string> = { "português": "português do Brasil", "inglês": "inglês", "espanhol": "espanhol" };
+  const idioma = IDIOMAS[String(bruto.idioma)] ?? "";
   const roteiroAtual = bruto.roteiro && typeof bruto.roteiro === "object" ? JSON.stringify(bruto.roteiro).slice(0, 12000) : "";
   if (["pesquisa", "ganchos", "esboco"].includes(modo) && e.tema.length < 3) return responder(400, { erro: "Escreva o tema do vídeo primeiro." });
   if (modo === "ganchos" && !pesquisaTexto) return responder(400, { erro: "Faça a pesquisa antes de pedir os ganchos." });
@@ -466,13 +467,19 @@ ${calendario || "(calendário vazio)"}`;
       model: "claude-opus-5-5",
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
-      max_tokens: modo === "ideia" || modo === "dobrar" ? 4000 : modo === "ganchos" || modo === "esboco" ? 6000 : 8000,
-      output_config: { effort: "medium", format: betaZodOutputFormat(esquema) },
+      // O raciocínio conta dentro de max_tokens: com 8000, reescrever um
+      // roteiro de 90 a 120 s parava no meio e a versão não saía (27/10).
+      max_tokens: modo === "ideia" || modo === "dobrar" ? 6000 : modo === "ganchos" || modo === "esboco" ? 10000 : 20000,
+      // Reescrever (duração, idioma) é ajuste, não criação: esforço baixo cabe nos 150 s.
+      output_config: { effort: modo === "ajustar" ? "low" : "medium", format: betaZodOutputFormat(esquema) },
       system: sistema,
       messages: [{ role: "user", content: pedido }],
     });
     if (resposta.stop_reason === "refusal") return responder(422, { erro: modo === "ideia" ? "O modelo recusou esta ideia. Escreva de outro jeito." : "O modelo recusou este pedido. Descreva o tema de outro jeito." });
-    if (!resposta.parsed_output) return responder(502, { erro: "A resposta veio incompleta. Tente gerar de novo." });
+    if (!resposta.parsed_output) {
+      console.error(`gerar-roteiro ${modo}: resposta sem saída (stop_reason ${resposta.stop_reason}, ${resposta.usage?.output_tokens} tokens)`);
+      return responder(502, { erro: "A resposta veio incompleta. Tente gerar de novo." });
+    }
     if (soDevolve) return responder(200, resposta.parsed_output);
 
     // Confere o tamanho: o modelo erra a conta de palavras. Fora da faixa,
@@ -481,12 +488,12 @@ ${calendario || "(calendário vazio)"}`;
     const duracaoAlvo = modo === "criar" ? duracaoPedida || 60 : modo === "ajustar" && idioma ? 0 : duracaoPedida;
     const alvo = duracaoAlvo ? orcamento(duracaoAlvo) : null;
     const palavras = palavrasFaladas(roteiro);
-    if (alvo && (palavras < alvo.minimo * 0.92 || palavras > alvo.maximo * 1.15) && Date.now() - inicio < 80_000) {
+    if (alvo && (palavras < alvo.minimo || palavras > alvo.maximo * 1.15) && Date.now() - inicio < 80_000) {
       const ajuste = await cliente.beta.messages.parse({
         model: "claude-opus-5-5",
         betas: ["server-side-fallback-2026-07-01"],
         fallbacks: "default",
-        max_tokens: 6000,
+        max_tokens: 16000,
         output_config: { effort: "low", format: betaZodOutputFormat(esquema) },
         system: sistema,
         messages: [
@@ -512,6 +519,7 @@ ${calendario || "(calendário vazio)"}`;
     roteiro.avisos = [...roteiro.avisos, ...conferirLoops(loops, roteiro.duracaoEstimadaSeg)];
     return responder(200, { ...roteiro, loops });
   } catch (erro) {
+    console.error(`gerar-roteiro ${modo}:`, erro instanceof Error ? erro.message : erro);
     if (erro instanceof Anthropic.AuthenticationError) {
       return responder(502, { erro: "A chave da Anthropic foi recusada. O dono precisa conferir o segredo no Supabase." });
     }

@@ -20,6 +20,7 @@ import {
   salvarVersao,
   sugerirGanchos,
   traduzir,
+  type Idioma,
   type Etapas,
   type GanchoOpcao,
   type RoteiroSalvo,
@@ -73,12 +74,14 @@ export function RoteiroEtapas() {
   const [etapas, setEtapas] = useState<Etapas>(ETAPAS_VAZIAS);
   const [versoes, setVersoes] = useState<Versao[]>([]);
   const [versaoId, setVersaoId] = useState<string | null>(null);
+  const versoesRef = useRef<Versao[]>([]);
+  versoesRef.current = versoes;
   const [carregando, setCarregando] = useState(true);
   const [ocupado, setOcupado] = useState<Ocupado>("");
   const [erro, setErro] = useState("");
   const [meuGancho, setMeuGancho] = useState({ textoNaTela: "", ganchoFalado: "" });
   const [novaDuracao, setNovaDuracao] = useState("30");
-  const [idioma, setIdioma] = useState<"inglês" | "espanhol">("inglês");
+  const [idioma, setIdioma] = useState<Idioma>("inglês");
   const [confirmarApagar, setConfirmarApagar] = useState(false);
   const mudouDesdeSalvar = useRef(false);
 
@@ -107,19 +110,23 @@ export function RoteiroEtapas() {
     };
   }, [disponivel]);
 
-  // Versões do roteiro aberto.
+  // Versões do roteiro aberto. A leitura se junta ao que já está na tela
+  // (versão criada enquanto a leitura voltava não some) e só mantém a versão
+  // escolhida se ela for deste roteiro.
   useEffect(() => {
+    setVersoes((vs) => vs.filter((v) => v.roteiro_id === atualId));
     if (!atualId) {
-      setVersoes([]);
       setVersaoId(null);
       return;
     }
     let vivo = true;
     lerVersoes(atualId)
-      .then((vs) => {
+      .then((lidas) => {
         if (!vivo) return;
-        setVersoes(vs);
-        setVersaoId(vs[0]?.id ?? null);
+        const ids = new Set(lidas.map((v) => v.id));
+        const juntas = [...versoesRef.current.filter((v) => v.roteiro_id === atualId && !ids.has(v.id)), ...lidas].sort((a, b) => b.numero - a.numero);
+        setVersoes(juntas);
+        setVersaoId((atual) => (atual && juntas.some((v) => v.id === atual) ? atual : juntas[0]?.id ?? null));
       })
       .catch((e: Error) => vivo && setErro(e.message));
     return () => {
@@ -596,7 +603,8 @@ export function RoteiroEtapas() {
                   </button>
                   <label className="campo campo-compacto">
                     <span className="rotulo">Idioma</span>
-                    <select value={idioma} onChange={(e) => setIdioma(e.target.value as "inglês" | "espanhol")}>
+                    <select value={idioma} onChange={(e) => setIdioma(e.target.value as Idioma)}>
+                      <option value="português">Português</option>
                       <option value="inglês">Inglês</option>
                       <option value="espanhol">Espanhol</option>
                     </select>

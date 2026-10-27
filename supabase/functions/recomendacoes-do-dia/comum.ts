@@ -6,9 +6,10 @@
 
 // Os cinco criadores do estudo falam quase sem pausa (Kallaway 8% de
 // silêncio, Robert e Benchimol abaixo de 15%, Tarik e Luka até 24% com
-// respiros): em português isso dá perto de 3 palavras por segundo. A conta
-// antiga (2,5) era ritmo de locução e deixava o texto curto para a duração.
-export const PALAVRAS_POR_SEGUNDO = 3;
+// respiros): em português isso dá 3 a 4 palavras por segundo. A conta
+// antiga (2,5) era ritmo de locução; com 3 o autor ainda achou o texto curto
+// em todas as durações (27/10/2026), por isso 3,5.
+export const PALAVRAS_POR_SEGUNDO = 3.5;
 
 export interface Orcamento {
   duracao: number;
@@ -37,7 +38,7 @@ export function orcamento(duracaoSeg: number): Orcamento {
   return {
     duracao,
     total,
-    minimo: Math.round(total * 0.9),
+    minimo: Math.round(total * 0.95),
     maximo: Math.round(total * 1.1),
     gancho,
     trava,

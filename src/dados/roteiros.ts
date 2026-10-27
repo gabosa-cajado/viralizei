@@ -234,6 +234,8 @@ export function ajustarDuracao(r: Roteiro, duracao: string): Promise<Roteiro> {
   return chamarRoteiroNoSite<Roteiro>({ modo: "ajustar", roteiro: r, duracao }, SO_NO_SITE);
 }
 
-export function traduzir(r: Roteiro, idioma: "inglês" | "espanhol"): Promise<Roteiro> {
+export type Idioma = "português" | "inglês" | "espanhol";
+
+export function traduzir(r: Roteiro, idioma: Idioma): Promise<Roteiro> {
   return chamarRoteiroNoSite<Roteiro>({ modo: "ajustar", roteiro: r, idioma }, SO_NO_SITE);
 }
